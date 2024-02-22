@@ -1,0 +1,43 @@
+{
+	"name": "@ez-kits/form",
+	"version": "0.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"nx": "nx",
+		"build": "nx run-many --projects=packages/** --target=build --parallel=6",
+		"dev": "nx run-many --projects=packages/** --target=dev --parallel=6",
+		"test": "vitest",
+		"test:coverage": "vitest test --coverage",
+		"publish-packages": "node scripts/publish.js"
+	},
+	"devDependencies": {
+		"@solidjs/router": "^0.8.2",
+		"@solidjs/testing-library": "^0.8.4",
+		"@testing-library/jest-dom": "^5.17.0",
+		"@testing-library/react": "^14.0.0",
+		"@testing-library/react-hooks": "^8.0.1",
+		"@testing-library/user-event": "^14.4.3",
+		"@testing-library/vue": "^7.0.0",
+		"@vitejs/plugin-vue": "^4.2.3",
+		"@vitest/coverage-v8": "^0.33.0",
+		"@vitest/ui": "^0.33.0",
+		"fast-glob": "^3.3.1",
+		"jsdom": "^22.1.0",
+		"nx": "16.5.2",
+		"nx-cloud": "latest",
+		"semver": "^7.5.4",
+		"vite-plugin-solid": "^2.7.0",
+		"vitest": "^1.2.0"
+	},
+	"nx": {
+		"targets": {}
+	},
+	"workspaces": [
+		"packages/*",
+		"examples/*"
+	],
+	"packageManager": "yarn@1.22.17"
+}

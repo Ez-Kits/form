@@ -1,0 +1,78 @@
+{
+	"name": "@ez-kits/form-vue",
+	"private": false,
+	"version": "0.0.0",
+	"description": "Powerful, type-safe, easy-to-use form package",
+	"author": {
+		"name": "Niku",
+		"email": "phammah.1221998@gmail.com",
+		"url": "https://github.com/niku98"
+	},
+	"repository": {
+		"url": "https://github.com/Ez-Kits/form"
+	},
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"typings": "./dist/index.d.ts",
+	"exports": {
+		".": {
+			"default": "./dist/index.js",
+			"import": "./dist/index.js",
+			"require": "./dist/index.cjs",
+			"types": "./dist/index.d.ts"
+		},
+		"./plugin": {
+			"default": "./dist/plugin.js",
+			"require": "./dist/plugin.cjs",
+			"import": "./dist/plugin.js",
+			"types": "./dist/plugin.d.ts"
+		}
+	},
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "MIT",
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md",
+		"package.json"
+	],
+	"dependencies": {
+		"@ez-kits/form-core": "*",
+		"@vue/devtools-api": "^7.0.11"
+	},
+	"peerDependencies": {
+		"async-validator": "^4.2.5",
+		"vue": "^3.0.0",
+		"yup": "^1.2.0",
+		"zod": "^3.21.4"
+	},
+	"peerDependenciesMeta": {
+		"async-validator": {
+			"optional": true
+		},
+		"yup": {
+			"optional": true
+		},
+		"zod": {
+			"optional": true
+		}
+	},
+	"devDependencies": {
+		"@typescript-eslint/eslint-plugin": "^5.61.0",
+		"@typescript-eslint/parser": "^5.61.0",
+		"eslint": "^8.44.0",
+		"eslint-plugin-vue": "9.15.1",
+		"tsup": "^7.1.0",
+		"typescript": "^5.0.2",
+		"vue": "^3.0.0"
+	}
+}

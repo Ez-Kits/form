@@ -1,0 +1,9 @@
+
+.nx/installation
+.nx/cache
+
+dist
+node_modules
+
+docs/*/.vitepress/cache/
+coverage/

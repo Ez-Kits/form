@@ -1,0 +1,42 @@
+{
+	"name": "@ez-kits/form-vue-devtools-old",
+	"private": false,
+	"version": "0.0.0",
+	"description": "Powerful, type-safe, easy-to-use form package",
+	"author": {
+		"name": "Niku",
+		"email": "phammah.1221998@gmail.com",
+		"url": "https://github.com/niku98"
+	},
+	"repository": {
+		"url": "https://github.com/Ez-Kits/form"
+	},
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"typings": "./dist/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
+	"license": "MIT",
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md",
+		"package.json"
+	],
+	"dependencies": {
+		"@ez-kits/form-core": "*",
+		"@vue/devtools-api": "^6.5.1"
+	},
+	"devDependencies": {
+		"tsup": "^7.1.0",
+		"typescript": "^5.0.2"
+	}
+}
