@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-mixed-spaces-and-tabs */
 /* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
@@ -12,6 +14,8 @@ import {
 	type GetKeys,
 	type GetType,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
+import { mergeFormOptions } from "src/utilities/form";
 export type * from "@ez-kits/form-core";
 
 export {
@@ -29,29 +33,33 @@ export type FieldNameProps<
 	: { index?: number; name: N; namePrefix?: string };
 
 declare module "@ez-kits/form-core" {
-	interface FormOptions<Values> {
+	interface FormOptions<Values, ValidationSchema> {
 		el: string | HTMLFormElement;
 	}
 
-	interface FormInstance<Values> {
+	interface FormInstance<Values, ValidationSchema> {
 		el: HTMLFormElement;
 		unmount: () => void;
 
-		createField: CreateField<Values>;
-		createFieldArray: CreateFieldArray<Values>;
+		createField: CreateField<Values, Values, ValidationSchema>;
+		createFieldArray: CreateFieldArray<Values, Values, ValidationSchema>;
 	}
 
-	interface FieldBaseInstance<FieldValue, FormValues> {
+	interface FieldBaseInstance<FieldValue, FormValues, ValidationSchema> {
 		unmount: () => void;
-		createField: CreateField<FormValues, FieldValue>;
-		createFieldArray: CreateFieldArray<FormValues, FieldValue>;
+		createField: CreateField<FormValues, FieldValue, ValidationSchema>;
+		createFieldArray: CreateFieldArray<
+			FormValues,
+			FieldValue,
+			ValidationSchema
+		>;
 	}
 }
 
-export function createForm<Values>(
-	options: FormOptions<Values>
-): FormInstance<Values> {
-	const form = new FormInstance(options);
+export function createForm<Values, ValidationSchema = DefaultValidationSchema>(
+	options: FormOptions<Values, ValidationSchema>
+): FormInstance<Values, ValidationSchema> {
+	const form = new FormInstance(mergeFormOptions(options));
 	form.unmount = form.mount();
 
 	form.createField = (options) => createField(form, options) as any;
@@ -87,10 +95,11 @@ export function createForm<Values>(
 type CreateFieldOptions<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues>, "name"> & {
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name"> & {
 		inputEl?:
 			| string
 			| HTMLInputElement
@@ -101,24 +110,30 @@ type CreateFieldOptions<
 		changeEventName?: string;
 		valuePropInEvent?: string;
 		handleInput?: (
-			field: FieldInstance<GetType<ParentValue, N>, FormValues>
+			field: FieldInstance<
+				GetType<ParentValue, N>,
+				FormValues,
+				ValidationSchema
+			>
 		) => void;
 	};
 
-export type CreateField<FormValues, ParentValue = FormValues> = <
-	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
-	FieldValue = GetType<ParentValue, N>
->(
-	options: CreateFieldOptions<FormValues, ParentValue, N>
-) => FieldInstance<FieldValue, FormValues>;
+export type CreateField<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <N extends GetKeys<ParentValue> = GetKeys<ParentValue>>(
+	options: CreateFieldOptions<FormValues, ParentValue, ValidationSchema, N>
+) => FieldInstance<GetType<ParentValue, N>, FormValues, ValidationSchema>;
 
 function createField<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 >(
-	form: FormInstance<FormValues>,
-	options: CreateFieldOptions<FormValues, ParentValue, N>
+	form: FormInstance<FormValues, ValidationSchema>,
+	options: CreateFieldOptions<FormValues, ParentValue, ValidationSchema, N>
 ) {
 	const fieldName = (
 		typeof options.index === "number"
@@ -138,13 +153,13 @@ function createField<
 		createField(form, {
 			...props,
 			namePrefix: field.name,
-		}) as any;
+		} as any);
 
 	field.createFieldArray = (props) =>
 		createFieldArray(form, {
 			...props,
 			namePrefix: field.name,
-		}) as any;
+		} as any) as any;
 
 	if (options.handleInput) {
 		options.handleInput(field);
@@ -212,17 +227,18 @@ function createField<
 type CreateFieldArrayOptions<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues>, "name"> & {
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name"> & {
 		/**
 		 * Container element
 		 */
 		el: string | HTMLElement;
 		itemTemplate: (
 			index: number,
-			fieldArray: FieldArrayInstance<FieldValue, FormValues>
+			fieldArray: FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
 		) => HTMLElement;
 		/**
 		 * CSS Selector to query all field's items. Will be passed to querySelectorAll.
@@ -230,25 +246,30 @@ type CreateFieldArrayOptions<
 		itemsSelector: string;
 		itemFieldsCreator: (
 			index: number,
-			fieldArray: FieldArrayInstance<FieldValue, FormValues>
-		) => FieldBaseInstance<any, any>[];
+			fieldArray: FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
+		) => FieldBaseInstance<any, any, ValidationSchema>[];
 	};
 
-export type CreateFieldArray<FormValues, ParentValue = FormValues> = <
+export type CreateFieldArray<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 >(
-	options: CreateFieldArrayOptions<FormValues, ParentValue, N>
-) => FieldArrayInstance<FieldValue, FormValues>;
+	options: CreateFieldArrayOptions<FormValues, ParentValue, ValidationSchema, N>
+) => FieldArrayInstance<FieldValue, FormValues, ValidationSchema>;
 
 function createFieldArray<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 >(
-	form: FormInstance<FormValues>,
-	options: CreateFieldArrayOptions<FormValues, ParentValue, N>
-): FieldArrayInstance<GetType<ParentValue, N>, FormValues> {
+	form: FormInstance<FormValues, ValidationSchema>,
+	options: CreateFieldArrayOptions<FormValues, ParentValue, ValidationSchema, N>
+): FieldArrayInstance<GetType<ParentValue, N>, FormValues, ValidationSchema> {
 	const fieldName = (
 		typeof options.index === "number"
 			? [options.namePrefix, options.index, options.name]
@@ -267,13 +288,13 @@ function createFieldArray<
 		createField(form, {
 			...props,
 			namePrefix: field.name,
-		}) as any;
+		} as any) as any;
 
 	field.createFieldArray = (props) =>
 		createFieldArray(form, {
 			...props,
 			namePrefix: field.name,
-		}) as any;
+		} as any) as any;
 
 	const initialValue = field.value;
 
@@ -296,7 +317,7 @@ function createFieldArray<
 	);
 
 	// Initial fields
-	const itemsFields: FieldBaseInstance<any, any>[][] = Array.isArray(
+	const itemsFields: FieldBaseInstance<any, any, any>[][] = Array.isArray(
 		initialValue
 	)
 		? initialValue.map((_, index) => {

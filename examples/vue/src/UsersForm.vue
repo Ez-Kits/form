@@ -1,7 +1,7 @@
 <template>
 	<Form>
 		<div>
-			<div v-for="field in fieldsInfo" :key="field.key">
+			<div v-for="field in fieldsInfo" :key="field.index">
 				<Field :index="field.index" name="username">
 					<EzBindingFieldInput>
 						<input :data-testid="`users.username.${field.index}`" />
@@ -17,7 +17,6 @@
 			<p data-testid="users_length">
 				{{ fieldsInfo.length }}
 			</p>
-
 			<button data-testid="action_btn" @click="doAction">Action</button>
 		</div>
 	</Form>
@@ -45,7 +44,12 @@ const formData: UsersForm = {
 		}),
 };
 
-const { Form, useFieldArray } = useForm({ initialValues: formData });
+const { Form, useFieldArray } = useForm({
+	initialValues: formData,
+	onValuesChange(values) {
+		console.log("form values", values);
+	},
+});
 const fieldArray = useFieldArray({ name: "users" });
 const { Field } = fieldArray;
 const fieldsInfo = fieldArray.useFieldsInfo();

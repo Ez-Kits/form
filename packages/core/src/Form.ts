@@ -303,6 +303,31 @@ export default class FormInstance<
 			});
 	};
 
+	submitAsync = async () => {
+		try {
+			this.setMetaKey("submissionCount", this.meta.submissionCount + 1);
+			this.setMetaKey("submitting", true);
+
+			const { valid, errors } = await this.validate({
+				trigger: "submit",
+			});
+
+			if (valid) {
+				this.options.onSubmit?.(this.values);
+				this.trigger("submit", this.values);
+
+				return this.values;
+			} else {
+				this.options.onError?.(errors);
+				this.trigger("error", errors);
+
+				throw errors;
+			}
+		} finally {
+			this.setMetaKey("submitting", false);
+		}
+	};
+
 	// Handle validate
 	getValidationSchema = () => {
 		return this.options.validationSchema;

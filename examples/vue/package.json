@@ -9,13 +9,19 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"vue": "^3.3.4",
-		"@ez-kits/form-vue": "*"
+		"@ez-kits/form-vue": "*",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"vue": "^3.5.6",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@vitejs/plugin-vue": "^4.2.3",
 		"typescript": "^5.0.2",
-		"vite": "^4.4.5",
-		"vue-tsc": "^1.8.5"
+		"vite": "^5.4.6",
+		"vue-tsc": "^2.1.6"
 	}
 }

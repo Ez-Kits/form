@@ -57,7 +57,7 @@ export type FieldComponent<
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = Omit<BaseFieldType, "$props"> & {
 	new (): {
-		$props: FieldProps<FormValues, ParentValue, N>;
+		$props: FieldProps<FormValues, ParentValue, ValidationSchema, N>;
 		$slots: {
 			default: (helpers: {
 				form: FormInstance<FormValues, ValidationSchema>;

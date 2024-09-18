@@ -273,6 +273,15 @@ export default abstract class FieldBaseInstance<
 			trigger: options?.trigger,
 		});
 
+		if (options?.trigger && validationSchemas.length === 0) {
+			this.validationPromise.resolve({
+				valid: !!this.meta.errors?.length,
+				errors: this.meta.errors ?? [],
+			});
+
+			return this.validationPromise;
+		}
+
 		if (validationSchemas.length === 0) {
 			this.validationPromise.resolve({ valid: true, errors: [] });
 			return this.validationPromise;
