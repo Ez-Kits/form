@@ -285,7 +285,9 @@ export default class FormInstance<
 		this.setMetaKey("submissionCount", this.meta.submissionCount + 1);
 		this.setMetaKey("submitting", true);
 
-		this.validate()
+		this.validate({
+			trigger: "submit",
+		})
 			.then(({ valid, errors }) => {
 				this.setMetaKey("submitting", false);
 				if (valid) {
@@ -328,20 +330,20 @@ export default class FormInstance<
 				this.setMetaKey("validating", false);
 			});
 
-		const validationPromisees: Promise<ValidationResult>[] = [];
+		const validationPromisees: PromiseLike<ValidationResult>[] = [];
 
-		// if (this.options.validationSchema) {
-		// 	const formValidationResult = validator({
-		// 		schema: this.options.validationSchema,
-		// 		value: this.values,
-		// 	});
-		// 	validationPromisees.push(Promise.resolve(formValidationResult));
-		// } else {
-		// }
-
-		this.fields.forEach((field) => {
-			validationPromisees.push(field.validate(options));
-		});
+		if (this.options.validationSchema) {
+			const formValidationResult = validator.validate({
+				schema: this.options.validationSchema,
+				value: this.values,
+			});
+			validationPromisees.push(formValidationResult);
+			console.log("formValidationResult", formValidationResult);
+		} else {
+			this.fields.forEach((field) => {
+				validationPromisees.push(field.validate(options));
+			});
+		}
 
 		Promise.all(validationPromisees)
 			.then((results) => {

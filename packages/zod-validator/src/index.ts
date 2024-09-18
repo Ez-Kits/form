@@ -1,5 +1,5 @@
-import { GLOBAL_ERROR_FIELD, Validator, castPath } from "@ez-kits/form-core";
-import { ZodArray, ZodObject, ZodSchema } from "zod";
+import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
+import { ZodSchema } from "zod";
 
 export const zodValidator: Validator<ZodSchema> = {
 	async validate({ schema, value, field }) {
@@ -23,26 +23,26 @@ export const zodValidator: Validator<ZodSchema> = {
 		};
 	},
 
-	extractSchema(schema: ZodSchema, field: string): ZodSchema {
-		const paths = castPath(field);
-		let resultPath = schema;
-		try {
-			for (const path of paths) {
-				const maybeNumberPath = Number(path);
-				const isNumberPath = !Number.isNaN(maybeNumberPath);
+	// extractSchema(schema: ZodSchema, field: string): ZodSchema {
+	// 	const paths = castPath(field);
+	// 	let resultPath = schema;
+	// 	try {
+	// 		for (const path of paths) {
+	// 			const maybeNumberPath = Number(path);
+	// 			const isNumberPath = !Number.isNaN(maybeNumberPath);
 
-				if (isNumberPath) {
-					resultPath = (resultPath as ZodArray<any>).element;
-				} else {
-					resultPath = (resultPath as ZodObject<any>).shape[path];
-				}
-			}
+	// 			if (isNumberPath) {
+	// 				resultPath = (resultPath as ZodArray<any>).element;
+	// 			} else {
+	// 				resultPath = (resultPath as ZodObject<any>).shape[path];
+	// 			}
+	// 		}
 
-			return resultPath;
-		} catch (error) {
-			return schema;
-		}
-	},
+	// 		return resultPath;
+	// 	} catch (error) {
+	// 		return schema;
+	// 	}
+	// },
 };
 
 function getFieldPath(path: (string | number)[], field?: string) {

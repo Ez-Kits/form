@@ -6,6 +6,7 @@ import {
 	type FieldOptions,
 	type GetKeys,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { useField } from "src/index";
 import { useInjectForm } from "src/provides/form";
 import { fieldProps, type FieldNameProps } from "src/utilities/field";
@@ -14,9 +15,10 @@ import { defineComponent, getCurrentInstance } from "vue";
 export type FieldProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<any, FormValues>, "name">;
+	Omit<FieldOptions<any, FormValues, ValidationSchema>, "name">;
 
 const FieldImpl = defineComponent({
 	name: "EzField",
@@ -51,14 +53,15 @@ type BaseFieldType = typeof FieldImpl;
 export type FieldComponent<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = Omit<BaseFieldType, "$props"> & {
 	new (): {
 		$props: FieldProps<FormValues, ParentValue, N>;
 		$slots: {
 			default: (helpers: {
-				form: FormInstance<FormValues>;
-				field: FieldInstance<any, FormValues>;
+				form: FormInstance<FormValues, ValidationSchema>;
+				field: FieldInstance<any, FormValues, ValidationSchema>;
 				value: any;
 				meta: FieldMeta;
 			}) => any;

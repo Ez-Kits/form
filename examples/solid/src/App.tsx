@@ -1,4 +1,8 @@
-import { registerGlobalValidator, useForm } from "@ez-kits/form-solid";
+import {
+	FieldErrors,
+	registerGlobalValidator,
+	useForm,
+} from "@ez-kits/form-solid";
 import { createUniqueId, For, type Component } from "solid-js";
 
 import { zodValidator } from "@ez-kits/form-zod-validator";
@@ -95,7 +99,18 @@ function LoginPage() {
 									{(_, index) => (
 										<fieldArray.Field index={index()} name="city">
 											{({ field }) => (
-												<input {...field.getInputProps()} type="text" />
+												<div>
+													<input {...field.getInputProps()} type="text" />
+													<FieldErrors>
+														{(errors) => (
+															<div>
+																{errors()
+																	.flatMap((error) => error.messages)
+																	.join(", ")}
+															</div>
+														)}
+													</FieldErrors>
+												</div>
 											)}
 										</fieldArray.Field>
 									)}

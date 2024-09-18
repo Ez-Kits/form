@@ -5,6 +5,7 @@ import {
 	FieldOptions,
 	UpdateValueOptions,
 	ValidateError,
+	ValidateTrigger,
 	ValidationOptions,
 	ValidationResult,
 	ValidationSchemaInput,
@@ -14,6 +15,7 @@ import {
 	EventListenersManager,
 	clone,
 	get,
+	isEqual,
 	set,
 	uniqueId,
 } from "src/utilities";
@@ -57,8 +59,6 @@ export default abstract class FieldBaseInstance<
 		this.options = options;
 		this.initialize(false);
 	}
-
-	abstract mount(): () => void;
 
 	initialize = (notify = true) => {
 		this.name = this.options.name;
@@ -105,6 +105,68 @@ export default abstract class FieldBaseInstance<
 		}
 	};
 
+	// Handle mount and unmount
+	mount = () => {
+		this.form.addField(this);
+
+		const offFormChangeValue = this.form.on("change:value", () => {
+			const newValue = this.getValue();
+			const oldValue = this.value;
+
+			if (oldValue !== newValue) {
+				this.value = newValue;
+				this.setMetaKey("dirty", true);
+
+				this.trigger("change:value", this.value, oldValue);
+				this.trigger("change", this);
+			}
+		});
+
+		const offFormErrorsChange = this.form.on("error", () => {
+			this.setMetaKey(
+				"errors",
+				this.form.meta.errors.filter((error) => {
+					return error.field.startsWith(this.name);
+				})
+			);
+		});
+
+		const offThisChangeMeta = this.on("change:meta", () => {
+			const { dirty, touched } = this.meta;
+
+			dirty && this.form.setMetaKey("dirty", true);
+			touched && this.form.setMetaKey("touched", true);
+		});
+
+		const offFormReset = this.form.on("reset", () => {
+			this.initialize();
+		});
+
+		const offFormReInitialize = this.form.on("reInitialize", () => {
+			this.initialize();
+		});
+
+		const offFormChangeMeta = this.form.on("change:meta", () => {
+			const nextErrors = this.form.meta.errors.filter((error) =>
+				error.field.startsWith(this.name)
+			);
+
+			if (!isEqual(this.meta.errors, nextErrors)) {
+				this.setMetaKey("errors", nextErrors);
+			}
+		});
+
+		return () => {
+			offFormChangeValue();
+			offFormErrorsChange();
+			offFormReInitialize();
+			offThisChangeMeta();
+			offFormReset();
+			this.form.removeField(this);
+			offFormChangeMeta();
+		};
+	};
+
 	// Handle meta
 	setMeta = (value: FieldMeta) => {
 		this.meta = value;
@@ -143,34 +205,46 @@ export default abstract class FieldBaseInstance<
 	};
 
 	// Handle validate
-	private getValidationSchema = (
+	private getValidationSchema = async (
 		options: ValidationOptions
-	): ValidationSchemaInput<ValidationSchema>[] => {
+	): Promise<ValidationSchemaInput<ValidationSchema>[]> => {
 		if (!this.options.validationSchema) {
 			return [];
 		}
 
-		if (!options.trigger) {
-			return toArray(this.options.validationSchema);
+		let fieldValidationSchemas = this.options.validationSchema;
+		if (typeof fieldValidationSchemas === "function") {
+			fieldValidationSchemas = toArray(
+				await (fieldValidationSchemas as Function)(this.value, {
+					field: this,
+					form: this.form,
+				})
+			);
 		}
 
-		const schemas = toArray(this.options.validationSchema);
+		if (!options.trigger) {
+			return toArray(fieldValidationSchemas);
+		}
+
+		const schemas = toArray(fieldValidationSchemas);
 		const filteredSchemas = schemas.filter((schema) => {
 			if (schema && typeof schema === "object" && "trigger" in schema) {
-				return schema.trigger === options.trigger;
+				return (toArray(options.trigger) as ValidateTrigger[]).some((trigger) =>
+					toArray(schema.trigger).includes(trigger)
+				);
 			}
 
 			return true;
 		});
 
-		if (this.form.options.validator && this.form.options.validationSchema) {
-			filteredSchemas.push(
-				this.form.options.validator.extractSchema(
-					this.form.options.validationSchema,
-					this.name
-				)
-			);
-		}
+		// if (this.form.options.validator && this.form.options.validationSchema) {
+		// 	filteredSchemas.push(
+		// 		this.form.options.validator.extractSchema(
+		// 			this.form.options.validationSchema,
+		// 			this.name
+		// 		)
+		// 	);
+		// }
 
 		return filteredSchemas;
 	};
@@ -195,7 +269,7 @@ export default abstract class FieldBaseInstance<
 				this.setMetaKey("validating", false);
 			});
 
-		const validationSchemas = this.getValidationSchema({
+		const validationSchemas = await this.getValidationSchema({
 			trigger: options?.trigger,
 		});
 

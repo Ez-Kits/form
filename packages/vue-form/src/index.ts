@@ -21,15 +21,12 @@ export type { UseFieldProps } from "src/composables/useField";
 export type { UseFieldArrayProps } from "src/composables/useFieldArray";
 export type { UseFormProps } from "src/composables/useForm";
 export * from "src/composables/useInstance";
-
-export {
-	asyncFieldSchema,
-	asyncSchema,
-	yupFieldSchema,
-	yupSchema,
-	zodFieldSchema,
-	zodSchema,
-} from "@ez-kits/form-core";
+export { registerGlobalValidator } from "src/global";
+export type {
+	DefaultValidationSchema,
+	GlobalRegister,
+	GlobalValidator,
+} from "src/global";
 
 export {
 	EzBindingFieldInput,

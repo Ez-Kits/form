@@ -1,7 +1,7 @@
 import FieldBaseInstance from "src/FieldBase";
 import FormInstance from "src/Form";
 import { FieldMeta, FieldOptions, ToArray, ValidateError } from "src/models";
-import { isEqual, uniqueId } from "src/utilities";
+import { uniqueId } from "src/utilities";
 import { toArray } from "src/utilities/array";
 
 type GetArrayItemType<T> = ToArray<T>[number];
@@ -69,57 +69,6 @@ export default class FieldArrayInstance<
 			  })
 			: [];
 	}
-
-	mount = () => {
-		this.form.addField(this);
-
-		const offChangeValue = this.form.on("change:value", () => {
-			const newValue = this.getValue();
-			const oldValue = this.value;
-
-			if (this.value !== newValue) {
-				this.value = newValue;
-				this.setMetaKey("dirty", true);
-
-				this.trigger("change:value", this.value, oldValue);
-				this.trigger("change", this);
-			}
-		});
-
-		const offThisChangeMeta = this.on("change:meta", () => {
-			const { dirty, touched } = this.meta;
-
-			dirty && this.form.setMetaKey("dirty", true);
-			touched && this.form.setMetaKey("touched", true);
-		});
-
-		const offFormReset = this.form.on("reset", () => {
-			this.initialize();
-		});
-
-		const offFormReInitialize = this.form.on("reInitialize", () => {
-			this.initialize();
-		});
-
-		const offFormChangeMeta = this.form.on("change:meta", () => {
-			const nextErrors = this.form.meta.errors.filter((error) =>
-				error.field.startsWith(this.name)
-			);
-
-			if (!isEqual(this.meta.errors, nextErrors)) {
-				this.setMetaKey("errors", nextErrors);
-			}
-		});
-
-		return () => {
-			offChangeValue();
-			offThisChangeMeta();
-			offFormReInitialize();
-			offFormReset();
-			this.form.removeField(this);
-			offFormChangeMeta();
-		};
-	};
 
 	private copyFields(): FieldValue {
 		if (Array.isArray(this.fields)) {

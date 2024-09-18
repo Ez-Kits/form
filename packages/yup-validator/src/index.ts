@@ -1,5 +1,5 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import { reach, Schema, ValidationError } from "yup";
+import { Schema, ValidationError } from "yup";
 
 export const yupValidator: Validator<Schema> = {
 	async validate({ schema, value, field }) {
@@ -36,7 +36,7 @@ export const yupValidator: Validator<Schema> = {
 		}
 	},
 
-	extractSchema(schema, field) {
-		return reach(schema, field) as Schema;
-	},
+	// extractSchema(schema, field) {
+	// 	return reach(schema, field) as Schema;
+	// },
 };

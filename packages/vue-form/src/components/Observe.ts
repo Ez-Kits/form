@@ -1,4 +1,5 @@
 import { type FormInstance } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { useInjectForm } from "src/provides/form";
 import { defineComponent, type PropType } from "vue";
 
@@ -34,12 +35,15 @@ export default Observe;
 
 type BaseObserveType = typeof ObserveImpl;
 
-export type ObserveComponent<FormValues> = Omit<BaseObserveType, "$props"> & {
+export type ObserveComponent<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = Omit<BaseObserveType, "$props"> & {
 	new (): {
 		$props: ObserveProps<FormValues>;
 		$slots: {
 			default: (helpers: {
-				form: FormInstance<FormValues>;
+				form: FormInstance<FormValues, ValidationSchema>;
 				values: any;
 			}) => void;
 		};

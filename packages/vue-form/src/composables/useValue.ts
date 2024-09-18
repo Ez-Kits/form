@@ -5,6 +5,7 @@ import type {
 	FormInstance,
 	FormMeta,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { ref, type Ref } from "vue";
 
 export interface UseFormDataValues<FormValues> {
@@ -12,8 +13,12 @@ export interface UseFormDataValues<FormValues> {
 	values: FormValues;
 }
 
-export function useFormData<FormValues, T = UseFormDataValues<FormValues>>(
-	form: FormInstance<FormValues>,
+export function useFormData<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = UseFormDataValues<FormValues>
+>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: UseFormDataValues<FormValues>) => T
 ): Ref<T> {
 	function getValue() {
@@ -34,8 +39,12 @@ export function useFormData<FormValues, T = UseFormDataValues<FormValues>>(
 	return data;
 }
 
-export function useFormValues<FormValues, T = FormValues>(
-	form: FormInstance<FormValues>,
+export function useFormValues<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FormValues
+>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: FormValues) => T
 ): Ref<T> {
 	return useFormData(form, ({ values }) =>
@@ -43,8 +52,8 @@ export function useFormValues<FormValues, T = FormValues>(
 	) as Ref<T>;
 }
 
-export function useFormMeta<FormValues, T = FormMeta>(
-	form: FormInstance<FormValues>,
+export function useFormMeta<FormValues, ValidationSchema, T = FormMeta>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: FormMeta) => T
 ) {
 	return useFormData(form, ({ meta }) =>
@@ -60,9 +69,10 @@ export interface UseFieldDataValues<FieldValue> {
 export function useFieldData<
 	FieldValue,
 	FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	T = UseFormDataValues<FieldValue>
 >(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: UseFieldDataValues<FieldValue>) => T
 ): Ref<T> {
 	function getValue() {
@@ -79,8 +89,13 @@ export function useFieldData<
 	return data;
 }
 
-export function useFieldValue<FieldValue, FormValues, T = FieldValue>(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+export function useFieldValue<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FieldValue
+>(
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: FieldValue) => T
 ): Ref<T> {
 	return useFieldData(field, ({ value }) =>
@@ -88,8 +103,13 @@ export function useFieldValue<FieldValue, FormValues, T = FieldValue>(
 	) as Ref<T>;
 }
 
-export function useFieldMeta<FieldValue, FormValues, T = FieldValue>(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+export function useFieldMeta<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FieldValue
+>(
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: FieldMeta) => T
 ) {
 	return useFieldData(field, ({ meta }) =>
@@ -97,8 +117,10 @@ export function useFieldMeta<FieldValue, FormValues, T = FieldValue>(
 	) as Ref<T>;
 }
 
-export function useFieldsInfo<FieldValue, FormValues>(
-	field: FieldArrayInstance<FieldValue, FormValues>
-) {
+export function useFieldsInfo<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(field: FieldArrayInstance<FieldValue, FormValues, ValidationSchema>) {
 	return useFieldData(field, () => field.getFieldsInfo());
 }

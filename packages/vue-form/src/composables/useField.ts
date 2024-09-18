@@ -20,6 +20,7 @@ import {
 	useFieldValue,
 	type UseFieldDataValues,
 } from "src/composables/useValue";
+import type { DefaultValidationSchema } from "src/global";
 import { provideField } from "src/provides/field";
 import { useInjectForm } from "src/provides/form";
 import type { FieldNameProps } from "src/utilities/field";
@@ -36,9 +37,9 @@ import {
 } from "vue";
 
 declare module "@ez-kits/form-core" {
-	interface FieldInstance<FieldValue, FormValues> {
-		useField: UseField<FormValues, FieldValue>;
-		useFieldArray: UseFieldArray<FormValues, FieldValue>;
+	interface FieldInstance<FieldValue, FormValues, ValidationSchema> {
+		useField: UseField<FormValues, FieldValue, ValidationSchema>;
+		useFieldArray: UseFieldArray<FormValues, FieldValue, ValidationSchema>;
 
 		getInputProps(node: VNode): Record<string, any>;
 		useFieldValue: <T = FieldValue>(
@@ -49,11 +50,11 @@ declare module "@ez-kits/form-core" {
 			selector?: (values: UseFieldDataValues<FieldValue>) => T
 		) => Ref<T>;
 
-		Field: FieldComponent<FormValues, FieldValue>;
-		FieldArray: FieldArrayComponent<FormValues, FieldValue>;
+		Field: FieldComponent<FormValues, FieldValue, ValidationSchema>;
+		FieldArray: FieldArrayComponent<FormValues, FieldValue, ValidationSchema>;
 	}
 
-	interface FieldOptions<FieldValue, FormValues> {
+	interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 		valuePropName?: string;
 		onChangePropName?: string;
 		onBlurPropName?: string;
@@ -64,17 +65,21 @@ declare module "@ez-kits/form-core" {
 export type UseFieldProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues>, "name">;
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
 
 export default function useField<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
->(options: MaybeRef<UseFieldProps<FormValues, ParentValue, N>>) {
-	const form = useInjectForm<FormValues>();
+>(
+	options: MaybeRef<UseFieldProps<FormValues, ParentValue, ValidationSchema, N>>
+) {
+	const form = useInjectForm<FormValues, ValidationSchema>();
 
 	const name = computed(() => {
 		const optionsValue = toValue(options);
@@ -197,9 +202,13 @@ export default function useField<
 	return field;
 }
 
-export type UseField<FormValues, ParentValue = FormValues> = <
+export type UseField<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 >(
-	options: UseFieldProps<FormValues, ParentValue, N>
-) => FieldInstance<FieldValue, FormValues>;
+	options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>
+) => FieldInstance<FieldValue, FormValues, ValidationSchema>;

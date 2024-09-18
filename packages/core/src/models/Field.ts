@@ -1,3 +1,6 @@
+import FieldInstance from "src/Field";
+import FieldArrayInstance from "src/FieldArray";
+import FormInstance from "src/Form";
 import { GetKeys } from "src/models/Utilities";
 import type {
 	ValidateError,
@@ -13,14 +16,28 @@ export interface FieldMeta {
 	validationCount: number;
 }
 
+export type FieldValidationSchema<ValidationSchema> =
+	| ValidationSchemaInput<ValidationSchema>
+	| ValidationSchemaInput<ValidationSchema>[];
+
 export interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 	name: GetKeys<FormValues>;
 	label?: string;
 	initialValue?: FieldValue;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
 	validationSchema?:
-		| ValidationSchemaInput<ValidationSchema>
-		| ValidationSchemaInput<ValidationSchema>[];
+		| FieldValidationSchema<ValidationSchema>
+		| ((
+				value: FieldValue,
+				otherInfo: {
+					field: FieldValue extends any[]
+						? FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
+						: FieldInstance<FieldValue, FormValues, ValidationSchema>;
+					form: FormInstance<FormValues, ValidationSchema>;
+				}
+		  ) =>
+				| PromiseLike<FieldValidationSchema<ValidationSchema>>
+				| FieldValidationSchema<ValidationSchema>);
 	// preserveValue?: boolean;
 	onChange?: (value: FieldValue) => void;
 	onBlur?: (event: any) => void;

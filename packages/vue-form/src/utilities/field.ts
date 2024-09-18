@@ -1,8 +1,9 @@
 import type {
-	FieldAsyncValidatorSchema,
+	FieldOptions,
 	GetKeys,
 	ValidateTrigger,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import type { PropType } from "vue";
 
 export type FieldNameProps<
@@ -12,7 +13,11 @@ export type FieldNameProps<
 	? { index: number; name?: N }
 	: { index?: number; name: N };
 
-export function fieldProps<FieldValue, FormValues>(namePrefix?: string) {
+export function fieldProps<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(namePrefix?: string) {
 	return {
 		name: {
 			type: String as unknown as PropType<GetKeys<FormValues>>,
@@ -44,11 +49,13 @@ export function fieldProps<FieldValue, FormValues>(namePrefix?: string) {
 			required: false,
 		},
 		validationSchema: {
-			type: Object as PropType<FieldAsyncValidatorSchema>,
-			required: false,
-		},
-		validateFirst: {
-			type: Boolean,
+			type: [Object, Function, Array] as PropType<
+				FieldOptions<
+					FieldValue,
+					FormValues,
+					ValidationSchema
+				>["validationSchema"]
+			>,
 			required: false,
 		},
 		// preserveValue: {
@@ -78,7 +85,11 @@ export function fieldProps<FieldValue, FormValues>(namePrefix?: string) {
 	};
 }
 
-export function fieldArrayProps<FieldValue, FormValues>(namePrefix?: string) {
+export function fieldArrayProps<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(namePrefix?: string) {
 	return {
 		name: {
 			type: String as unknown as PropType<GetKeys<FormValues>>,
@@ -106,11 +117,13 @@ export function fieldArrayProps<FieldValue, FormValues>(namePrefix?: string) {
 			required: false,
 		},
 		validationSchema: {
-			type: Object as PropType<FieldAsyncValidatorSchema>,
-			required: false,
-		},
-		validateFirst: {
-			type: Boolean,
+			type: [Object, Function, Array] as PropType<
+				FieldOptions<
+					FieldValue,
+					FormValues,
+					ValidationSchema
+				>["validationSchema"]
+			>,
 			required: false,
 		},
 		// preserveValue: {

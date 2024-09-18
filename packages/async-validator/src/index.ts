@@ -1,10 +1,8 @@
-import { castPath, GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
+import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
 import Schema, { Rule, ValidateError } from "async-validator";
 
 export const asyncValidator: Validator<Rule> = {
 	async validate({ schema, value, field }) {
-		console.log("Validating", field, value);
-
 		const validator = new Schema({
 			__private__: schema,
 		});
@@ -33,27 +31,36 @@ export const asyncValidator: Validator<Rule> = {
 				};
 			});
 	},
-	
-	extractSchema(schema, field) {
-		try {
-			const paths = castPath(field);
-			let resultSchema = schema;
-			for (const path of paths) {
-				const maybeNumberPath = Number(path);
-				const isNumberPath = !Number.isNaN(maybeNumberPath);
 
-				if (isNumberPath) {
-					resultSchema = ;
-				} else {
-					resultSchema = (resultSchema as ZodObject<any>).shape[path];
-				}
-			}
-			
-			return resultSchema;
-		} catch {
-			return schema;
-		}
-	},
+	// extractSchema(schema, field) {
+	// 	try {
+	// 		const paths = castPath(field);
+	// 		let resultSchema = schema;
+	// 		for (const path of paths) {
+	// 			const maybeNumberPath = Number(path);
+	// 			const isNumberPath = !Number.isNaN(maybeNumberPath);
+
+	// 			if (isNumberPath) {
+	// 				resultSchema = Array.isArray(resultSchema)
+	// 					? (resultSchema
+	// 							.map((schema) => schema.defaultField)
+	// 							.filter(Boolean) as RuleItem[])
+	// 					: ((resultSchema.defaultField ??
+	// 							resultSchema.fields?.[maybeNumberPath]) as RuleItem);
+	// 			} else {
+	// 				resultSchema = Array.isArray(resultSchema)
+	// 					? (resultSchema
+	// 							.map((schema) => schema.fields?.[path])
+	// 							.filter(Boolean) as RuleItem[])
+	// 					: (resultSchema.fields?.[path] as RuleItem);
+	// 			}
+	// 		}
+
+	// 		return resultSchema;
+	// 	} catch {
+	// 		return schema;
+	// 	}
+	// },
 };
 
 function getFieldPath(path: string, field?: string) {

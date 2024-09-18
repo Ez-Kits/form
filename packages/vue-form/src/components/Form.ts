@@ -1,11 +1,15 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 import type { FormInstance, FormOptions } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { useForm } from "src/index";
 import { formProps } from "src/utilities/form";
 import { defineComponent, getCurrentInstance } from "vue";
 
-export interface FormProps<FormValues> extends FormOptions<FormValues> {
-	form?: FormInstance<FormValues>;
+export interface FormProps<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> extends FormOptions<FormValues, ValidationSchema> {
+	form?: FormInstance<FormValues, ValidationSchema>;
 }
 
 const FormImpl = defineComponent({
@@ -28,9 +32,12 @@ export default EzForm;
 
 type BaseFormType = typeof FormImpl;
 
-export type FormComponent<FormValues> = Omit<BaseFormType, "$props"> & {
+export type FormComponent<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = Omit<BaseFormType, "$props"> & {
 	new (): {
-		$props: FormProps<FormValues>;
+		$props: FormProps<FormValues, ValidationSchema>;
 		$slots: {
 			default: () => any;
 		};

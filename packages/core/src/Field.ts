@@ -21,47 +21,6 @@ export default class FieldInstance<
 > {
 	protected managerName = "Field";
 
-	// Handle mount and unmount
-	mount = () => {
-		this.form.addField(this);
-
-		const offChangeValue = this.form.on("change:value", () => {
-			const newValue = this.getValue();
-			const oldValue = this.value;
-
-			if (oldValue !== newValue) {
-				this.value = newValue;
-				this.setMetaKey("dirty", true);
-
-				this.trigger("change:value", this.value, oldValue);
-				this.trigger("change", this);
-			}
-		});
-
-		const offThisChangeMeta = this.on("change:meta", () => {
-			const { dirty, touched } = this.meta;
-
-			dirty && this.form.setMetaKey("dirty", true);
-			touched && this.form.setMetaKey("touched", true);
-		});
-
-		const offFormReset = this.form.on("reset", () => {
-			this.initialize();
-		});
-
-		const offFormReInitialize = this.form.on("reInitialize", () => {
-			this.initialize();
-		});
-
-		return () => {
-			offChangeValue();
-			offThisChangeMeta();
-			offFormReInitialize();
-			offFormReset();
-			this.form.removeField(this);
-		};
-	};
-
 	// Handle field's input events
 	handleChange = (event: any) => {
 		let value = event;

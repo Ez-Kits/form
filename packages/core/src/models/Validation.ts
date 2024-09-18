@@ -1,4 +1,4 @@
-export type ValidateTrigger = "change" | "blur";
+export type ValidateTrigger = "change" | "blur" | "submit";
 
 export interface ValidationOptions {
 	trigger?: ValidateTrigger | ValidateTrigger[];
@@ -30,13 +30,12 @@ export interface ValidatorProps<Schema> {
 
 export type Validator<Schema> = {
 	validate: (props: ValidatorProps<Schema>) => PromiseLike<ValidationResult>;
-	extractSchema(schema: Schema, field: string): Schema;
 };
 
 export type ValidationSchemaInput<Schema> =
 	| Schema
 	| {
-			trigger: ValidateTrigger;
+			trigger: ValidateTrigger | ValidateTrigger[];
 			schema: Schema;
 	  };
 
