@@ -5,7 +5,7 @@ import {
 	FormOptions,
 	UpdateValueOptions,
 	ValidateError,
-	ValidationOption,
+	ValidationOptions,
 	ValidationResult,
 } from "src/models";
 import { GetKeys, GetType } from "src/models/Utilities";
@@ -14,6 +14,7 @@ import {
 	clone,
 	get,
 	isEqual,
+	normalizeErrors,
 	set,
 	uniqueId,
 } from "src/utilities";
@@ -22,10 +23,9 @@ import {
 	ControlledPromise,
 	createControlledPromise,
 } from "src/utilities/promise";
-import { ValidationSchema, normalizeErrors } from "src/validation";
 
-type FormEvents<Values> = {
-	change: [form: FormInstance<Values>];
+type FormEvents<Values, ValidationInput> = {
+	change: [form: FormInstance<Values, ValidationInput>];
 	"change:value": [values: Values, oldValues: Values];
 	"change:meta": [meta: FormMeta, oldMeta: FormMeta];
 	reset: [];
@@ -36,21 +36,22 @@ type FormEvents<Values> = {
 };
 
 export default class FormInstance<
-	Values = unknown
-> extends EventListenersManager<FormEvents<Values>> {
+	Values,
+	ValidationSchema
+> extends EventListenersManager<FormEvents<Values, ValidationSchema>> {
 	protected managerName = "Form";
 
 	uid: string = uniqueId();
 	name!: string;
 	values!: Values;
 	meta!: FormMeta;
-	options: FormOptions<Values>;
-	private fields: Set<FieldBaseInstance<any, Values>> = new Set([]);
+	options: FormOptions<Values, ValidationSchema>;
+	private fields: Set<FieldBaseInstance<any, Values, ValidationSchema>> =
+		new Set([]);
 
 	private validationPromise?: ControlledPromise<ValidationResult>;
-	private validationSchema?: ValidationSchema<GetKeys<Values>>;
 
-	constructor(options?: Partial<FormOptions<Values>>) {
+	constructor(options?: Partial<FormOptions<Values, ValidationSchema>>) {
 		super();
 		this.options = Object.assign(
 			{
@@ -64,8 +65,6 @@ export default class FormInstance<
 		);
 
 		this.initialize(false);
-
-		this.updateValidationSchema(options?.validationSchema);
 	}
 
 	initialize(notify = true) {
@@ -94,7 +93,7 @@ export default class FormInstance<
 		}
 	}
 
-	updateOptions = (options: Partial<FormOptions<Values>>) => {
+	updateOptions = (options: Partial<FormOptions<Values, ValidationSchema>>) => {
 		if (this.options.name !== options.name) {
 			const oldName = this.name;
 			this.name = options.name ?? uniqueId();
@@ -102,8 +101,6 @@ export default class FormInstance<
 		}
 
 		this.options = options;
-
-		this.updateValidationSchema(options?.validationSchema);
 
 		if (
 			this.options.enableReinitialize &&
@@ -115,7 +112,7 @@ export default class FormInstance<
 	};
 
 	mount = () => {
-		const fieldsToAdd: FieldBaseInstance<any, any>[] = [];
+		const fieldsToAdd: FieldBaseInstance<any, any, ValidationSchema>[] = [];
 		this.fields.forEach((field) => {
 			if (field.options.registerInstance !== false) {
 				fieldsToAdd.push(field);
@@ -168,7 +165,7 @@ export default class FormInstance<
 	};
 
 	// Handle fields
-	addField = (field: FieldBaseInstance<any, Values>) => {
+	addField = (field: FieldBaseInstance<any, Values, ValidationSchema>) => {
 		if (!this.fields.has(field)) {
 			this.fields.add(field);
 
@@ -181,7 +178,7 @@ export default class FormInstance<
 		};
 	};
 
-	removeField = (field: FieldBaseInstance<any, Values>) => {
+	removeField = (field: FieldBaseInstance<any, Values, ValidationSchema>) => {
 		const fieldName = field.name;
 		const registerInstance = field.options.registerInstance;
 
@@ -209,7 +206,9 @@ export default class FormInstance<
 	};
 
 	removeFieldByUid = (uid: string) => {
-		let result: FieldBaseInstance<unknown, Values> | undefined;
+		let result:
+			| FieldBaseInstance<unknown, Values, ValidationSchema>
+			| undefined;
 		this.fields.forEach((field) => {
 			if (field.uid === uid) {
 				result = field;
@@ -224,8 +223,10 @@ export default class FormInstance<
 
 	getFieldByName = <N extends GetKeys<Values>>(
 		name: N
-	): FieldBaseInstance<GetType<Values, N>, Values> => {
-		let result: FieldBaseInstance<GetType<Values, N>, Values> | undefined;
+	): FieldBaseInstance<GetType<Values, N>, Values, ValidationSchema> => {
+		let result:
+			| FieldBaseInstance<GetType<Values, N>, Values, ValidationSchema>
+			| undefined;
 		this.fields.forEach((field) => {
 			if (field.name === name) {
 				result = field;
@@ -240,9 +241,11 @@ export default class FormInstance<
 	};
 
 	filterFields = (
-		compareFn: (field: FieldBaseInstance<unknown, Values>) => boolean
-	): FieldBaseInstance<unknown, Values>[] => {
-		const result: FieldBaseInstance<unknown, Values>[] = [];
+		compareFn: (
+			field: FieldBaseInstance<unknown, Values, ValidationSchema>
+		) => boolean
+	): FieldBaseInstance<unknown, Values, ValidationSchema>[] => {
+		const result: FieldBaseInstance<unknown, Values, ValidationSchema>[] = [];
 		this.fields.forEach((field) => {
 			if (compareFn(field)) {
 				result.push(field);
@@ -293,23 +296,26 @@ export default class FormInstance<
 					this.trigger("error", errors);
 				}
 			})
-			.catch((error) => {
+			.catch(() => {
 				this.setMetaKey("submitting", false);
 			});
 	};
 
 	// Handle validate
 	getValidationSchema = () => {
-		return this.validationSchema;
+		return this.options.validationSchema;
 	};
 
-	private updateValidationSchema = (
-		schema?: ValidationSchema<GetKeys<Values>>
-	) => {
-		this.validationSchema = schema;
-	};
+	validate = (options?: ValidationOptions) => {
+		const validator = this.options.validator;
+		if (!validator) {
+			this.setMetaKey("errors", []);
+			return Promise.resolve({
+				valid: true,
+				errors: [],
+			});
+		}
 
-	validate = (options?: ValidationOption) => {
 		this.setMetaKey("validationCount", this.meta.validationCount + 1);
 		this.setMetaKey("validating", true);
 
@@ -322,13 +328,22 @@ export default class FormInstance<
 				this.setMetaKey("validating", false);
 			});
 
-		const fieldValidationPromisees: Promise<ValidationResult>[] = [];
+		const validationPromisees: Promise<ValidationResult>[] = [];
+
+		// if (this.options.validationSchema) {
+		// 	const formValidationResult = validator({
+		// 		schema: this.options.validationSchema,
+		// 		value: this.values,
+		// 	});
+		// 	validationPromisees.push(Promise.resolve(formValidationResult));
+		// } else {
+		// }
 
 		this.fields.forEach((field) => {
-			fieldValidationPromisees.push(field.validate(options));
+			validationPromisees.push(field.validate(options));
 		});
 
-		Promise.all(fieldValidationPromisees)
+		Promise.all(validationPromisees)
 			.then((results) => {
 				if (!this.validationPromise) {
 					return;
@@ -348,14 +363,14 @@ export default class FormInstance<
 					errors,
 				});
 			})
-			.catch((error) => {});
+			.catch(() => {});
 
 		return this.validationPromise;
 	};
 
-	validateFields = <Field extends GetKeys<Values>>(
+	validateFields = async <Field extends GetKeys<Values>>(
 		fields: Field | Field[],
-		options?: ValidationOption
+		options?: ValidationOptions
 	): Promise<ValidationResult> => {
 		const fieldList = toArray(fields);
 		const fieldValidationPromisees: Promise<ValidationResult>[] = [];

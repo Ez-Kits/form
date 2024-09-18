@@ -11,6 +11,7 @@ import {
 } from "@ez-kits/form-core";
 import type { ReactElement, ReactNode } from "react";
 import fieldContext from "src/contexts/fieldContext";
+import type { DefaultValidationSchema } from "src/global";
 import useField from "src/hooks/useField";
 import useFormContext from "src/hooks/useFormContext";
 import type { FieldNameProps } from "src/utilities";
@@ -18,25 +19,32 @@ import type { FieldNameProps } from "src/utilities";
 export type FieldProps<
 	FormValue,
 	ParentValue = FormValue,
+	ValidationSchema = DefaultValidationSchema,
 	N extends string = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
 		| ReactNode
 		| ((helpers: {
-				form: FormInstance<FormValue>;
-				field: FieldInstance<FieldValue, FormValue>;
+				form: FormInstance<FormValue, ValidationSchema>;
+				field: FieldInstance<FieldValue, FormValue, ValidationSchema>;
 				value: FieldValue;
 				meta: FieldMeta;
 		  }) => ReactNode);
-} & Omit<FieldOptions<FieldValue, FormValue>, "name">;
+} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name">;
 
-export default function Field<FormValues, ParentValue = FormValues>({
+export default function Field<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+>({
 	children,
 	...options
-}: FieldProps<FormValues, ParentValue>) {
-	const field = useField<FormValues, ParentValue>(options as any);
-	const form = useFormContext<FormValues>();
+}: FieldProps<FormValues, ParentValue, ValidationSchema>) {
+	const field = useField<FormValues, ParentValue, ValidationSchema>(
+		options as any
+	);
+	const form = useFormContext<FormValues, ValidationSchema>();
 	const value = field.useFieldValue();
 	const meta = field.useFieldMeta();
 
@@ -51,6 +59,10 @@ export default function Field<FormValues, ParentValue = FormValues>({
 
 Field.displayName = "Field";
 
-export type FieldComponent<FormValue, ParentValue = FormValue> = (
-	props: FieldProps<FormValue, ParentValue>
+export type FieldComponent<
+	FormValue,
+	ParentValue = FormValue,
+	ValidationSchema = DefaultValidationSchema
+> = <N extends string = GetKeys<ParentValue>>(
+	props: FieldProps<FormValue, ParentValue, ValidationSchema, N>
 ) => ReactElement;

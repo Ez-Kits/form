@@ -12,6 +12,7 @@ import type { FieldComponent } from "src/components/Field";
 import Field from "src/components/Field";
 import type { FieldArrayComponent } from "src/components/FieldArray";
 import FieldArray from "src/components/FieldArray";
+import type { DefaultValidationSchema } from "src/global";
 import useFormContext from "src/hooks/useFormContext";
 import {
 	useFieldData,
@@ -22,35 +23,37 @@ import {
 import type { FieldNameProps } from "src/utilities";
 
 declare module "@ez-kits/form-core" {
-	interface FieldArrayInstance<FieldValue, FormValues> {
+	interface FieldArrayInstance<FieldValue, FormValues, ValidationSchema> {
 		useFieldValue: <T = FieldValue>(selector?: (values: FieldValue) => T) => T;
 		useFieldMeta: <T = FieldMeta>(selector?: (meta: FieldMeta) => T) => T;
 		useFieldData: <T = UseFieldDataValues<FieldValue>>(
 			selector?: (values: UseFieldDataValues<FieldValue>) => T
 		) => T;
 
-		Field: FieldComponent<FormValues, FieldValue>;
-		FieldArray: FieldArrayComponent<FormValues, FieldValue>;
+		Field: FieldComponent<FormValues, FieldValue, ValidationSchema>;
+		FieldArray: FieldArrayComponent<FormValues, FieldValue, ValidationSchema>;
 	}
 }
 
 export type UseFieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends string = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
 	Omit<
-		FieldOptions<FieldValue, FormValues>,
+		FieldOptions<FieldValue, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
 	>;
 
 export default function useFieldArray<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
->(options: UseFieldArrayProps<FormValues, ParentValue, N>) {
-	const form = useFormContext<FormValues>();
+>(options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>) {
+	const form = useFormContext<FormValues, ValidationSchema>();
 
 	const name = useMemo(() => {
 		const { index, namePrefix, name } = options as any;
@@ -83,7 +86,7 @@ export default function useFieldArray<
 		};
 
 		fieldInstance.Field = (props) => {
-			return <Field namePrefix={fieldInstance.name} {...props} />;
+			return <Field namePrefix={fieldInstance.name} {...(props as any)} />;
 		};
 		fieldInstance.FieldArray = (props) => {
 			return <FieldArray namePrefix={fieldInstance.name} {...(props as any)} />;
@@ -106,8 +109,9 @@ export default function useFieldArray<
 export type UseFieldArray<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue extends any[] = GetType<ParentValue, N> & []
 > = (
-	options: UseFieldArrayProps<FormValues, ParentValue, N>
-) => FieldArrayInstance<FieldValue, FormValues>;
+	options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
+) => FieldArrayInstance<FieldValue, FormValues, ValidationSchema>;

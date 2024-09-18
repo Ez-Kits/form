@@ -6,8 +6,8 @@ import { toArray } from "src/utilities/array";
 
 type GetArrayItemType<T> = ToArray<T>[number];
 
-export type FieldArrayEvents<Value, FormValues> = {
-	change: [field: FieldArrayInstance<Value, FormValues>];
+export type FieldArrayEvents<Value, FormValues, ValidationSchema> = {
+	change: [field: FieldArrayInstance<Value, FormValues, ValidationSchema>];
 	"change:value": [value: Value, oldValue: Value];
 	"change:meta": [meta: FieldMeta];
 	error: [errors: ValidateError[]];
@@ -30,11 +30,13 @@ export type FieldArrayEvents<Value, FormValues> = {
 
 export default class FieldArrayInstance<
 	FieldValue,
-	FormValues
+	FormValues,
+	ValidationSchema
 > extends FieldBaseInstance<
 	FieldValue,
 	FormValues,
-	FieldArrayEvents<FieldValue, FormValues>
+	ValidationSchema,
+	FieldArrayEvents<FieldValue, FormValues, ValidationSchema>
 > {
 	protected managerName = "FieldArray";
 	private get fields(): FieldValue {
@@ -47,8 +49,8 @@ export default class FieldArrayInstance<
 	private keys: string[] = [];
 
 	constructor(
-		form: FormInstance<FormValues>,
-		options: FieldOptions<FieldValue, FormValues>
+		form: FormInstance<FormValues, ValidationSchema>,
+		options: FieldOptions<FieldValue, FormValues, ValidationSchema>
 	) {
 		super(form, options);
 	}
@@ -270,8 +272,8 @@ export default class FieldArrayInstance<
 	getItemFieldInstances(index: number) {
 		return this.form.filterFields((field) => {
 			return (
-				(field.name as string).startsWith(`${this.name}[${index}]`) ||
-				(field.name as string).startsWith(`${this.name}.${index}`)
+				field.name.startsWith(`${this.name}[${index}]`) ||
+				field.name.startsWith(`${this.name}.${index}`)
 			);
 		});
 	}

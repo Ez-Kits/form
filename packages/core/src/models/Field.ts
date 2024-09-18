@@ -1,6 +1,9 @@
 import { GetKeys } from "src/models/Utilities";
-import type { ValidateError, ValidateTrigger } from "src/models/Validation";
-import { FieldValidationSchema } from "src/validation/ValidationSchema";
+import type {
+	ValidateError,
+	ValidateTrigger,
+	ValidationSchemaInput,
+} from "src/models/Validation";
 
 export interface FieldMeta {
 	errors?: ValidateError[];
@@ -10,13 +13,14 @@ export interface FieldMeta {
 	validationCount: number;
 }
 
-export interface FieldOptions<FieldValue, FormValues> {
+export interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 	name: GetKeys<FormValues>;
 	label?: string;
 	initialValue?: FieldValue;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
-	validationSchema?: FieldValidationSchema;
-	validateFirst?: boolean;
+	validationSchema?:
+		| ValidationSchemaInput<ValidationSchema>
+		| ValidationSchemaInput<ValidationSchema>[];
 	// preserveValue?: boolean;
 	onChange?: (value: FieldValue) => void;
 	onBlur?: (event: any) => void;

@@ -4,9 +4,9 @@ import FormInstance from "src/Form";
 import GlobalInstances from "src/GlobalInstances";
 import { GetKeys, GetType } from "src/models";
 
-export function getFormInstance<Values = unknown>(
+export function getFormInstance<Values, ValidationSchema>(
 	name: string
-): FormInstance<Values> | undefined {
+): FormInstance<Values, ValidationSchema> | undefined {
 	const group = GlobalInstances.getGroup(name);
 
 	if (group) {
@@ -17,12 +17,13 @@ export function getFormInstance<Values = unknown>(
 }
 
 export function getFieldInstance<
-	Values = unknown,
+	Values,
+	ValidationSchema,
 	N extends GetKeys<Values> = GetKeys<Values>
 >(
 	formName: string,
 	fieldName: N
-): FieldInstance<GetType<Values, N>, Values> | undefined {
+): FieldInstance<GetType<Values, N>, Values, ValidationSchema> | undefined {
 	const group = GlobalInstances.getGroup(formName);
 
 	if (group) {
@@ -34,12 +35,15 @@ export function getFieldInstance<
 }
 
 export function getFieldArrayInstance<
-	Values = unknown,
+	Values,
+	ValidationSchema,
 	N extends GetKeys<Values> = GetKeys<Values>
 >(
 	formName: string,
 	fieldName: N
-): FieldArrayInstance<GetType<Values, N>, Values> | undefined {
+):
+	| FieldArrayInstance<GetType<Values, N>, Values, ValidationSchema>
+	| undefined {
 	const group = GlobalInstances.getGroup(formName);
 
 	if (group) {

@@ -5,8 +5,8 @@ import { EventListenersManager } from "src/utilities";
 type GlobalInstanceMap = Record<
 	string,
 	{
-		form: FormInstance<any>;
-		fields: Record<string, FieldBaseInstance<any, any>>;
+		form: FormInstance<any, any>;
+		fields: Record<string, FieldBaseInstance<any, any, any>>;
 	}
 >;
 
@@ -25,7 +25,10 @@ class GlobalInstances extends EventListenersManager<GlobalInstancesEvents> {
 		return name in this.instances ? this.instances[name] : undefined;
 	};
 
-	addForm = (form: FormInstance, fields?: FieldBaseInstance<any, any>[]) => {
+	addForm = (
+		form: FormInstance<any, any>,
+		fields?: FieldBaseInstance<any, any, any>[]
+	) => {
 		const instanceGroup = this.getGroup(form.name);
 
 		if (instanceGroup) {
@@ -60,7 +63,7 @@ class GlobalInstances extends EventListenersManager<GlobalInstancesEvents> {
 
 	addField = <FieldValue, FormValues>(
 		formName: string,
-		...fields: FieldBaseInstance<FieldValue, FormValues>[]
+		...fields: FieldBaseInstance<FieldValue, FormValues, any>[]
 	) => {
 		const instanceGroup = this.getGroup(formName);
 		if (!instanceGroup) {

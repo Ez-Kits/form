@@ -17,6 +17,12 @@
 	},
 	"dependencies": {
 		"solid-js": "^1.7.6",
-		"@ez-kits/form-solid": "*"
+		"@ez-kits/form-solid": "*",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	}
 }

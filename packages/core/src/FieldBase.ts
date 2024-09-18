@@ -5,8 +5,9 @@ import {
 	FieldOptions,
 	UpdateValueOptions,
 	ValidateError,
-	ValidationOption,
+	ValidationOptions,
 	ValidationResult,
+	ValidationSchemaInput,
 } from "src/models";
 import { GetKeys } from "src/models/Utilities";
 import {
@@ -16,12 +17,11 @@ import {
 	set,
 	uniqueId,
 } from "src/utilities";
+import { toArray } from "src/utilities/array";
 import {
 	ControlledPromise,
 	createControlledPromise,
 } from "src/utilities/promise";
-import { SELF_KEY, isFieldValidationSchema } from "src/validation";
-import { FieldValidationSchema } from "src/validation/ValidationSchema";
 
 export type DefaultFieldEvents<Value> = {
 	change: [field: any];
@@ -34,21 +34,22 @@ export type DefaultFieldEvents<Value> = {
 export default abstract class FieldBaseInstance<
 	FieldValue,
 	FormValues,
+	ValidationSchema,
 	FieldEvents extends DefaultFieldEvents<FieldValue> = DefaultFieldEvents<FieldValue>
 > extends EventListenersManager<FieldEvents> {
 	protected managerName = "Field";
 
 	name!: GetKeys<FormValues>;
 	value!: FieldValue;
-	protected form!: FormInstance<FormValues>;
-	options!: FieldOptions<FieldValue, FormValues>;
+	protected form: FormInstance<FormValues, ValidationSchema>;
+	options!: FieldOptions<FieldValue, FormValues, ValidationSchema>;
 	meta!: FieldMeta;
 	uid: string = uniqueId();
 	protected validationPromise?: ControlledPromise<ValidationResult>;
 
 	constructor(
-		form: FormInstance<FormValues>,
-		options: FieldOptions<FieldValue, FormValues>
+		form: FormInstance<FormValues, ValidationSchema>,
+		options: FieldOptions<FieldValue, FormValues, ValidationSchema>
 	) {
 		super();
 		this.form = form;
@@ -62,7 +63,7 @@ export default abstract class FieldBaseInstance<
 	initialize = (notify = true) => {
 		this.name = this.options.name;
 		const oldValue = this.value;
-		this.value = (clone(get(this.form.options.initialValues, this.name)) ??
+		this.value = (clone(get(this.form.values, this.name)) ??
 			this.options.initialValue) as FieldValue;
 
 		this.form.setFieldValue(this.name, this.value as any, {
@@ -88,7 +89,9 @@ export default abstract class FieldBaseInstance<
 		}
 	};
 
-	updateOptions = (options: FieldOptions<FieldValue, FormValues>) => {
+	updateOptions = (
+		options: FieldOptions<FieldValue, FormValues, ValidationSchema>
+	) => {
 		if (this.options.name !== options.name) {
 			const oldName = this.name;
 			this.name = options.name;
@@ -140,37 +143,46 @@ export default abstract class FieldBaseInstance<
 	};
 
 	// Handle validate
-	private getValidationSchema = () => {
-		if (
-			this.options.validationSchema &&
-			!isFieldValidationSchema(this.options.validationSchema)
-		) {
-			throw new Error(
-				"[Field.options.validationSchema] must be FieldValidationSchema."
+	private getValidationSchema = (
+		options: ValidationOptions
+	): ValidationSchemaInput<ValidationSchema>[] => {
+		if (!this.options.validationSchema) {
+			return [];
+		}
+
+		if (!options.trigger) {
+			return toArray(this.options.validationSchema);
+		}
+
+		const schemas = toArray(this.options.validationSchema);
+		const filteredSchemas = schemas.filter((schema) => {
+			if (schema && typeof schema === "object" && "trigger" in schema) {
+				return schema.trigger === options.trigger;
+			}
+
+			return true;
+		});
+
+		if (this.form.options.validator && this.form.options.validationSchema) {
+			filteredSchemas.push(
+				this.form.options.validator.extractSchema(
+					this.form.options.validationSchema,
+					this.name
+				)
 			);
 		}
 
-		let validationSchema = this.options.validationSchema
-			? this.options.validationSchema.clone()
-			: undefined;
-
-		const formValidationSchema = this.form.getValidationSchema();
-		if (!formValidationSchema) {
-			return validationSchema;
-		}
-
-		if (!validationSchema) {
-			validationSchema = formValidationSchema.clone() as FieldValidationSchema;
-			validationSchema.FOR_FIELD = true;
-			validationSchema.clearRules();
-		}
-
-		validationSchema.addRule(SELF_KEY, formValidationSchema.getRule(this.name));
-
-		return validationSchema;
+		return filteredSchemas;
 	};
 
-	validate = (options?: ValidationOption): Promise<ValidationResult> => {
+	validate = async (options?: ValidationOptions): Promise<ValidationResult> => {
+		const validator = this.form.options.validator;
+
+		if (!validator) {
+			this.setMetaKey("errors", []);
+			return Promise.resolve({ valid: true, errors: [] });
+		}
+
 		this.setMetaKey("validationCount", this.meta.validationCount + 1);
 		this.setMetaKey("validating", true);
 
@@ -183,39 +195,48 @@ export default abstract class FieldBaseInstance<
 				this.setMetaKey("validating", false);
 			});
 
-		const validationSchema = this.getValidationSchema();
+		const validationSchemas = this.getValidationSchema({
+			trigger: options?.trigger,
+		});
 
-		if (!validationSchema) {
+		if (validationSchemas.length === 0) {
 			this.validationPromise.resolve({ valid: true, errors: [] });
 			return this.validationPromise;
 		}
 
-		if (this.form.options.validateMessages) {
-			validationSchema.updateMessages(this.form.options.validateMessages);
-		}
-
-		validationSchema
-			?.validate(this.form.getValues() as any, {
-				selfFieldName: this.name,
-				validateFirst: options?.validateFirst || this.options.validateFirst,
-				...options,
+		Promise.all(
+			validationSchemas.map((schema) => {
+				return validator.validate({
+					schema:
+						typeof schema === "object" && schema && "trigger" in schema
+							? schema.schema
+							: schema,
+					value: this.getValue(),
+					field: this.name,
+				});
 			})
-			.then((result) => {
-				if (!this.validationPromise) {
-					return;
-				}
+		).then((results) => {
+			if (!this.validationPromise) {
+				return;
+			}
 
-				if (!result.valid) {
-					result.errors = this.normalizeValidateErrors(result.errors);
+			const valid = results.every((result) => result.valid);
+			if (!valid) {
+				const errors = this.normalizeValidateErrors(
+					results
+						.filter((result) => !result.valid)
+						.flatMap((result) => result.errors)
+				);
 
-					this.setMetaKey("errors", result.errors);
-					this.trigger("error", result.errors);
-				} else {
-					this.setMetaKey("errors", []);
-				}
+				this.setMetaKey("errors", errors);
+				this.trigger("error", errors);
 
-				this.validationPromise.resolve(result);
-			});
+				this.validationPromise.resolve({ valid: false, errors });
+			} else {
+				this.setMetaKey("errors", []);
+				this.validationPromise.resolve({ valid: true, errors: [] });
+			}
+		});
 
 		return this.validationPromise;
 	};

@@ -11,6 +11,7 @@ import {
 } from "@ez-kits/form-core";
 import { splitProps, type Accessor, type JSXElement } from "solid-js";
 import fieldContext from "src/contexts/fieldContext";
+import type { DefaultValidationSchema } from "src/global";
 import useField from "src/hooks/useField";
 import useFormContext from "src/hooks/useFormContext";
 import type { FieldNameProps } from "src/utilities";
@@ -18,25 +19,30 @@ import type { FieldNameProps } from "src/utilities";
 export type FieldProps<
 	FormValue,
 	ParentValue = FormValue,
+	ValidationSchema = DefaultValidationSchema,
 	N extends string = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
 		| JSXElement
 		| ((helpers: {
-				form: FormInstance<FormValue>;
-				field: FieldInstance<FieldValue, FormValue>;
+				form: FormInstance<FormValue, ValidationSchema>;
+				field: FieldInstance<FieldValue, FormValue, ValidationSchema>;
 				value: Accessor<FieldValue>;
 				meta: Accessor<FieldMeta>;
 		  }) => JSXElement);
-} & Omit<FieldOptions<FieldValue, FormValue>, "name">;
+} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name">;
 
-function Field<FormValues, ParentValue = FormValues>(
-	props: FieldProps<FormValues, ParentValue>
-) {
+function Field<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(props: FieldProps<FormValues, ParentValue, ValidationSchema>) {
 	const [local, options] = splitProps(props, ["children"]);
-	const form = useFormContext<FormValues>();
-	const field = useField<FormValues, ParentValue>(options as any);
+	const form = useFormContext<FormValues, ValidationSchema>();
+	const field = useField<FormValues, ParentValue, ValidationSchema>(
+		options as any
+	);
 	const value = field.useFieldValue();
 	const meta = field.useFieldMeta();
 
@@ -53,6 +59,10 @@ Field.displayName = "Field";
 
 export default Field;
 
-export type FieldComponent<FormValue, ParentValue = FormValue> = (
-	props: FieldProps<FormValue, ParentValue>
+export type FieldComponent<
+	FormValue,
+	ParentValue = FormValue,
+	ValidationSchema = DefaultValidationSchema
+> = <N extends string = GetKeys<ParentValue>>(
+	props: FieldProps<FormValue, ParentValue, ValidationSchema, N>
 ) => JSXElement;

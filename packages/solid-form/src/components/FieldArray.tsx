@@ -11,6 +11,7 @@ import type {
 	GetType,
 } from "@ez-kits/form-core";
 import { splitProps, type Accessor, type JSXElement } from "solid-js";
+import type { DefaultValidationSchema } from "src/global";
 import useFieldArray from "src/hooks/useFieldArray";
 import { useFormContext } from "src/index";
 import type { FieldNameProps } from "src/utilities";
@@ -18,26 +19,35 @@ import type { FieldNameProps } from "src/utilities";
 export type FieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends string = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
 		| JSXElement
 		| ((helpers: {
-				form: FormInstance<FormValues>;
-				fieldArray: FieldArrayInstance<FieldValue, FormValues>;
+				form: FormInstance<FormValues, ValidationSchema>;
+				fieldArray: FieldArrayInstance<
+					FieldValue,
+					FormValues,
+					ValidationSchema
+				>;
 				fieldsInfo: Accessor<FieldArrayItemInfo[]>;
 				value: Accessor<FieldValue>;
 				meta: Accessor<FieldMeta>;
 		  }) => JSXElement);
-} & Omit<FieldOptions<FieldValue, FormValues>, "name">;
+} & Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
 
-function FieldArray<FormValues, ParentValue = FormValues>(
-	props: FieldArrayProps<FormValues, ParentValue>
-) {
+function FieldArray<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(props: FieldArrayProps<FormValues, ParentValue, ValidationSchema>) {
 	const [local, options] = splitProps(props, ["children"]);
-	const fieldArray = useFieldArray<FormValues, ParentValue>(options as any);
-	const form = useFormContext<FormValues>();
+	const fieldArray = useFieldArray<FormValues, ParentValue, ValidationSchema>(
+		options as any
+	);
+	const form = useFormContext<FormValues, ValidationSchema>();
 	const fieldsInfo = fieldArray.useFieldValue(() => fieldArray.getFieldsInfo());
 	const value = fieldArray.useFieldValue();
 	const meta = fieldArray.useFieldMeta();
@@ -61,8 +71,10 @@ FieldArray.displayName = "FieldArray";
 
 export default FieldArray;
 
-export type FieldArrayComponent<FormValues, ParentValue = FormValues> = <
-	N extends string = GetKeys<ParentValue>
->(
-	props: FieldArrayProps<FormValues, ParentValue, N>
+export type FieldArrayComponent<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <N extends string = GetKeys<ParentValue>>(
+	props: FieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
 ) => JSXElement;

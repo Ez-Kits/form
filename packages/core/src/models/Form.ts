@@ -1,6 +1,8 @@
-import { GetKeys } from "src/models";
-import type { ValidateError, ValidateTrigger } from "src/models/Validation";
-import ValidationSchema from "src/validation/ValidationSchema";
+import type {
+	ValidateError,
+	ValidateTrigger,
+	Validator,
+} from "src/models/Validation";
 export interface FormMeta {
 	errors: ValidateError[];
 	dirty: boolean;
@@ -12,13 +14,13 @@ export interface FormMeta {
 	valid: boolean;
 }
 
-export interface FormOptions<Values = any> {
+export interface FormOptions<Values, ValidationSchema> {
 	name?: string;
 	initialValues?: Values;
 	enableReinitialize?: boolean;
-	validationSchema?: ValidationSchema<GetKeys<Values>, any, any>;
+	validationSchema?: ValidationSchema;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
-	validateMessages?: any;
+	validator?: Validator<ValidationSchema>;
 	// preserveValues?: boolean;
 	onValuesChange?: (values: Values, oldValues: Values) => void;
 	onReset?: () => void;

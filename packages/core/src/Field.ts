@@ -1,8 +1,8 @@
 import FieldBaseInstance from "src/FieldBase";
 import { FieldMeta, ValidateError } from "src/models";
 
-export type FieldEvents<Value> = {
-	change: [field: FieldInstance<any, any>];
+export type FieldEvents<Value, ValidationSchema> = {
+	change: [field: FieldInstance<any, any, ValidationSchema>];
 	"change:value": [value: Value, oldValue: Value];
 	"change:meta": [meta: FieldMeta];
 	error: [errors: ValidateError[]];
@@ -11,8 +11,14 @@ export type FieldEvents<Value> = {
 
 export default class FieldInstance<
 	FieldValue,
-	FormValues
-> extends FieldBaseInstance<FieldValue, FormValues, FieldEvents<FieldValue>> {
+	FormValues,
+	ValidationSchema
+> extends FieldBaseInstance<
+	FieldValue,
+	FormValues,
+	ValidationSchema,
+	FieldEvents<FieldValue, ValidationSchema>
+> {
 	protected managerName = "Field";
 
 	// Handle mount and unmount
@@ -23,7 +29,7 @@ export default class FieldInstance<
 			const newValue = this.getValue();
 			const oldValue = this.value;
 
-			if (this.value !== newValue) {
+			if (oldValue !== newValue) {
 				this.value = newValue;
 				this.setMetaKey("dirty", true);
 
