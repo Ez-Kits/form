@@ -233,17 +233,13 @@ type CreateFieldArrayOptions<
 > = FieldNameProps<ParentValue, N> &
 	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name"> & {
 		/**
-		 * Container element
+		 * Container element. Should only contain the items.
 		 */
 		el: string | HTMLElement;
 		itemTemplate: (
 			index: number,
 			fieldArray: FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
 		) => HTMLElement;
-		/**
-		 * CSS Selector to query all field's items. Will be passed to querySelectorAll.
-		 */
-		itemsSelector: string;
 		itemFieldsCreator: (
 			index: number,
 			fieldArray: FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
@@ -327,12 +323,12 @@ function createFieldArray<
 
 	field.on("change:value", () => {
 		const items = Array.isArray(field.value) ? field.value : [];
-		const itemsEl = form.el.querySelectorAll(options.itemsSelector);
+		const itemsEl = containerEl.children;
 
 		if (itemsFields.length > items.length) {
 			for (let index = items.length; index < itemsFields.length; index++) {
 				const el = itemsEl.item(index);
-				el.remove();
+				el?.remove();
 
 				const fields = itemsFields[index];
 				fields?.forEach((f) => f.unmount());

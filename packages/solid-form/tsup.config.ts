@@ -34,6 +34,7 @@ export default defineConfig(async (config) => {
 	return {
 		...preset.generateTsupOptions(parsed_data)[0],
 		format: ["cjs", "esm"],
+		target: "es2016",
 		splitting: true,
 		sourcemap: false,
 		clean: true,

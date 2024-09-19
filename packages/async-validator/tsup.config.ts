@@ -3,6 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
 	entry: ["src/index.ts"],
 	format: ["cjs", "esm"],
+	target: "es2016",
 	splitting: true,
 	sourcemap: false,
 	treeshake: true,
@@ -10,7 +11,7 @@ export default defineConfig({
 	dts: true,
 	skipNodeModulesBundle: true,
 	minify: false,
-	external: ["vue", "async-validator"],
+	external: ["async-validator", "@ez-kits/form-core"],
 	tsconfig: "./tsconfig.json",
 	keepNames: true,
 });
