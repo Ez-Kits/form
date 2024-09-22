@@ -1,67 +1,82 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import Schema, { type Rule, type ValidateError } from "async-validator";
+import Schema, {
+	ValidateOption,
+	type Rule,
+	type ValidateError,
+} from "async-validator";
 
-export const asyncValidator: Validator<Rule> = {
-	async validate({ schema, value, field }) {
-		const validator = new Schema({
-			__private__: schema,
-		});
+export interface CreateAsyncValidatorOptions extends ValidateOption {}
 
-		return validator
-			.validate({
-				__private__: value,
-			})
-			.then(() => {
-				return {
-					valid: true,
-					errors: [],
-				};
-			})
-			.catch(({ errors }) => {
-				return {
-					valid: false,
-					errors: Array.isArray(errors)
-						? (errors as ValidateError[]).map((error) => {
-								return {
-									field: getFieldPath(error.field ?? "", field),
-									messages: [getErrorMessage(error.message ?? "", field)],
-								};
-						  })
-						: [],
-				};
+export const createAsyncValidator = (
+	options?: CreateAsyncValidatorOptions
+): Validator<Rule> => {
+	return {
+		async validate({ schema, value, field }) {
+			const validator = new Schema({
+				__private__: schema,
 			});
-	},
 
-	// extractSchema(schema, field) {
-	// 	try {
-	// 		const paths = castPath(field);
-	// 		let resultSchema = schema;
-	// 		for (const path of paths) {
-	// 			const maybeNumberPath = Number(path);
-	// 			const isNumberPath = !Number.isNaN(maybeNumberPath);
+			return validator
+				.validate(
+					{
+						__private__: value,
+					},
+					options
+				)
+				.then(() => {
+					return {
+						valid: true,
+						errors: [],
+					};
+				})
+				.catch(({ errors }) => {
+					return {
+						valid: false,
+						errors: Array.isArray(errors)
+							? (errors as ValidateError[]).map((error) => {
+									return {
+										field: getFieldPath(error.field ?? "", field),
+										messages: [getErrorMessage(error.message ?? "", field)],
+									};
+							  })
+							: [],
+					};
+				});
+		},
 
-	// 			if (isNumberPath) {
-	// 				resultSchema = Array.isArray(resultSchema)
-	// 					? (resultSchema
-	// 							.map((schema) => schema.defaultField)
-	// 							.filter(Boolean) as RuleItem[])
-	// 					: ((resultSchema.defaultField ??
-	// 							resultSchema.fields?.[maybeNumberPath]) as RuleItem);
-	// 			} else {
-	// 				resultSchema = Array.isArray(resultSchema)
-	// 					? (resultSchema
-	// 							.map((schema) => schema.fields?.[path])
-	// 							.filter(Boolean) as RuleItem[])
-	// 					: (resultSchema.fields?.[path] as RuleItem);
-	// 			}
-	// 		}
+		// extractSchema(schema, field) {
+		// 	try {
+		// 		const paths = castPath(field);
+		// 		let resultSchema = schema;
+		// 		for (const path of paths) {
+		// 			const maybeNumberPath = Number(path);
+		// 			const isNumberPath = !Number.isNaN(maybeNumberPath);
 
-	// 		return resultSchema;
-	// 	} catch {
-	// 		return schema;
-	// 	}
-	// },
+		// 			if (isNumberPath) {
+		// 				resultSchema = Array.isArray(resultSchema)
+		// 					? (resultSchema
+		// 							.map((schema) => schema.defaultField)
+		// 							.filter(Boolean) as RuleItem[])
+		// 					: ((resultSchema.defaultField ??
+		// 							resultSchema.fields?.[maybeNumberPath]) as RuleItem);
+		// 			} else {
+		// 				resultSchema = Array.isArray(resultSchema)
+		// 					? (resultSchema
+		// 							.map((schema) => schema.fields?.[path])
+		// 							.filter(Boolean) as RuleItem[])
+		// 					: (resultSchema.fields?.[path] as RuleItem);
+		// 			}
+		// 		}
+
+		// 		return resultSchema;
+		// 	} catch {
+		// 		return schema;
+		// 	}
+		// },
+	};
 };
+
+export const asyncValidator: Validator<Rule> = createAsyncValidator();
 
 function getFieldPath(path: string, field?: string) {
 	if (field) {

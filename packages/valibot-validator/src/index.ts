@@ -1,26 +1,44 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import { GenericSchema, IssuePathItem, safeParse } from "valibot";
+import {
+	BaseIssue,
+	Config,
+	GenericSchema,
+	IssuePathItem,
+	safeParse,
+} from "valibot";
 
-export const valibotValidator: Validator<GenericSchema> = {
-	async validate({ schema, value, field }) {
-		const result = safeParse(schema, value);
+export interface CreateValibotValidatorOptions
+	extends Config<BaseIssue<unknown>> {}
 
-		if (result.success) {
+export const createValibotValidator = (
+	options?: CreateValibotValidatorOptions
+): Validator<GenericSchema> => {
+	return {
+		async validate({ schema, value, field }) {
+			const result = safeParse(schema, value, options);
+
+			if (result.success) {
+				return {
+					valid: true,
+					errors: [],
+				};
+			}
+
 			return {
-				valid: true,
-				errors: [],
+				valid: false,
+				errors: result.issues.map((issue) => ({
+					messages: [issue.message],
+					field: getFieldPath(issue.path ?? [], field),
+				})),
 			};
-		}
-
-		return {
-			valid: false,
-			errors: result.issues.map((issue) => ({
-				messages: [issue.message],
-				field: getFieldPath(issue.path ?? [], field),
-			})),
-		};
-	},
+		},
+	};
 };
+
+export const valibotValidator: Validator<GenericSchema> =
+	createValibotValidator({
+		abortEarly: false,
+	});
 
 function getFieldPath(path: IssuePathItem[], field?: string) {
 	if (field) {
