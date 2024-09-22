@@ -1,0 +1,43 @@
+{
+	"name": "@ez-kits/form-valibot-validator",
+	"private": false,
+	"version": "0.0.0",
+	"description": "Powerful, type-safe, easy-to-use form package",
+	"author": {
+		"name": "Niku",
+		"email": "phammah.1221998@gmail.com",
+		"url": "https://github.com/niku98"
+	},
+	"repository": {
+		"url": "https://github.com/Ez-Kits/form"
+	},
+	"license": "MIT",
+	"type": "module",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.js",
+	"types": "./dist/index.d.ts",
+	"typings": "./dist/index.d.ts",
+	"scripts": {
+		"dev": "tsup --watch",
+		"build": "tsup",
+		"test": "vitest",
+		"coverage": "vitest run --coverage"
+	},
+	"files": [
+		"dist",
+		"LICENSE",
+		"README.md",
+		"package.json"
+	],
+	"peerDependencies": {
+		"@ez-kits/form-core": "*",
+		"valibot": "^0.42.1"
+	},
+	"devDependencies": {
+		"@ez-kits/form-core": "*",
+		"@types/node": "^20.4.2",
+		"tsup": "^7.1.0",
+		"typescript": "^5.1.6",
+		"valibot": "^0.42.1"
+	}
+}

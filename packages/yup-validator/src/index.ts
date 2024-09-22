@@ -1,5 +1,5 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import { Schema, ValidationError } from "yup";
+import { type Schema, type ValidationError } from "yup";
 
 export const yupValidator: Validator<Schema> = {
 	async validate({ schema, value, field }) {

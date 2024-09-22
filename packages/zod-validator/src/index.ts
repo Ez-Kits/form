@@ -1,5 +1,5 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import { ZodSchema } from "zod";
+import { type ZodSchema } from "zod";
 
 export const zodValidator: Validator<ZodSchema> = {
 	async validate({ schema, value, field }) {

@@ -1,5 +1,5 @@
 import { GLOBAL_ERROR_FIELD, Validator } from "@ez-kits/form-core";
-import Schema, { Rule, ValidateError } from "async-validator";
+import Schema, { type Rule, type ValidateError } from "async-validator";
 
 export const asyncValidator: Validator<Rule> = {
 	async validate({ schema, value, field }) {

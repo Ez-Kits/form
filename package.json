@@ -7,8 +7,8 @@
 	"type": "module",
 	"scripts": {
 		"nx": "nx",
-		"build": "nx run-many --projects=packages/** --target=build --parallel=9",
-		"dev": "nx run-many --projects=packages/** --target=dev --parallel=9",
+		"build": "nx run-many --projects=packages/** --target=build --parallel=11",
+		"dev": "nx run-many --projects=packages/** --target=dev --parallel=11",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage",
 		"publish-packages": "node scripts/publish.js"
