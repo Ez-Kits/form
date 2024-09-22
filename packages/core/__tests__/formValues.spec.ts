@@ -11,11 +11,11 @@ describe("Form values", () => {
 			password: string;
 		}
 
-		const form = new FormInstance<LoginForm>();
-		const userName = new FieldInstance<string, LoginForm>(form, {
+		const form = new FormInstance<LoginForm, unknown>();
+		const userName = new FieldInstance<string, LoginForm, unknown>(form, {
 			name: "username",
 		});
-		const password = new FieldInstance<string, LoginForm>(form, {
+		const password = new FieldInstance<string, LoginForm, unknown>(form, {
 			name: "password",
 		});
 
@@ -53,25 +53,37 @@ describe("Form values", () => {
 			cardNumbers: ["123"],
 		};
 
-		const form = new FormInstance<RegisterForm>();
-		const userName = new FieldInstance<string, RegisterForm>(form, {
+		const form = new FormInstance<RegisterForm, unknown>();
+		const userName = new FieldInstance<string, RegisterForm, unknown>(form, {
 			name: "username",
 		});
-		const password = new FieldInstance<string, RegisterForm>(form, {
+		const password = new FieldInstance<string, RegisterForm, unknown>(form, {
 			name: "password",
 		});
-		const confirmPassword = new FieldInstance<string, RegisterForm>(form, {
-			name: "confirmPassword",
-		});
-		const addressLineOne = new FieldInstance<string, RegisterForm>(form, {
-			name: "address.lineOne",
-		});
-		const addressLineTwo = new FieldInstance<string, RegisterForm>(form, {
-			name: "address.lineTwo",
-		});
-		const cardNumbers = new FieldArrayInstance<string[], RegisterForm>(form, {
-			name: "cardNumbers",
-		});
+		const confirmPassword = new FieldInstance<string, RegisterForm, unknown>(
+			form,
+			{
+				name: "confirmPassword",
+			}
+		);
+		const addressLineOne = new FieldInstance<string, RegisterForm, unknown>(
+			form,
+			{
+				name: "address.lineOne",
+			}
+		);
+		const addressLineTwo = new FieldInstance<string, RegisterForm, unknown>(
+			form,
+			{
+				name: "address.lineTwo",
+			}
+		);
+		const cardNumbers = new FieldArrayInstance<string[], RegisterForm, unknown>(
+			form,
+			{
+				name: "cardNumbers",
+			}
+		);
 
 		userName.mount();
 		password.mount();
@@ -112,10 +124,10 @@ describe("Form values - Field Array", () => {
 			}),
 	};
 
-	const form = new FormInstance<UsersForm>({
+	const form = new FormInstance<UsersForm, unknown>({
 		initialValues: clone(formData),
 	});
-	const usersField = new FieldArrayInstance<User[], UsersForm>(form, {
+	const usersField = new FieldArrayInstance<User[], UsersForm, unknown>(form, {
 		name: "users",
 	});
 

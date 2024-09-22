@@ -25,6 +25,13 @@ export {
 	GlobalInstances,
 } from "@ez-kits/form-core";
 
+export { registerGlobalValidator } from "src/global";
+export type {
+	DefaultValidationSchema,
+	GlobalRegister,
+	GlobalValidator,
+} from "src/global";
+
 export type FieldNameProps<
 	ParentValue,
 	N = GetKeys<ParentValue>

@@ -58,6 +58,12 @@
 		"eslint-plugin-vue": "9.15.1",
 		"tsup": "^7.1.0",
 		"typescript": "^5.0.2",
-		"vue": "^3.5.6"
+		"vue": "^3.5.6",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	}
 }

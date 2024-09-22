@@ -4,7 +4,9 @@ import { Schema, ValidationError } from "yup";
 export const yupValidator: Validator<Schema> = {
 	async validate({ schema, value, field }) {
 		try {
-			await schema.validate(value);
+			await schema.validate(value, {
+				abortEarly: false,
+			});
 
 			return {
 				valid: true,
@@ -12,26 +14,23 @@ export const yupValidator: Validator<Schema> = {
 			};
 		} catch (error) {
 			const yupError = error as ValidationError;
+
 			if (field) {
 				return {
 					valid: false,
-					errors: [
-						{
-							messages: yupError.errors,
-							field: yupError.path ? `${field}.${yupError.path}` : field,
-						},
-					],
+					errors: yupError.inner.map((error) => ({
+						messages: error.errors,
+						field: error.path ? `${field}.${error.path}` : field,
+					})),
 				};
 			}
 
 			return {
 				valid: false,
-				errors: [
-					{
-						messages: yupError.errors,
-						field: yupError.path ?? GLOBAL_ERROR_FIELD,
-					},
-				],
+				errors: yupError.inner.map((error) => ({
+					messages: error.errors,
+					field: error.path ?? GLOBAL_ERROR_FIELD,
+				})),
 			};
 		}
 	},

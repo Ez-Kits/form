@@ -1,6 +1,7 @@
 import type {
 	ValidateError,
 	ValidateTrigger,
+	ValidationSchemaInput,
 	Validator,
 } from "src/models/Validation";
 export interface FormMeta {
@@ -18,7 +19,7 @@ export interface FormOptions<Values, ValidationSchema> {
 	name?: string;
 	initialValues?: Values;
 	enableReinitialize?: boolean;
-	validationSchema?: ValidationSchema;
+	validationSchema?: ValidationSchemaInput<ValidationSchema>;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
 	validator?: Validator<ValidationSchema>;
 	// preserveValues?: boolean;

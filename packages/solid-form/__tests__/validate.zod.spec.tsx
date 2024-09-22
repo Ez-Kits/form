@@ -1,18 +1,19 @@
+import { zodValidator } from "@ez-kits/form-zod-validator";
 import { render, screen } from "@solidjs/testing-library";
 import "@testing-library/jest-dom";
 import user from "@testing-library/user-event";
 import type { Accessor } from "solid-js";
 import {
 	FieldErrors,
+	registerGlobalValidator,
 	useForm,
-	zodFieldSchema,
-	zodSchema,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 import { z } from "zod";
 
-describe("Async Validator", () => {
+describe("Zod Validator", () => {
+	registerGlobalValidator(zodValidator);
 	const renderErrors =
 		(testId: string) => (errors: Accessor<ValidateError[]>) =>
 			(
@@ -33,13 +34,9 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: zodSchema<LoginForm>({
-					username: [
-						{
-							schema: z.string().length(6),
-						},
-					],
+			const form = useForm<LoginForm, z.Schema>({
+				validationSchema: z.object({
+					username: z.string().length(6),
 				}),
 			});
 
@@ -59,15 +56,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={zodFieldSchema({
-								schema: z
-									.string()
-									.refine((value) =>
-										new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(
-											value
-										)
-									),
-							})}
+							validationSchema={z
+								.string()
+								.refine((value) =>
+									new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+								)}
 						>
 							{({ field }) => (
 								<>
@@ -127,7 +120,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, z.Schema>({});
 
 			return (
 				<form.Form>
@@ -143,15 +136,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={zodFieldSchema({
-								schema: z
-									.string()
-									.refine((value) =>
-										new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(
-											value
-										)
-									),
-							})}
+							validationSchema={z
+								.string()
+								.refine((value) =>
+									new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+								)}
 						>
 							{({ field }) => (
 								<>
@@ -166,17 +155,14 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={zodFieldSchema([
-								{
-									schema: (values: RegisterForm) =>
-										z
-											.string()
-											.refine(
-												() => values.confirmPassword === values.password,
-												"Confirm password doesn't match password."
-											),
-								},
-							])}
+							validationSchema={(confirmPassword, { form }) =>
+								z
+									.string()
+									.refine(
+										() => confirmPassword === form.getFieldValue("password"),
+										"Confirm password doesn't match password."
+									)
+							}
 						>
 							{({ field }) => (
 								<>

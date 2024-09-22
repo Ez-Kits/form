@@ -26,6 +26,7 @@ import {
 import type { DefaultValidationSchema } from "src/global";
 import { provideForm } from "src/provides/form";
 import { handleEventPrevent } from "src/utilities/event";
+import { mergeFormOptions } from "src/utilities/form";
 import { clearUndefinedProperties } from "src/utilities/object";
 import {
 	h,
@@ -73,10 +74,12 @@ export default function useForm<
 	function getForm() {
 		const { form: optionsForm, ...otherOptions } = toValue(options);
 		if (optionsForm) {
-			optionsForm.updateOptions({
-				...optionsForm.options,
-				...clearUndefinedProperties(otherOptions),
-			});
+			optionsForm.updateOptions(
+				mergeFormOptions({
+					...optionsForm.options,
+					...clearUndefinedProperties(otherOptions),
+				})
+			);
 
 			return optionsForm;
 		}
@@ -139,10 +142,12 @@ export default function useForm<
 		(newOptions) => {
 			const { form: optionsForm, ...otherOptions } = newOptions;
 
-			form.updateOptions({
-				...optionsForm?.options,
-				...clearUndefinedProperties(otherOptions),
-			});
+			form.updateOptions(
+				mergeFormOptions({
+					...optionsForm?.options,
+					...clearUndefinedProperties(otherOptions),
+				})
+			);
 		}
 	);
 

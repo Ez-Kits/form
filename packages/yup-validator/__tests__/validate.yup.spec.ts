@@ -1,6 +1,5 @@
-import FieldInstance from "src/Field";
-import FormInstance from "src/Form";
-import { yupFieldSchema, yupSchema } from "src/validation";
+import { FieldInstance, FormInstance } from "@ez-kits/form-core";
+import { yupValidator } from "src/index";
 import { describe, it } from "vitest";
 import * as yup from "yup";
 
@@ -11,26 +10,21 @@ describe("Yup validator", () => {
 			password: string;
 		}
 
-		const form = new FormInstance<LoginForm>({
-			validationSchema: yupSchema<LoginForm>({
-				username: [
-					{
-						schema: yup.string().required().length(6),
-					},
-				],
-			}),
-		});
-		const userName = new FieldInstance<string, LoginForm>(form, {
-			name: "username",
-		});
-		const password = new FieldInstance<string, LoginForm>(form, {
-			name: "password",
-			validationSchema: yupFieldSchema({
-				schema: yup
+		const form = new FormInstance<LoginForm, yup.Schema>({
+			validator: yupValidator,
+			validationSchema: yup.object({
+				username: yup.string().required().length(6),
+				password: yup
 					.string()
 					.required()
 					.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
 			}),
+		});
+		const userName = new FieldInstance<string, LoginForm, yup.Schema>(form, {
+			name: "username",
+		});
+		const password = new FieldInstance<string, LoginForm, yup.Schema>(form, {
+			name: "password",
 		});
 		userName.mount();
 		password.mount();
@@ -64,38 +58,44 @@ describe("Yup validator", () => {
 			},
 		};
 
-		const form = new FormInstance<RegisterForm>();
-		const userName = new FieldInstance<string, RegisterForm>(form, {
+		const form = new FormInstance<RegisterForm, yup.Schema>({
+			validator: yupValidator,
+		});
+		const userName = new FieldInstance<string, RegisterForm, yup.Schema>(form, {
 			name: "username",
 		});
-		const password = new FieldInstance<string, RegisterForm>(form, {
+		const password = new FieldInstance<string, RegisterForm, yup.Schema>(form, {
 			name: "password",
-			validationSchema: yupFieldSchema({
-				schema: yup
-					.string()
-					.required()
-					.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-			}),
+			validationSchema: yup
+				.string()
+				.required()
+				.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
 		});
-		const confirmPassword = new FieldInstance<string, RegisterForm>(form, {
-			name: "confirmPassword",
-			validationSchema: yupFieldSchema([
-				{
-					schema: yup
+		const confirmPassword = new FieldInstance<string, RegisterForm, yup.Schema>(
+			form,
+			{
+				name: "confirmPassword",
+				validationSchema: (_, { form }) =>
+					yup
 						.string()
 						.oneOf(
-							[yup.ref("password"), undefined],
+							[form.getFieldValue("password"), undefined],
 							"Confirm password doesn't match password."
 						),
-				},
-			]),
-		});
-		const addressLineOne = new FieldInstance<string, RegisterForm>(form, {
-			name: "address.lineOne",
-		});
-		const addressLineTwo = new FieldInstance<string, RegisterForm>(form, {
-			name: "address.lineTwo",
-		});
+			}
+		);
+		const addressLineOne = new FieldInstance<string, RegisterForm, yup.Schema>(
+			form,
+			{
+				name: "address.lineOne",
+			}
+		);
+		const addressLineTwo = new FieldInstance<string, RegisterForm, yup.Schema>(
+			form,
+			{
+				name: "address.lineTwo",
+			}
+		);
 
 		userName.mount();
 		password.mount();

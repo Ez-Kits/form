@@ -16,10 +16,6 @@ export interface FieldMeta {
 	validationCount: number;
 }
 
-export type FieldValidationSchema<ValidationSchema> =
-	| ValidationSchemaInput<ValidationSchema>
-	| ValidationSchemaInput<ValidationSchema>[];
-
 export type FieldValidationSchemaFunction<
 	FieldValue,
 	FormValues,
@@ -33,8 +29,8 @@ export type FieldValidationSchemaFunction<
 		form: FormInstance<FormValues, ValidationSchema>;
 	}
 ) =>
-	| PromiseLike<FieldValidationSchema<ValidationSchema>>
-	| FieldValidationSchema<ValidationSchema>;
+	| PromiseLike<ValidationSchemaInput<ValidationSchema>>
+	| ValidationSchemaInput<ValidationSchema>;
 
 export interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 	name: GetKeys<FormValues>;
@@ -42,7 +38,7 @@ export interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 	initialValue?: FieldValue;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
 	validationSchema?:
-		| FieldValidationSchema<ValidationSchema>
+		| ValidationSchemaInput<ValidationSchema>
 		| FieldValidationSchemaFunction<FieldValue, FormValues, ValidationSchema>;
 	// preserveValue?: boolean;
 	onChange?: (value: FieldValue) => void;

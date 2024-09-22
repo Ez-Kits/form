@@ -1,9 +1,8 @@
 import "@testing-library/jest-dom";
-import { render, screen } from "@testing-library/react";
+import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { Fragment } from "react";
-import { BindingFieldInput, useForm } from "src/index";
-import { describe, expect, it } from "vitest";
+import { createForm } from "src/index";
+import { describe, it } from "vitest";
 
 describe("Form values", () => {
 	it("Login form", async () => {
@@ -17,28 +16,24 @@ describe("Form values", () => {
 			password: "secret_password",
 		};
 
-		function LoginPage() {
-			const form = useForm<LoginForm>();
+		document.body.innerHTML = `
+			<form id="loginForm">
+				<input data-testid="usernameInput" name="username" />
+				<input data-testid="passwordInput" name="password" type="password" />
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form {...form.getFormProps()}>
-						<form.Field name="username">
-							<BindingFieldInput>
-								<input data-testid="usernameInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="password">
-							<BindingFieldInput>
-								<input data-testid="passwordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-					</form>
-				</form.Form>
-			);
-		}
+		const form = createForm<LoginForm>({
+			el: "#loginForm",
+		});
 
-		render(<LoginPage />);
+		form.createField({
+			name: "password",
+		});
+		form.createField({
+			name: "username",
+		});
+
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
 
@@ -63,30 +58,25 @@ describe("Form values", () => {
 			password: "secret_password",
 		};
 
-		function LoginPage() {
-			const form = useForm<LoginForm>({
-				initialValues: loginFormData,
-			});
+		document.body.innerHTML = `
+			<form id="loginForm">
+				<input data-testid="usernameInput" name="username" />
+				<input data-testid="passwordInput" name="password" type="password" />
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form {...form.getFormProps()}>
-						<form.Field name="username">
-							<BindingFieldInput>
-								<input data-testid="usernameInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="password">
-							<BindingFieldInput>
-								<input data-testid="passwordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-					</form>
-				</form.Form>
-			);
-		}
+		const form = createForm<LoginForm>({
+			el: "#loginForm",
+			initialValues: loginFormData,
+		});
 
-		render(<LoginPage />);
+		form.createField({
+			name: "password",
+		});
+		form.createField({
+			name: "username",
+		});
+
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
 
@@ -124,43 +114,36 @@ describe("Form values", () => {
 			},
 		};
 
-		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+		document.body.innerHTML = `
+			<form id="registerForm">
+				<input data-testid="usernameInput" name="username" />
+				<input data-testid="passwordInput" type="password" name="password" />
+				<input data-testid="confirmPasswordInput" type="password" name="confirmPassword" />
+				<input data-testid="addressLineOneInput" name="address.lineOne" />
+				<input data-testid="addressLineTwoInput" name="address.lineTwo" />
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form {...form.getFormProps()}>
-						<form.Field name="username">
-							<BindingFieldInput>
-								<input data-testid="usernameInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="password">
-							<BindingFieldInput>
-								<input data-testid="passwordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="confirmPassword">
-							<BindingFieldInput>
-								<input data-testid="confirmPasswordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="address.lineOne">
-							<BindingFieldInput>
-								<input data-testid="addressLineOneInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="address.lineTwo">
-							<BindingFieldInput>
-								<input data-testid="addressLineTwoInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-					</form>
-				</form.Form>
-			);
-		}
+		const form = createForm<RegisterForm>({
+			el: "#registerForm",
+		});
 
-		render(<RegisterPage />);
+		form.createField({
+			name: "address.lineOne",
+		});
+		form.createField({
+			name: "address.lineTwo",
+		});
+		form.createField({
+			name: "username",
+		});
+		form.createField({
+			name: "password",
+		});
+		form.createField({
+			name: "confirmPassword",
+		});
+
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
 		const confirmPasswordInput = screen.getByTestId("confirmPasswordInput");
@@ -206,50 +189,45 @@ describe("Form values", () => {
 			},
 		};
 
-		function RegisterPage() {
-			const form = useForm<RegisterForm>({
-				initialValues: formData,
-			});
+		document.body.innerHTML = `
+			<form id="registerForm">
+				<input data-testid="usernameInput" name="username" />
+				<input data-testid="passwordInput" type="password" name="password" />
+				<input data-testid="confirmPasswordInput" type="password" name="confirmPassword" />
+				<input data-testid="addressLineOneInput" name="address.lineOne" />
+				<input data-testid="addressLineTwoInput" name="address.lineTwo" />
+				<span data-testid="observeUsername" id="observeUsername">{value}</span>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form {...form.getFormProps()}>
-						<form.Field name="username">
-							<BindingFieldInput>
-								<input data-testid="usernameInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="password">
-							<BindingFieldInput>
-								<input data-testid="passwordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="confirmPassword">
-							<BindingFieldInput>
-								<input data-testid="confirmPasswordInput" type="password" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="address.lineOne">
-							<BindingFieldInput>
-								<input data-testid="addressLineOneInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.Field name="address.lineTwo">
-							<BindingFieldInput>
-								<input data-testid="addressLineTwoInput" />
-							</BindingFieldInput>
-						</form.Field>
-						<form.ObserveField name="username">
-							{({ value }) => (
-								<span data-testid="observeUsername">{value}</span>
-							)}
-						</form.ObserveField>
-					</form>
-				</form.Form>
-			);
-		}
+		const form = createForm<RegisterForm>({
+			el: "#registerForm",
+			initialValues: formData,
+		});
 
-		render(<RegisterPage />);
+		form.createField({
+			name: "address.lineOne",
+		});
+		form.createField({
+			name: "address.lineTwo",
+		});
+		form.createField({
+			name: "username",
+		});
+		form.createField({
+			name: "password",
+		});
+		form.createField({
+			name: "confirmPassword",
+		});
+
+		form.on("change:value", (values) => {
+			const el = document.getElementById("observeUsername");
+			if (el) {
+				el.innerHTML = values.username;
+			}
+		});
+
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
 		const confirmPasswordInput = screen.getByTestId("confirmPasswordInput");
@@ -306,49 +284,63 @@ describe("Field Array", () => {
 			password: "secret_password",
 		};
 
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Add user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((field) => {
-									return (
-										<Fragment key={field.key}>
-											<fieldArray.Field index={field.index} name="username">
-												<BindingFieldInput>
-													<input
-														data-testid={`users.username.${field.index}`}
-													/>
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={field.index} name="password">
-												<BindingFieldInput>
-													<input
-														data-testid={`users.password.${field.index}`}
-													/>
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</Fragment>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.push(user)}
-								>
-									Add user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
-		}
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-		render(<ListUsers />);
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.push(user);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -384,47 +376,75 @@ describe("Field Array", () => {
 	});
 
 	it("Pop", async () => {
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Pop user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<span data-testid="users_length">{fieldsInfo.length}</span>
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.pop()}
-								>
-									Pop user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.pop();
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -463,56 +483,75 @@ describe("Field Array", () => {
 			password: "Password",
 		};
 
-		/*************  ✨ Codeium Command ⭐  *************/
-		/**
-		 * A form with a FieldArray containing two BindingFieldInputs per index.
-		 * The FieldArray is initialized with the users data from the formData object.
-		 * Each input is assigned a data-testid equal to "users.username.${index}" or "users.password.${index}".
-		 * Below the FieldArray, there is a span with a data-testid of "users_length" that displays the current length of the FieldArray.
-		 * Below the span, there is a button with a data-testid of "action_btn" that inserts a new user at index 2 when clicked.
-		 */
-		/******  f80f2a42-ddd1-43a1-9dc0-74cf9ba17673  *******/
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Insert user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<Fragment key={index}>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</Fragment>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<span data-testid="users_length">{fieldsInfo.length}</span>
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.insert(2, newUser)}
-								>
-									Insert user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.insert(2, newUser);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -552,47 +591,75 @@ describe("Field Array", () => {
 	});
 
 	it("Shift", async () => {
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Shift user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<span data-testid="users_length">{fieldsInfo.length}</span>
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.shift()}
-								>
-									Shift user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.shift();
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -631,45 +698,75 @@ describe("Field Array", () => {
 			password: "secret_password_abc",
 		};
 
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Unshift user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.unshift(user)}
-								>
-									Unshift user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
+
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.unshift(user);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -710,45 +807,75 @@ describe("Field Array", () => {
 			password: "secret_password_abc",
 		};
 
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Replace user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.replace(0, user)}
-								>
-									Unshift user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
+
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.replace(0, user);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -784,47 +911,75 @@ describe("Field Array", () => {
 	});
 
 	it("Remove", async () => {
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Remove user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<span data-testid="users_length">{fieldsInfo.length}</span>
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.remove(0)}
-								>
-									Pop user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.remove(0);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -858,45 +1013,75 @@ describe("Field Array", () => {
 	});
 
 	it("Move", async () => {
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Move user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.move(0, 9)}
-								>
-									Unshift user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
+
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.move(0, 9);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)
@@ -936,45 +1121,75 @@ describe("Field Array", () => {
 	});
 
 	it("Swap", async () => {
-		function ListUsers() {
-			const form = useForm({ initialValues: { ...formData } });
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Pop user
+				</button>
+			</form>
+		`;
 
-			return (
-				<form.Form>
-					<form.FieldArray name="users">
-						{({ fieldArray, fieldsInfo }) => (
-							<div>
-								{fieldsInfo.map((_, index) => {
-									return (
-										<>
-											<fieldArray.Field index={index} name="username">
-												<BindingFieldInput>
-													<input data-testid={`users.username.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
-												<BindingFieldInput>
-													<input data-testid={`users.password.${index}`} />
-												</BindingFieldInput>
-											</fieldArray.Field>
-										</>
-									);
-								})}
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: { ...formData },
+		});
 
-								<button
-									data-testid="action_btn"
-									onClick={() => fieldArray.swap(0, 9)}
-								>
-									Unshift user
-								</button>
-							</div>
-						)}
-					</form.FieldArray>
-				</form.Form>
-			);
+		const fieldArray = form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
+
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.${index}.username"
+					/>
+					<input
+						data-testid="users.password.${index}"
+						name="users.${index}.password"
+						type="password"
+					/>
+				`;
+
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: "username",
+						index,
+					}),
+					fieldArray.createField({
+						name: "password",
+						index,
+					}),
+				];
+			},
+		});
+
+		const usersLengthEl = document.getElementById("users-length");
+		if (usersLengthEl) {
+			usersLengthEl.innerHTML = fieldArray.value.length.toString();
 		}
 
-		render(<ListUsers />);
+		fieldArray.on("change:value", (values) => {
+			if (usersLengthEl) {
+				usersLengthEl.innerHTML = values.length.toString();
+			}
+		});
+
+		const actionButtonEl = document.getElementById("action-button");
+
+		actionButtonEl?.addEventListener("click", () => {
+			fieldArray.swap(0, 9);
+		});
 
 		const usernameInputs = Array(10)
 			.fill(0)

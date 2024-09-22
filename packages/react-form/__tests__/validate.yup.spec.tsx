@@ -1,18 +1,19 @@
+import { yupValidator } from "@ez-kits/form-yup-validator";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import user from "@testing-library/user-event";
 import {
 	BindingFieldInput,
 	FieldErrors,
+	registerGlobalValidator,
 	useForm,
-	yupFieldSchema,
-	yupSchema,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 import * as yup from "yup";
 
-describe("Async Validator", () => {
+describe("Yup Validator", () => {
+	registerGlobalValidator(yupValidator);
 	const renderErrors =
 		(testId: string) =>
 		(errors: ValidateError[] = []) =>
@@ -34,14 +35,18 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: yupSchema<LoginForm>({
-					username: [
-						{
-							schema: yup.string().required().length(6),
-						},
-					],
+			const form = useForm<LoginForm, yup.Schema>({
+				validationSchema: yup.object({
+					username: yup.string().required().length(6),
+					password: yup
+						.string()
+						.required()
+						.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
 				}),
+				// onError(errors) {
+				// 	const field = form.getFieldByName("password");
+				// 	console.log(form.meta.errors, errors, field.meta.errors);
+				// },
 			});
 
 			return (
@@ -53,20 +58,15 @@ describe("Async Validator", () => {
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 						</form.Field>
-						<form.Field
-							name="password"
-							validationSchema={yupFieldSchema({
-								schema: yup
-									.string()
-									.required()
-									.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-							})}
-						>
+						<form.Field name="password">
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 						</form.Field>
+						<button type="submit" data-testid="submitButton">
+							Submit
+						</button>
 					</form>
 				</form.Form>
 			);
@@ -76,12 +76,14 @@ describe("Async Validator", () => {
 
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
+		const submitButton = screen.getByTestId("submitButton");
 
 		expect(usernameInput).toBeInTheDocument();
 		expect(passwordInput).toBeInTheDocument();
 
 		await user.type(usernameInput, loginFormData.username);
 		await user.type(passwordInput, loginFormData.password);
+		await user.click(submitButton);
 
 		expect(usernameInput).toHaveValue(loginFormData.username);
 		expect(passwordInput).toHaveValue(loginFormData.password);
@@ -114,7 +116,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, yup.Schema>({});
 
 			return (
 				<form.Form>
@@ -126,12 +128,10 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={yupFieldSchema({
-								schema: yup
-									.string()
-									.required()
-									.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-							})}
+							validationSchema={yup
+								.string()
+								.required()
+								.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"))}
 						>
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
@@ -140,16 +140,14 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={yupFieldSchema([
-								{
-									schema: yup
-										.string()
-										.oneOf(
-											[yup.ref("password"), undefined],
-											"Confirm password doesn't match password."
-										),
-								},
-							])}
+							validationSchema={(_, { form }) =>
+								yup
+									.string()
+									.oneOf(
+										[form.getFieldValue("password"), undefined],
+										"Confirm password doesn't match password."
+									)
+							}
 						>
 							<BindingFieldInput>
 								<input data-testid="confirmPasswordInput" type="password" />

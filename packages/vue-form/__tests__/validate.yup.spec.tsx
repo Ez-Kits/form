@@ -1,13 +1,15 @@
+import { yupValidator } from "@ez-kits/form-yup-validator";
 import "@testing-library/jest-dom";
 import user from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import LoginPageVue from "__tests__/forms/LoginPage.vue";
 import RegisterPageVue from "__tests__/forms/RegisterPage.vue";
-import { yupFieldSchema, yupSchema } from "src/index";
+import { registerGlobalValidator } from "src/global";
 import { describe, it } from "vitest";
 import * as yup from "yup";
 
 describe("Async Validator", () => {
+	registerGlobalValidator(yupValidator);
 	it("Login Form", async () => {
 		interface LoginForm {
 			username: string;
@@ -21,19 +23,13 @@ describe("Async Validator", () => {
 
 		render(LoginPageVue, {
 			props: {
-				validationSchema: yupSchema<LoginForm>({
-					username: [
-						{
-							schema: yup.string().required().length(6),
-						},
-					],
+				validationSchema: yup.object({
+					username: yup.string().required().length(6),
 				}),
-				passwordValidationSchema: yupFieldSchema({
-					schema: yup
-						.string()
-						.required()
-						.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-				}),
+				passwordValidationSchema: yup
+					.string()
+					.required()
+					.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
 			},
 		});
 
@@ -78,22 +74,17 @@ describe("Async Validator", () => {
 
 		render(RegisterPageVue, {
 			props: {
-				passwordValidationSchema: yupFieldSchema({
-					schema: yup
-						.string()
-						.required()
-						.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-				}),
-				confirmPasswordValidationSchema: yupFieldSchema([
-					{
-						schema: yup
-							.string()
-							.oneOf(
-								[yup.ref("password"), undefined],
-								"Confirm password doesn't match password."
-							),
-					},
-				]),
+				passwordValidationSchema: yup
+					.string()
+					.required()
+					.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
+
+				confirmPasswordValidationSchema: yup
+					.string()
+					.oneOf(
+						[yup.ref("password"), undefined],
+						"Confirm password doesn't match password."
+					),
 			},
 		});
 		const usernameInput = screen.getByTestId("usernameInput");

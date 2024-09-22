@@ -1,13 +1,16 @@
+import type { FormInstance } from "@ez-kits/form-core";
+import { zodValidator } from "@ez-kits/form-zod-validator";
 import "@testing-library/jest-dom";
 import user from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import LoginPageVue from "__tests__/forms/LoginPage.vue";
 import RegisterPageVue from "__tests__/forms/RegisterPage.vue";
-import { zodFieldSchema, zodSchema } from "src/index";
+import { registerGlobalValidator } from "src/global";
 import { describe, it } from "vitest";
 import { z } from "zod";
 
 describe("Async Validator", () => {
+	registerGlobalValidator(zodValidator);
 	it("Login Form", async () => {
 		interface LoginForm {
 			username: string;
@@ -21,20 +24,14 @@ describe("Async Validator", () => {
 
 		render(LoginPageVue, {
 			props: {
-				validationSchema: zodSchema<LoginForm>({
-					username: [
-						{
-							schema: z.string().length(6),
-						},
-					],
+				validationSchema: z.object({
+					username: z.string().length(6),
 				}),
-				passwordValidationSchema: zodFieldSchema({
-					schema: z
-						.string()
-						.refine((value) =>
-							new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
-						),
-				}),
+				passwordValidationSchema: z
+					.string()
+					.refine((value) =>
+						new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+					),
 			},
 		});
 
@@ -79,24 +76,21 @@ describe("Async Validator", () => {
 
 		render(RegisterPageVue, {
 			props: {
-				passwordValidationSchema: zodFieldSchema({
-					schema: z
+				passwordValidationSchema: z
+					.string()
+					.refine((value) =>
+						new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+					),
+				confirmPasswordValidationSchema: (
+					confirmPassword: string,
+					{ form }: { form: FormInstance<RegisterForm, z.Schema> }
+				) =>
+					z
 						.string()
-						.refine((value) =>
-							new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+						.refine(
+							() => confirmPassword === form.getFieldValue("password"),
+							"Confirm password doesn't match password."
 						),
-				}),
-				confirmPasswordValidationSchema: zodFieldSchema([
-					{
-						schema: (values: RegisterForm) =>
-							z
-								.string()
-								.refine(
-									() => values.confirmPassword === values.password,
-									"Confirm password doesn't match password."
-								),
-					},
-				]),
 			},
 		});
 		const usernameInput = screen.getByTestId("usernameInput");

@@ -41,6 +41,12 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.1",
 		"tsup": "^7.1.0",
-		"typescript": "^5.0.2"
+		"typescript": "^5.0.2",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	}
 }

@@ -13,16 +13,14 @@ import {
 	EventListenersManager,
 	clone,
 	get,
+	getValidationSchema,
 	isEqual,
 	normalizeErrors,
 	set,
 	uniqueId,
 } from "src/utilities";
 import { toArray } from "src/utilities/array";
-import {
-	ControlledPromise,
-	createControlledPromise,
-} from "src/utilities/promise";
+import { ControlledPromise } from "src/utilities/promise";
 
 type FormEvents<Values, ValidationInput> = {
 	change: [form: FormInstance<Values, ValidationInput>];
@@ -334,87 +332,64 @@ export default class FormInstance<
 	};
 
 	validate = (options?: ValidationOptions) => {
-		const validator = this.options.validator;
-		if (!validator) {
-			this.setMetaKey("errors", []);
-			return Promise.resolve({
-				valid: true,
-				errors: [],
-			});
-		}
-
-		this.setMetaKey("validationCount", this.meta.validationCount + 1);
-		this.setMetaKey("validating", true);
-
-		this.validationPromise = createControlledPromise();
-		this.validationPromise
-			.then(() => {
-				this.setMetaKey("validating", false);
-			})
-			.catch(() => {
-				this.setMetaKey("validating", false);
-			});
-
-		const validationPromisees: PromiseLike<ValidationResult>[] = [];
-
-		if (this.options.validationSchema) {
-			const formValidationResult = validator.validate({
-				schema: this.options.validationSchema,
-				value: this.values,
-			});
-			validationPromisees.push(formValidationResult);
-			console.log("formValidationResult", formValidationResult);
-		} else {
-			this.fields.forEach((field) => {
-				validationPromisees.push(field.validate(options));
-			});
-		}
-
-		Promise.all(validationPromisees)
-			.then((results) => {
-				if (!this.validationPromise) {
-					return;
-				}
-
-				const invalidResults = results.filter(({ valid }) => !valid);
-				const valid = invalidResults.length === 0;
-				const errors = normalizeErrors(
-					invalidResults.flatMap((result) => result.errors)
-				);
-
-				this.setMetaKey("errors", errors);
-				this.setMetaKey("valid", valid);
-
-				this.validationPromise.resolve({
-					valid,
-					errors,
-				});
-			})
-			.catch(() => {});
-
-		return this.validationPromise;
+		return this.validateFields(undefined, options);
 	};
 
 	validateFields = async <Field extends GetKeys<Values>>(
-		fields: Field | Field[],
+		fields?: Field | Field[],
 		options?: ValidationOptions
 	): Promise<ValidationResult> => {
-		const fieldList = toArray(fields);
-		const fieldValidationPromisees: Promise<ValidationResult>[] = [];
+		const validator = this.options.validator;
+		if (!validator) {
+			this.setMetaKey("errors", []);
+			return {
+				valid: true,
+				errors: [],
+			};
+		}
 
-		this.fields.forEach((field) => {
-			if (fieldList.includes(field.name as any)) {
-				fieldValidationPromisees.push(field.validate(options));
-			}
-		});
+		const fieldValidationPromises: PromiseLike<ValidationResult>[] = [];
 
-		return Promise.all(fieldValidationPromisees).then((results) => {
+		if (this.options.validationSchema) {
+			const promises = getValidationSchema(
+				this.options.validationSchema,
+				options
+			).map((schema) => {
+				return validator.validate({
+					schema,
+					value: this.values,
+				});
+			});
+
+			fieldValidationPromises.push(...promises);
+		}
+
+		if (fields) {
+			const fieldList = toArray(fields);
+
+			this.fields.forEach((field) => {
+				if (fieldList.includes(field.name as any)) {
+					fieldValidationPromises.push(field.validate(options));
+				}
+			});
+		} else {
+			this.fields.forEach((field) => {
+				fieldValidationPromises.push(field.validate(options));
+			});
+		}
+
+		return Promise.all(fieldValidationPromises).then((results) => {
 			const invalidResults = results.filter(({ valid }) => !valid);
 
 			const errors = normalizeErrors(
-				this.meta.errors
-					.filter((error) => !fieldList.includes(error.field as any))
-					.concat(invalidResults.flatMap((result) => result.errors))
+				fields
+					? this.meta.errors
+							.filter((error) => {
+								const fieldList = toArray(fields);
+								return !fieldList.includes(error.field as any);
+							})
+							.concat(invalidResults.flatMap((result) => result.errors))
+					: invalidResults.flatMap((result) => result.errors)
 			);
 
 			this.setMetaKey("errors", errors);

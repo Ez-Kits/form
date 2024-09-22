@@ -1,3 +1,5 @@
+import { ToEvent } from "src/models";
+
 export function isEqual(a: any, b: any): boolean {
 	if (
 		typeof a !== "object" ||
@@ -36,4 +38,8 @@ export function uniqueId(length: number = 6) {
 		result += characters.charAt(Math.floor(Math.random() * charactersLength));
 	}
 	return result;
+}
+
+export function toEvent<T extends string>(input: T): ToEvent<T> {
+	return `on${input[0]?.toUpperCase()}${input.slice(1)}` as ToEvent<T>;
 }

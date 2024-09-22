@@ -5,7 +5,6 @@ import {
 	FieldOptions,
 	UpdateValueOptions,
 	ValidateError,
-	ValidateTrigger,
 	ValidationOptions,
 	ValidationResult,
 	ValidationSchemaInput,
@@ -15,11 +14,11 @@ import {
 	EventListenersManager,
 	clone,
 	get,
+	getValidationSchema,
 	isEqual,
 	set,
 	uniqueId,
 } from "src/utilities";
-import { toArray } from "src/utilities/array";
 import {
 	ControlledPromise,
 	createControlledPromise,
@@ -122,15 +121,6 @@ export default abstract class FieldBaseInstance<
 			}
 		});
 
-		const offFormErrorsChange = this.form.on("error", () => {
-			this.setMetaKey(
-				"errors",
-				this.form.meta.errors.filter((error) => {
-					return error.field.startsWith(this.name);
-				})
-			);
-		});
-
 		const offThisChangeMeta = this.on("change:meta", () => {
 			const { dirty, touched } = this.meta;
 
@@ -158,7 +148,6 @@ export default abstract class FieldBaseInstance<
 
 		return () => {
 			offFormChangeValue();
-			offFormErrorsChange();
 			offFormReInitialize();
 			offThisChangeMeta();
 			offFormReset();
@@ -207,46 +196,20 @@ export default abstract class FieldBaseInstance<
 	// Handle validate
 	private getValidationSchema = async (
 		options: ValidationOptions
-	): Promise<ValidationSchemaInput<ValidationSchema>[]> => {
+	): Promise<ValidationSchema[]> => {
 		if (!this.options.validationSchema) {
 			return [];
 		}
 
-		let fieldValidationSchemas = this.options.validationSchema;
-		if (typeof fieldValidationSchemas === "function") {
-			fieldValidationSchemas = toArray(
-				await (fieldValidationSchemas as Function)(this.value, {
-					field: this,
-					form: this.form,
-				})
-			);
-		}
+		let fieldValidationSchemas =
+			typeof this.options.validationSchema === "function"
+				? ((await (this.options.validationSchema as Function)(this.value, {
+						field: this,
+						form: this.form,
+				  })) as ValidationSchemaInput<ValidationSchema>)
+				: this.options.validationSchema;
 
-		if (!options.trigger) {
-			return toArray(fieldValidationSchemas);
-		}
-
-		const schemas = toArray(fieldValidationSchemas);
-		const filteredSchemas = schemas.filter((schema) => {
-			if (schema && typeof schema === "object" && "trigger" in schema) {
-				return (toArray(options.trigger) as ValidateTrigger[]).some((trigger) =>
-					toArray(schema.trigger).includes(trigger)
-				);
-			}
-
-			return true;
-		});
-
-		// if (this.form.options.validator && this.form.options.validationSchema) {
-		// 	filteredSchemas.push(
-		// 		this.form.options.validator.extractSchema(
-		// 			this.form.options.validationSchema,
-		// 			this.name
-		// 		)
-		// 	);
-		// }
-
-		return filteredSchemas;
+		return getValidationSchema(fieldValidationSchemas, options);
 	};
 
 	validate = async (options?: ValidationOptions): Promise<ValidationResult> => {
@@ -290,10 +253,7 @@ export default abstract class FieldBaseInstance<
 		Promise.all(
 			validationSchemas.map((schema) => {
 				return validator.validate({
-					schema:
-						typeof schema === "object" && schema && "trigger" in schema
-							? schema.schema
-							: schema,
+					schema,
 					value: this.getValue(),
 					field: this.name,
 				});

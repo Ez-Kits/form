@@ -1,3 +1,5 @@
+import { ToEvent } from "src/models/Utilities";
+
 export type ValidateTrigger = "change" | "blur" | "submit";
 
 export interface ValidationOptions {
@@ -32,11 +34,13 @@ export type Validator<Schema> = {
 	validate: (props: ValidatorProps<Schema>) => PromiseLike<ValidationResult>;
 };
 
+export type ValidationSChemaRecord<Schema> = {
+	[trigger in ToEvent<ValidateTrigger>]?: Schema[];
+};
+
 export type ValidationSchemaInput<Schema> =
 	| Schema
-	| {
-			trigger: ValidateTrigger | ValidateTrigger[];
-			schema: Schema;
-	  };
+	| Schema[]
+	| ValidationSChemaRecord<Schema>;
 
 export type GetValidatorSchema<V> = V extends Validator<infer S> ? S : never;

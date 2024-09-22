@@ -1,17 +1,19 @@
+import { asyncValidator } from "@ez-kits/form-async-validator";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import user from "@testing-library/user-event";
+import type { Rule } from "async-validator";
 import {
 	BindingFieldInput,
 	FieldErrors,
-	asyncFieldSchema,
-	asyncSchema,
+	registerGlobalValidator,
 	useForm,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 
 describe("Async Validator", () => {
+	registerGlobalValidator(asyncValidator);
 	const renderErrors =
 		(testId: string) =>
 		(errors: ValidateError[] = []) =>
@@ -33,16 +35,22 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: asyncSchema<LoginForm>({
-					username: [
-						{
+			const form = useForm<LoginForm, Rule>({
+				validationSchema: {
+					type: "object",
+					fields: {
+						username: {
 							required: true,
 							type: "string",
 							len: 6,
 						},
-					],
-				}),
+						password: {
+							type: "string",
+							pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
+							required: true,
+						},
+					},
+				},
 			});
 
 			return (
@@ -54,19 +62,15 @@ describe("Async Validator", () => {
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 						</form.Field>
-						<form.Field
-							name="password"
-							validationSchema={asyncFieldSchema({
-								type: "string",
-								pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
-								required: true,
-							})}
-						>
+						<form.Field name="password">
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 						</form.Field>
+						<button type="submit" data-testid="submitButton">
+							Submit
+						</button>
 					</form>
 				</form.Form>
 			);
@@ -76,12 +80,14 @@ describe("Async Validator", () => {
 
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
+		const submitButton = screen.getByTestId("submitButton");
 
 		expect(usernameInput).toBeInTheDocument();
 		expect(passwordInput).toBeInTheDocument();
 
 		await user.type(usernameInput, loginFormData.username);
 		await user.type(passwordInput, loginFormData.password);
+		await user.click(submitButton);
 
 		expect(usernameInput).toHaveValue(loginFormData.username);
 		expect(passwordInput).toHaveValue(loginFormData.password);
@@ -114,7 +120,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, Rule>({});
 
 			return (
 				<form.Form>
@@ -126,11 +132,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={asyncFieldSchema({
+							validationSchema={{
 								type: "string",
 								pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 								required: true,
-							})}
+							}}
 						>
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
@@ -139,9 +145,9 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={asyncFieldSchema({
-								validator(_, __, ___, source) {
-									if (source.password !== source.confirmPassword) {
+							validationSchema={(confirmPassword, { form }) => ({
+								validator() {
+									if (form.getFieldValue("password") !== confirmPassword) {
 										return ["Confirm password doesn't match password."];
 									}
 
