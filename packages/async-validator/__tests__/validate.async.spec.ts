@@ -1,6 +1,6 @@
-import FieldInstance from "src/Field";
-import FormInstance from "src/Form";
-import { asyncFieldSchema, asyncSchema } from "src/validation";
+import { FieldInstance, FormInstance } from "@ez-kits/form-core";
+import { Rule } from "async-validator";
+import { asyncValidator } from "src/index";
 import { describe, it } from "vitest";
 
 describe("Async validator", () => {
@@ -10,27 +10,29 @@ describe("Async validator", () => {
 			password: string;
 		}
 
-		const form = new FormInstance<LoginForm>({
-			validationSchema: asyncSchema<LoginForm>({
-				username: [
-					{
+		const form = new FormInstance<LoginForm, Rule>({
+			validator: asyncValidator,
+			validationSchema: {
+				type: "object",
+				fields: {
+					username: {
 						required: true,
 						type: "string",
 						len: 6,
 					},
-				],
-			}),
+					password: {
+						type: "string",
+						pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
+						required: true,
+					},
+				},
+			},
 		});
-		const userName = new FieldInstance<string, LoginForm>(form, {
+		const userName = new FieldInstance<string, LoginForm, Rule>(form, {
 			name: "username",
 		});
-		const password = new FieldInstance<string, LoginForm>(form, {
+		const password = new FieldInstance<string, LoginForm, Rule>(form, {
 			name: "password",
-			validationSchema: asyncFieldSchema({
-				type: "string",
-				pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
-				required: true,
-			}),
 		});
 		userName.mount();
 		password.mount();
@@ -64,36 +66,41 @@ describe("Async validator", () => {
 			},
 		};
 
-		const form = new FormInstance<RegisterForm>();
-		const userName = new FieldInstance<string, RegisterForm>(form, {
+		const form = new FormInstance<RegisterForm, Rule>({
+			validator: asyncValidator,
+		});
+		const userName = new FieldInstance<string, RegisterForm, Rule>(form, {
 			name: "username",
 		});
-		const password = new FieldInstance<string, RegisterForm>(form, {
+		const password = new FieldInstance<string, RegisterForm, Rule>(form, {
 			name: "password",
-			validationSchema: asyncFieldSchema({
+			validationSchema: {
 				type: "string",
 				pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 				required: true,
-			}),
+			},
 		});
-		const confirmPassword = new FieldInstance<string, RegisterForm>(form, {
-			name: "confirmPassword",
-			validationSchema: asyncFieldSchema([
-				{
-					validator(_, __, ___, source) {
-						if (source.password !== source.confirmPassword) {
-							return ["Confirm password doesn't match password."];
-						}
+		const confirmPassword = new FieldInstance<string, RegisterForm, Rule>(
+			form,
+			{
+				name: "confirmPassword",
+				validationSchema: (confirmPassword, { form }) => [
+					{
+						validator() {
+							if (form.getFieldValue("password") !== confirmPassword) {
+								return ["Confirm password doesn't match password."];
+							}
 
-						return [];
+							return [];
+						},
 					},
-				},
-			]),
-		});
-		const addressLineOne = new FieldInstance<string, RegisterForm>(form, {
+				],
+			}
+		);
+		const addressLineOne = new FieldInstance<string, RegisterForm, Rule>(form, {
 			name: "address.lineOne",
 		});
-		const addressLineTwo = new FieldInstance<string, RegisterForm>(form, {
+		const addressLineTwo = new FieldInstance<string, RegisterForm, Rule>(form, {
 			name: "address.lineTwo",
 		});
 

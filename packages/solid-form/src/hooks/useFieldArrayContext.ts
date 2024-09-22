@@ -1,10 +1,12 @@
 import type { FieldArrayInstance } from "@ez-kits/form-core";
 import { useContext } from "solid-js";
 import fieldArrayContext from "src/contexts/fieldArrayContext";
+import type { DefaultValidationSchema } from "src/global";
 
 export default function useFieldArrayContext<
 	FieldValue = unknown,
-	FormValues = unknown
+	FormValues = unknown,
+	ValidationSchema = DefaultValidationSchema
 >() {
 	const context = useContext(fieldArrayContext);
 
@@ -14,5 +16,9 @@ export default function useFieldArrayContext<
 		);
 	}
 
-	return context.fieldArray as FieldArrayInstance<FieldValue, FormValues>;
+	return context.fieldArray as FieldArrayInstance<
+		FieldValue,
+		FormValues,
+		ValidationSchema
+	>;
 }

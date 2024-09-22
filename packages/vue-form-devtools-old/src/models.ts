@@ -5,14 +5,18 @@ import type {
 } from "@ez-kits/form-core";
 
 export interface DevtoolInstance {
-	addForm(name: string, instance: FormInstance, componentUid: string): void;
+	addForm(
+		name: string,
+		instance: FormInstance<unknown, unknown>,
+		componentUid: string
+	): void;
 	removeForm(name: string): void;
 	updateFormName(old: string, name: string): void;
 
 	addFormItem(
 		form: string,
 		name: string,
-		instance: FieldInstance<unknown, unknown>,
+		instance: FieldInstance<unknown, unknown, unknown>,
 		componentUid: string
 	): void;
 	removeFormItem(form: string, name: string): void;
@@ -26,7 +30,7 @@ export interface DevtoolInstance {
 	addFormList(
 		form: string,
 		name: string,
-		instance: FieldArrayInstance<unknown, unknown>,
+		instance: FieldArrayInstance<unknown, unknown, unknown>,
 		componentUid: string
 	): void;
 	removeFormList(form: string, name: string): void;
@@ -50,14 +54,14 @@ export enum DevToolDataType {
 export interface DevtoolFormData {
 	type: DevToolDataType.Form;
 	name: string;
-	instance: FormInstance;
+	instance: FormInstance<unknown, unknown>;
 	componentUid: string;
 }
 
 export interface DevtoolFormItemData {
 	type: DevToolDataType.Item;
 	name: string;
-	instance: FieldArrayInstance<unknown, unknown>;
+	instance: FieldArrayInstance<unknown, unknown, unknown>;
 	form: string;
 	componentUid: string;
 }
@@ -65,7 +69,7 @@ export interface DevtoolFormItemData {
 export interface DevtoolFormListData {
 	type: DevToolDataType.List;
 	name: string;
-	instance: FieldArrayInstance<unknown, unknown>;
+	instance: FieldArrayInstance<unknown, unknown, unknown>;
 	form: string;
 	componentUid: string;
 }

@@ -1,18 +1,19 @@
+import { zodValidator } from "@ez-kits/form-zod-validator";
 import "@testing-library/jest-dom";
 import { render, screen } from "@testing-library/react";
 import user from "@testing-library/user-event";
 import {
 	BindingFieldInput,
 	FieldErrors,
+	registerGlobalValidator,
 	useForm,
-	zodFieldSchema,
-	zodSchema,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 import { z } from "zod";
 
-describe("Async Validator", () => {
+describe("Zod Validator", () => {
+	registerGlobalValidator(zodValidator);
 	const renderErrors =
 		(testId: string) =>
 		(errors: ValidateError[] = []) =>
@@ -34,13 +35,14 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: zodSchema<LoginForm>({
-					username: [
-						{
-							schema: z.string().length(6),
-						},
-					],
+			const form = useForm<LoginForm, z.Schema>({
+				validationSchema: z.object({
+					username: z.string().length(6),
+					password: z
+						.string()
+						.refine((value) =>
+							new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+						),
 				}),
 			});
 
@@ -53,23 +55,15 @@ describe("Async Validator", () => {
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 						</form.Field>
-						<form.Field
-							name="password"
-							validationSchema={zodFieldSchema({
-								schema: z
-									.string()
-									.refine((value) =>
-										new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(
-											value
-										)
-									),
-							})}
-						>
+						<form.Field name="password">
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
 							</BindingFieldInput>
 							<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 						</form.Field>
+						<button type="submit" data-testid="submitButton">
+							Submit
+						</button>
 					</form>
 				</form.Form>
 			);
@@ -79,12 +73,14 @@ describe("Async Validator", () => {
 
 		const usernameInput = screen.getByTestId("usernameInput");
 		const passwordInput = screen.getByTestId("passwordInput");
+		const submitButton = screen.getByTestId("submitButton");
 
 		expect(usernameInput).toBeInTheDocument();
 		expect(passwordInput).toBeInTheDocument();
 
 		await user.type(usernameInput, loginFormData.username);
 		await user.type(passwordInput, loginFormData.password);
+		await user.click(submitButton);
 
 		expect(usernameInput).toHaveValue(loginFormData.username);
 		expect(passwordInput).toHaveValue(loginFormData.password);
@@ -117,7 +113,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, z.Schema>({});
 
 			return (
 				<form.Form>
@@ -129,15 +125,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={zodFieldSchema({
-								schema: z
-									.string()
-									.refine((value) =>
-										new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(
-											value
-										)
-									),
-							})}
+							validationSchema={z
+								.string()
+								.refine((value) =>
+									new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
+								)}
 						>
 							<BindingFieldInput>
 								<input data-testid="passwordInput" type="password" />
@@ -146,17 +138,14 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={zodFieldSchema([
-								{
-									schema: (values: RegisterForm) =>
-										z
-											.string()
-											.refine(
-												() => values.confirmPassword === values.password,
-												"Confirm password doesn't match password."
-											),
-								},
-							])}
+							validationSchema={(confirmPassword, { form }) =>
+								z
+									.string()
+									.refine(
+										() => confirmPassword === form.getFieldValue("password"),
+										"Confirm password doesn't match password."
+									)
+							}
 						>
 							<BindingFieldInput>
 								<input data-testid="confirmPasswordInput" type="password" />

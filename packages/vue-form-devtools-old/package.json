@@ -31,12 +31,16 @@
 		"README.md",
 		"package.json"
 	],
+	"peerDependencies": {
+		"vue": "^3.5.6"
+	},
 	"dependencies": {
 		"@ez-kits/form-core": "*",
 		"@vue/devtools-api": "^6.5.1"
 	},
 	"devDependencies": {
 		"tsup": "^7.1.0",
-		"typescript": "^5.0.2"
+		"typescript": "^5.0.2",
+		"vue": "^3.5.6"
 	}
 }

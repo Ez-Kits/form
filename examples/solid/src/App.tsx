@@ -1,6 +1,12 @@
-import { useForm } from "@ez-kits/form-solid";
-import { For, type Component } from "solid-js";
+import {
+	FieldErrors,
+	registerGlobalValidator,
+	useForm,
+} from "@ez-kits/form-solid";
+import { createUniqueId, For, type Component } from "solid-js";
 
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
 import styles from "./App.module.css";
 import logo from "./logo.svg";
 
@@ -34,20 +40,48 @@ interface LoginForm {
 	addresses: { city: string }[];
 }
 
+declare module "@ez-kits/form-solid" {
+	interface GlobalRegister {
+		validator: typeof zodValidator;
+	}
+}
+
+registerGlobalValidator(zodValidator);
+
 function LoginPage() {
-	const form = useForm<LoginForm>();
+	const form = useForm<LoginForm>({
+		initialValues: {
+			username: "",
+			password: "",
+			addresses: [],
+		},
+		validationSchema: z.object({
+			username: z.string().min(1, "This field is required"),
+			password: z.string().min(1, "This field is required"),
+			addresses: z.array(
+				z.object({
+					city: z.string().min(1, "This field is required"),
+				})
+			),
+		}),
+	});
+
+	form.on("error", (errors) => {
+		console.log(errors);
+	});
 
 	return (
-		<form.Form onValuesChange={console.log}>
+		<form.Form>
+			<form.Observe>
+				{({ values }) => <span>{JSON.stringify(values())}</span>}
+			</form.Observe>
 			<form {...form.getFormProps()}>
 				<form.Field name="username">
 					{({ field }) => (
 						<input data-testid="usernameInput" {...field.getInputProps()} />
 					)}
 				</form.Field>
-				<form.ObserveField name="username">
-					{({ value }) => <span>{value()}</span>}
-				</form.ObserveField>
+
 				<form.Field name="password">
 					{({ field }) => (
 						<input
@@ -65,14 +99,27 @@ function LoginPage() {
 									{(_, index) => (
 										<fieldArray.Field index={index()} name="city">
 											{({ field }) => (
-												<input {...field.getInputProps()} type="text" />
+												<div>
+													<input {...field.getInputProps()} type="text" />
+													<FieldErrors>
+														{(errors) => (
+															<div>
+																{errors()
+																	.flatMap((error) => error.messages)
+																	.join(", ")}
+															</div>
+														)}
+													</FieldErrors>
+												</div>
 											)}
 										</fieldArray.Field>
 									)}
 								</For>
 							</div>
 							<div>
-								<button onClick={() => fieldArray.push({ city: "" })}>
+								<button
+									onClick={() => fieldArray.push({ city: createUniqueId() })}
+								>
 									Push
 								</button>
 								<button onClick={() => fieldArray.swap(0, 1)}>Swap</button>

@@ -1,16 +1,19 @@
+import { asyncValidator } from "@ez-kits/form-async-validator";
 import { render, screen } from "@solidjs/testing-library";
 import user from "@testing-library/user-event";
+import type { Rule } from "async-validator";
 import type { Accessor } from "solid-js";
 import {
 	FieldErrors,
-	asyncFieldSchema,
-	asyncSchema,
+	registerGlobalValidator,
 	useForm,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 
 describe("Async Validator", () => {
+	registerGlobalValidator(asyncValidator);
+
 	const renderErrors =
 		(testId: string) => (errors: Accessor<ValidateError[]>) =>
 			(
@@ -31,16 +34,17 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: asyncSchema<LoginForm>({
-					username: [
-						{
+			const form = useForm<LoginForm, Rule>({
+				validationSchema: {
+					type: "object",
+					fields: {
+						username: {
 							required: true,
 							type: "string",
 							len: 6,
 						},
-					],
-				}),
+					},
+				},
 			});
 
 			return (
@@ -59,11 +63,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={asyncFieldSchema({
+							validationSchema={{
 								type: "string",
 								pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 								required: true,
-							})}
+							}}
 						>
 							{({ field }) => (
 								<>
@@ -123,7 +127,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, Rule>({});
 
 			return (
 				<form.Form>
@@ -140,11 +144,11 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={asyncFieldSchema({
+							validationSchema={{
 								type: "string",
 								pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 								required: true,
-							})}
+							}}
 						>
 							{({ field }) => (
 								<>
@@ -159,9 +163,9 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={asyncFieldSchema({
-								validator(_, __, ___, source) {
-									if (source.password !== source.confirmPassword) {
+							validationSchema={(confirmPassword, { form }) => ({
+								validator() {
+									if (form.getFieldValue("password") !== confirmPassword) {
 										return ["Confirm password doesn't match password."];
 									}
 

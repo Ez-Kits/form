@@ -1,7 +1,7 @@
 <template>
 	<Form>
 		<div>
-			<div v-for="field in fieldsInfo" :key="field.key">
+			<div v-for="field in fieldsInfo" :key="field.index">
 				<Field :index="field.index" name="username">
 					<EzBindingFieldInput>
 						<input :data-testid="`users.username.${field.index}`" />
@@ -28,6 +28,7 @@
 import {
 	EzBindingFieldInput,
 	useForm,
+	type DefaultValidationSchema,
 	type FieldArrayInstance,
 } from "src/index";
 
@@ -45,7 +46,9 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-	actionClick: [fieldArray: FieldArrayInstance<User[], UsersForm>];
+	actionClick: [
+		fieldArray: FieldArrayInstance<User[], UsersForm, DefaultValidationSchema>
+	];
 }>();
 
 const { Form, useFieldArray } = useForm({ initialValues: props.initialValues });

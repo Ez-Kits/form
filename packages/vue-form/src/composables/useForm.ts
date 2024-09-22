@@ -23,8 +23,10 @@ import {
 	useFormValues,
 	type UseFormDataValues,
 } from "src/composables/useValue";
+import type { DefaultValidationSchema } from "src/global";
 import { provideForm } from "src/provides/form";
 import { handleEventPrevent } from "src/utilities/event";
+import { mergeFormOptions } from "src/utilities/form";
 import { clearUndefinedProperties } from "src/utilities/object";
 import {
 	h,
@@ -37,14 +39,14 @@ import {
 } from "vue";
 
 declare module "@ez-kits/form-core" {
-	interface FormInstance<Values> {
-		Field: FieldComponent<Values>;
-		FieldArray: FieldArrayComponent<Values>;
-		Form: FormComponent<Values>;
-		useField: UseField<Values>;
-		useFieldArray: UseFieldArray<Values>;
-		Observe: ObserveComponent<Values>;
-		ObserveField: ObserveFieldComponent<Values>;
+	interface FormInstance<Values, ValidationSchema> {
+		Field: FieldComponent<Values, Values, ValidationSchema>;
+		FieldArray: FieldArrayComponent<Values, Values, ValidationSchema>;
+		Form: FormComponent<Values, ValidationSchema>;
+		useField: UseField<Values, Values, ValidationSchema>;
+		useFieldArray: UseFieldArray<Values, Values, ValidationSchema>;
+		Observe: ObserveComponent<Values, ValidationSchema>;
+		ObserveField: ObserveFieldComponent<Values, ValidationSchema>;
 		getFormProps: () => {
 			onReset: (e: Event) => void;
 			onSubmit: (e: Event) => void;
@@ -58,20 +60,26 @@ declare module "@ez-kits/form-core" {
 	}
 }
 
-export interface UseFormProps<FormValues> extends FormOptions<FormValues> {
-	form?: FormInstance<FormValues>;
+export interface UseFormProps<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> extends FormOptions<FormValues, ValidationSchema> {
+	form?: FormInstance<FormValues, ValidationSchema>;
 }
 
-export default function useForm<FormValues>(
-	options: MaybeRef<UseFormProps<FormValues>> = {}
-) {
+export default function useForm<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(options: MaybeRef<UseFormProps<FormValues, ValidationSchema>> = {}) {
 	function getForm() {
 		const { form: optionsForm, ...otherOptions } = toValue(options);
 		if (optionsForm) {
-			optionsForm.updateOptions({
-				...optionsForm.options,
-				...clearUndefinedProperties(otherOptions),
-			});
+			optionsForm.updateOptions(
+				mergeFormOptions({
+					...optionsForm.options,
+					...clearUndefinedProperties(otherOptions),
+				})
+			);
 
 			return optionsForm;
 		}
@@ -80,10 +88,17 @@ export default function useForm<FormValues>(
 
 		form.useField = useField as any;
 		form.useFieldArray = useFieldArray as any;
-		form.Field = Field as unknown as FieldComponent<FormValues>;
-		form.FieldArray =
-			EzFieldArray as unknown as FieldArrayComponent<FormValues>;
-		form.Observe = Observe;
+		form.Field = Field as unknown as FieldComponent<
+			FormValues,
+			FormValues,
+			ValidationSchema
+		>;
+		form.FieldArray = EzFieldArray as unknown as FieldArrayComponent<
+			FormValues,
+			FormValues,
+			ValidationSchema
+		>;
+		form.Observe = Observe as ObserveComponent<FormValues, ValidationSchema>;
 		form.ObserveField = ObserveField as any;
 		form.Form = ((props: any, { slots }: { slots: Slots }) =>
 			h(
@@ -93,7 +108,7 @@ export default function useForm<FormValues>(
 					...props,
 				},
 				slots
-			)) as unknown as FormComponent<FormValues>;
+			)) as unknown as FormComponent<FormValues, ValidationSchema>;
 
 		form.getFormProps = () => {
 			return {
@@ -127,10 +142,12 @@ export default function useForm<FormValues>(
 		(newOptions) => {
 			const { form: optionsForm, ...otherOptions } = newOptions;
 
-			form.updateOptions({
-				...optionsForm?.options,
-				...clearUndefinedProperties(otherOptions),
-			});
+			form.updateOptions(
+				mergeFormOptions({
+					...optionsForm?.options,
+					...clearUndefinedProperties(otherOptions),
+				})
+			);
 		}
 	);
 

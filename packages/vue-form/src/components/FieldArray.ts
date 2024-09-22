@@ -7,6 +7,7 @@ import {
 	type GetKeys,
 } from "@ez-kits/form-core";
 import useFieldArray from "src/composables/useFieldArray";
+import type { DefaultValidationSchema } from "src/global";
 import { useInjectForm } from "src/provides/form";
 import { fieldProps, type FieldNameProps } from "src/utilities/field";
 import { defineComponent, getCurrentInstance } from "vue";
@@ -14,10 +15,11 @@ import { defineComponent, getCurrentInstance } from "vue";
 export type FieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = FieldNameProps<ParentValue, N> &
 	Omit<
-		FieldOptions<any, FormValues>,
+		FieldOptions<any, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
 	>;
 
@@ -48,14 +50,15 @@ type BaseFieldArrayType = typeof FieldArrayImpl;
 export type FieldArrayComponent<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = Omit<BaseFieldArrayType, "$props"> & {
 	new (): {
-		$props: FieldArrayProps<FormValues, ParentValue, N>;
+		$props: FieldArrayProps<FormValues, ParentValue, ValidationSchema, N>;
 		$slots: {
 			default: (helpers: {
-				form: FormInstance<FormValues>;
-				fieldArray: FieldArrayInstance<any, FormValues>;
+				form: FormInstance<FormValues, ValidationSchema>;
+				fieldArray: FieldArrayInstance<any, FormValues, ValidationSchema>;
 				fieldsInfo: FieldArrayItemInfo[];
 			}) => any;
 		};

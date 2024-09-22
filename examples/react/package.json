@@ -10,9 +10,15 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-react": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
 		"react": "^18.2.0",
 		"react-dom": "^18.2.0",
-		"@ez-kits/form-react": "*"
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.14",

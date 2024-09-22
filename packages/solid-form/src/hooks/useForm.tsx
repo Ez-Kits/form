@@ -25,6 +25,7 @@ import {
 	type ObserveFieldProps,
 	type ObserveProps,
 } from "src/components/Observe";
+import type { DefaultValidationSchema } from "src/global";
 import type { UseField } from "src/hooks/useField";
 import useField from "src/hooks/useField";
 import type { UseFieldArray } from "src/hooks/useFieldArray";
@@ -35,18 +36,20 @@ import {
 	useFormValues,
 	type UseFormDataValues,
 } from "src/hooks/useValue";
-import { handleEventPrevent } from "src/utilities";
+import { handleEventPrevent, mergeFormOptions } from "src/utilities";
 
 declare module "@ez-kits/form-core" {
-	interface FormInstance<Values> {
-		Field: FieldComponent<Values>;
-		FieldArray: FieldArrayComponent<Values, Values>;
-		Form: FormComponent<Values>;
-		useField: UseField<Values, Values>;
-		useFieldArray: UseFieldArray<Values, Values>;
-		Observe: <T = Values>(props: ObserveProps<Values, T>) => JSXElement;
+	interface FormInstance<Values, ValidationSchema> {
+		Field: FieldComponent<Values, Values, ValidationSchema>;
+		FieldArray: FieldArrayComponent<Values, Values, ValidationSchema>;
+		Form: FormComponent<Values, ValidationSchema>;
+		useField: UseField<Values, Values, ValidationSchema>;
+		useFieldArray: UseFieldArray<Values, Values, ValidationSchema>;
+		Observe: <T = Values>(
+			props: ObserveProps<Values, ValidationSchema, T>
+		) => JSXElement;
 		ObserveField: <N extends string = GetKeys<Values>, T = GetType<Values, N>>(
-			props: ObserveFieldProps<Values, N, T>
+			props: ObserveFieldProps<Values, ValidationSchema, N, T>
 		) => JSXElement;
 		getFormProps: () => {
 			onReset: JSX.CustomEventHandlersCamelCase<HTMLFormElement>["onReset"];
@@ -65,27 +68,33 @@ declare module "@ez-kits/form-core" {
 	}
 }
 
-export interface UseFormProps<FormValues> extends FormOptions<FormValues> {
-	form?: FormInstance<FormValues>;
+export interface UseFormProps<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> extends FormOptions<FormValues, ValidationSchema> {
+	form?: FormInstance<FormValues, ValidationSchema>;
 }
 
-export default function useForm<FormValues>(
-	options: UseFormProps<FormValues> = {}
-) {
+export default function useForm<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+>(options: UseFormProps<FormValues, ValidationSchema> = {}) {
 	function getForm() {
 		const { form: optionsForm, ...otherOptions } = options;
 		if (optionsForm) {
-			optionsForm.updateOptions({
-				...optionsForm.options,
-				...otherOptions,
-			});
+			optionsForm.updateOptions(
+				mergeFormOptions({
+					...optionsForm.options,
+					...otherOptions,
+				})
+			);
 
 			return optionsForm;
 		}
 
 		const formInstance = new FormInstance(options);
 
-		formInstance.Field = Field;
+		formInstance.Field = Field as any;
 		formInstance.FieldArray = FieldArray as any;
 		formInstance.useField = useField;
 		formInstance.useFieldArray = useFieldArray as any;
@@ -131,10 +140,12 @@ export default function useForm<FormValues>(
 			() => {
 				const { form: optionsForm, ...otherOptions } = options;
 
-				form.updateOptions({
-					...optionsForm?.options,
-					...otherOptions,
-				});
+				form.updateOptions(
+					mergeFormOptions({
+						...optionsForm?.options,
+						...otherOptions,
+					})
+				);
 			}
 		)
 	);

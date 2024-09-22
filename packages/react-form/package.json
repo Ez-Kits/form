@@ -35,22 +35,8 @@
 		"use-sync-external-store": "^1.2.0"
 	},
 	"peerDependencies": {
-		"async-validator": "^4.2.5",
 		"react": "^18.2.0",
-		"react-dom": "^18.2.0",
-		"yup": "^1.2.0",
-		"zod": "^3.21.4"
-	},
-	"peerDependenciesMeta": {
-		"async-validator": {
-			"optional": true
-		},
-		"yup": {
-			"optional": true
-		},
-		"zod": {
-			"optional": true
-		}
+		"react-dom": "^18.2.0"
 	},
 	"devDependencies": {
 		"@types/react": "^18.2.14",
@@ -58,6 +44,12 @@
 		"@types/use-sync-external-store": "^0.0.3",
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
 		"@typescript-eslint/parser": "^5.61.0",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8",
 		"eslint": "^8.44.0",
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.1",

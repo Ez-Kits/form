@@ -47,13 +47,13 @@ describe("Global instances", () => {
 	it("Field instance", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldInstance<unknown, unknown>(form, {
+		const field = new FieldInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 		field.mount();
 
 		const formInstance = getFormInstance("test");
-		const fieldInstance = getFieldInstance("test", "firstName");
+		const fieldInstance = getFieldInstance("test", "firstName" as never);
 		expect(formInstance).toBeInstanceOf(FormInstance);
 		expect(fieldInstance).toBeInstanceOf(FieldInstance);
 	});
@@ -61,7 +61,7 @@ describe("Global instances", () => {
 	it("Field instance - Rename", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldInstance<unknown, unknown>(form, {
+		const field = new FieldInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 		field.mount();
@@ -74,7 +74,7 @@ describe("Global instances", () => {
 	it("Field instance - Removed", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldInstance<unknown, unknown>(form, {
+		const field = new FieldInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 
@@ -90,7 +90,7 @@ describe("Global instances", () => {
 	it("Field instance - Removed form", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		const unmountForm = form.mount();
-		const field = new FieldInstance<unknown, unknown>(form, {
+		const field = new FieldInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 
@@ -109,7 +109,7 @@ describe("Global instances", () => {
 	it("Field Array instance", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldArrayInstance<unknown, unknown>(form, {
+		const field = new FieldArrayInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 		field.mount();
@@ -123,7 +123,7 @@ describe("Global instances", () => {
 	it("Field Array instance - Rename", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldArrayInstance<unknown, unknown>(form, {
+		const field = new FieldArrayInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 		field.mount();
@@ -136,7 +136,7 @@ describe("Global instances", () => {
 	it("Field Array instance - Removed", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		form.mount();
-		const field = new FieldArrayInstance<unknown, unknown>(form, {
+		const field = new FieldArrayInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 
@@ -152,7 +152,7 @@ describe("Global instances", () => {
 	it("Field Array instance - Removed form", ({ expect }) => {
 		const form = new FormInstance({ name: "test" });
 		const unmountForm = form.mount();
-		const field = new FieldArrayInstance<unknown, unknown>(form, {
+		const field = new FieldArrayInstance<unknown, unknown, unknown>(form, {
 			name: "firstName",
 		});
 

@@ -1,10 +1,12 @@
 import {
+	BindingFieldInput,
 	FieldErrors,
-	asyncFieldSchema,
-	asyncSchema,
+	registerGlobalValidator,
 	useForm,
 } from "@ez-kits/form-react";
+import { zodValidator } from "@ez-kits/form-zod-validator";
 import { useState } from "react";
+import { z } from "zod";
 import "./App.css";
 import reactLogo from "./assets/react.svg";
 import viteLogo from "/vite.svg";
@@ -48,19 +50,23 @@ interface LoginForm {
 		lineOne: string;
 		lineTwo: string;
 	}[];
+	job: {
+		position: string;
+		salary: number;
+	};
 }
+
+declare module "@ez-kits/form-react" {
+	interface GlobalRegister {
+		validator: typeof zodValidator;
+	}
+}
+
+registerGlobalValidator(zodValidator);
 
 function LoginPage() {
 	const form = useForm<LoginForm>({
-		validationSchema: asyncSchema<LoginForm>({
-			username: [
-				{
-					required: true,
-					type: "string",
-					len: 6,
-				},
-			],
-		}),
+		name: "abc",
 	});
 
 	return (
@@ -69,20 +75,30 @@ function LoginPage() {
 				<form.Observe>
 					{({ values }) => <span>{JSON.stringify(values)}</span>}
 				</form.Observe>
+				<form.ObserveField name="addresses">
+					{({ value: addresses }) => <span>{addresses?.join(",")}</span>}
+				</form.ObserveField>
 				<br />
 				<form.Field name="username">
-					<input data-testid="usernameInput" />
+					<BindingFieldInput>
+						<input data-testid="usernameInput" />
+					</BindingFieldInput>
 				</form.Field>
 				<form.Field
 					name="password"
-					label="Test"
-					validationSchema={asyncFieldSchema({
-						type: "string",
-						pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
-						required: true,
-					})}
+					label="Password"
+					validationSchema={z
+						.string()
+						.min(1, "Password is required")
+						.regex(
+							new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
+							"Password must contain 8 or more characters with at least one letter and one number"
+						)
+						.default("")}
 				>
-					<input data-testid="passwordInput" type="password" />
+					<BindingFieldInput>
+						<input data-testid="passwordInput" type="password" />
+					</BindingFieldInput>
 					<FieldErrors>
 						{(errors) => errors?.map((error) => error.messages)}
 					</FieldErrors>
@@ -98,11 +114,28 @@ function LoginPage() {
 									return (
 										<div key={field.key}>
 											<fieldArray.Field index={field.index} name="lineOne">
-												<input />
+												<BindingFieldInput>
+													<input />
+												</BindingFieldInput>
+
+												<FieldErrors>
+													{(errors) => errors?.map((error) => error.messages)}
+												</FieldErrors>
 											</fieldArray.Field>
 											<br />
-											<fieldArray.Field index={field.index} name="lineTwo">
-												<input />
+											<fieldArray.Field
+												index={field.index}
+												name="lineTwo"
+												label="Line two"
+												validationSchema={z.string()}
+											>
+												<BindingFieldInput>
+													<input />
+												</BindingFieldInput>
+
+												<FieldErrors>
+													{(errors) => errors?.map((error) => error.messages)}
+												</FieldErrors>
 											</fieldArray.Field>
 										</div>
 									);
@@ -134,6 +167,13 @@ function LoginPage() {
 						);
 					}}
 				</form.FieldArray>
+				<form.Field name="job">
+					{({ field, value }) => (
+						<div>
+							<field.Field name="position">{({ value }) => value}</field.Field>
+						</div>
+					)}
+				</form.Field>
 			</form>
 		</form.Form>
 	);

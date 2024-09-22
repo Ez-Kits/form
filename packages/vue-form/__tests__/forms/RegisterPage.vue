@@ -1,6 +1,6 @@
 <template>
 	<Form>
-		<form v-bind="form.getFormProps()">
+		<form v-bind="registerForm.getFormProps()">
 			<Field name="username">
 				<EzBindingFieldInput>
 					<input data-testid="usernameInput" />
@@ -56,11 +56,11 @@
 </template>
 
 <script lang="ts" setup>
-import type { FieldValidationSchema } from "@ez-kits/form-core";
 import {
 	EzBindingFieldInput,
 	EzFieldErrors as FieldErrors,
 	useForm,
+	type DefaultValidationSchema,
 } from "src/index";
 export interface RegisterForm {
 	username: string;
@@ -74,13 +74,13 @@ export interface RegisterForm {
 
 const props = defineProps<{
 	initialValues?: RegisterForm;
-	passwordValidationSchema?: FieldValidationSchema;
-	confirmPasswordValidationSchema?: FieldValidationSchema;
+	passwordValidationSchema?: DefaultValidationSchema;
+	confirmPasswordValidationSchema?: DefaultValidationSchema;
 }>();
 
-const form = useForm<RegisterForm>({
+const registerForm = useForm<RegisterForm>({
 	initialValues: props.initialValues,
 });
 
-const { Form, Field, ObserveField, Observe } = form;
+const { Form, Field, ObserveField, Observe } = registerForm;
 </script>

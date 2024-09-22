@@ -3,7 +3,7 @@ import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { Fragment } from "react";
 import { BindingFieldInput, useForm } from "src/index";
-import { describe, it } from "vitest";
+import { describe, expect, it } from "vitest";
 
 describe("Form values", () => {
 	it("Login form", async () => {
@@ -300,7 +300,7 @@ describe("Field Array", () => {
 			}),
 	};
 
-	it("Push", async ({ expect }) => {
+	it("Push", async () => {
 		const user: User = {
 			username: "user 1",
 			password: "secret_password",
@@ -383,7 +383,7 @@ describe("Field Array", () => {
 		expect(screen.getByTestId("users.password.10")).toHaveValue(user.password);
 	});
 
-	it("Pop", async ({ expect }) => {
+	it("Pop", async () => {
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 
@@ -457,12 +457,21 @@ describe("Field Array", () => {
 		expect(usersLength).toHaveTextContent("9");
 	});
 
-	it("Insert", async ({ expect }) => {
+	it("Insert", async () => {
 		const newUser: User = {
 			username: "User to insert",
 			password: "Password",
 		};
 
+		/*************  ✨ Codeium Command ⭐  *************/
+		/**
+		 * A form with a FieldArray containing two BindingFieldInputs per index.
+		 * The FieldArray is initialized with the users data from the formData object.
+		 * Each input is assigned a data-testid equal to "users.username.${index}" or "users.password.${index}".
+		 * Below the FieldArray, there is a span with a data-testid of "users_length" that displays the current length of the FieldArray.
+		 * Below the span, there is a button with a data-testid of "action_btn" that inserts a new user at index 2 when clicked.
+		 */
+		/******  f80f2a42-ddd1-43a1-9dc0-74cf9ba17673  *******/
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 
@@ -473,7 +482,7 @@ describe("Field Array", () => {
 							<div>
 								{fieldsInfo.map((_, index) => {
 									return (
-										<>
+										<Fragment key={index}>
 											<fieldArray.Field index={index} name="username">
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
@@ -484,7 +493,7 @@ describe("Field Array", () => {
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-										</>
+										</Fragment>
 									);
 								})}
 
@@ -542,7 +551,7 @@ describe("Field Array", () => {
 		);
 	});
 
-	it("Shift", async ({ expect }) => {
+	it("Shift", async () => {
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 
@@ -616,7 +625,7 @@ describe("Field Array", () => {
 		expect(usersLength).toHaveTextContent("9");
 	});
 
-	it("Unshift", async ({ expect }) => {
+	it("Unshift", async () => {
 		const user: User = {
 			username: "user abc",
 			password: "secret_password_abc",
@@ -695,7 +704,7 @@ describe("Field Array", () => {
 		expect(screen.getByTestId("users.password.0")).toHaveValue(user.password);
 	});
 
-	it("Replace", async ({ expect }) => {
+	it("Replace", async () => {
 		const user: User = {
 			username: "user abc",
 			password: "secret_password_abc",
@@ -774,7 +783,7 @@ describe("Field Array", () => {
 		expect(screen.getByTestId("users.password.0")).toHaveValue(user.password);
 	});
 
-	it("Remove", async ({ expect }) => {
+	it("Remove", async () => {
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 
@@ -848,7 +857,7 @@ describe("Field Array", () => {
 		expect(usersLength).toHaveTextContent("9");
 	});
 
-	it("Move", async ({ expect }) => {
+	it("Move", async () => {
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 
@@ -926,7 +935,7 @@ describe("Field Array", () => {
 		);
 	});
 
-	it("Swap", async ({ expect }) => {
+	it("Swap", async () => {
 		function ListUsers() {
 			const form = useForm({ initialValues: { ...formData } });
 

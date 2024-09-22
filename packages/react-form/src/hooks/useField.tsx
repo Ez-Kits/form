@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import type { GetKeys } from "@ez-kits/form-core";
 import {
 	FieldInstance,
 	type FieldMeta,
 	type FieldOptions,
+	type GetKeys,
 	type GetType,
 } from "@ez-kits/form-core";
 import { useEffect, useMemo, useState, type ReactElement } from "react";
@@ -12,6 +12,7 @@ import type { FieldComponent } from "src/components/Field";
 import Field from "src/components/Field";
 import type { FieldArrayComponent } from "src/components/FieldArray";
 import FieldArray from "src/components/FieldArray";
+import type { DefaultValidationSchema } from "src/global";
 import useFormContext from "src/hooks/useFormContext";
 import {
 	useFieldData,
@@ -22,7 +23,7 @@ import {
 import type { FieldNameProps } from "src/utilities";
 
 declare module "@ez-kits/form-core" {
-	interface FieldInstance<FieldValue, FormValues> {
+	interface FieldInstance<FieldValue, FormValues, ValidationSchema> {
 		getInputProps(node: ReactElement): Record<string, any>;
 		useFieldValue: <T = FieldValue>(selector?: (values: FieldValue) => T) => T;
 		useFieldMeta: <T = FieldMeta>(selector?: (meta: FieldMeta) => T) => T;
@@ -30,11 +31,11 @@ declare module "@ez-kits/form-core" {
 			selector?: (values: UseFieldDataValues<FieldValue>) => T
 		) => T;
 
-		Field: FieldComponent<FormValues, FieldValue>;
-		FieldArray: FieldArrayComponent<FormValues, FieldValue>;
+		Field: FieldComponent<FormValues, FieldValue, ValidationSchema>;
+		FieldArray: FieldArrayComponent<FormValues, FieldValue, ValidationSchema>;
 	}
 
-	interface FieldOptions<FieldValue, FormValues> {
+	interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 		valuePropName?: string;
 		onChangePropName?: string;
 		onBlurPropName?: string;
@@ -45,17 +46,19 @@ declare module "@ez-kits/form-core" {
 export type UseFieldProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues>, "name">;
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
 
 export default function useField<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
->(options: UseFieldProps<FormValues, ParentValue, N>) {
-	const form = useFormContext<FormValues>();
+>(options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>) {
+	const form = useFormContext<FormValues, ValidationSchema>();
 
 	const name = useMemo(
 		() =>
@@ -114,7 +117,7 @@ export default function useField<
 		};
 
 		fieldInstance.Field = (props) => {
-			return <Field namePrefix={fieldInstance.name} {...props} />;
+			return <Field namePrefix={fieldInstance.name} {...(props as any)} />;
 		};
 		fieldInstance.FieldArray = (props) => {
 			return <FieldArray namePrefix={fieldInstance.name} {...(props as any)} />;
@@ -137,8 +140,9 @@ export default function useField<
 export type UseField<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = (
-	options: UseFieldProps<FormValues, ParentValue, N>
-) => FieldInstance<FieldValue, FormValues>;
+	options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>
+) => FieldInstance<FieldValue, FormValues, ValidationSchema>;

@@ -1,16 +1,19 @@
 import type {
 	FormInstance,
-	GetKeys,
+	FormOptions,
 	ValidateError,
 	ValidateTrigger,
-	ValidationSchema,
+	Validator,
 } from "@ez-kits/form-core";
+import { globalValidator, type DefaultValidationSchema } from "src/global";
 import type { PropType } from "vue";
 
-export function formProps<Values>(defaultForm?: FormInstance<Values>) {
+export function formProps<Values, ValidationSchema = DefaultValidationSchema>(
+	defaultForm?: FormInstance<Values, ValidationSchema>
+) {
 	return {
 		form: {
-			type: Object as PropType<FormInstance>,
+			type: Object as PropType<FormInstance<Values, ValidationSchema>>,
 			required: false,
 			default: defaultForm,
 		},
@@ -27,15 +30,11 @@ export function formProps<Values>(defaultForm?: FormInstance<Values>) {
 			required: false,
 		},
 		validationSchema: {
-			type: Object as PropType<ValidationSchema<GetKeys<Values>>>,
+			type: [Object, Array] as PropType<ValidationSchema>,
 			required: false,
 		},
 		validateTrigger: {
 			type: [String, Array] as PropType<ValidateTrigger | ValidateTrigger[]>,
-			required: false,
-		},
-		validateMessages: {
-			type: Object,
 			required: false,
 		},
 		// preserveValues: {
@@ -81,4 +80,20 @@ export function formPropsArray() {
 		"onError",
 		"onValidate",
 	] as const;
+}
+
+export function mergeFormOptions<
+	Values,
+	ValidationSchema = DefaultValidationSchema
+>(
+	options: FormOptions<Values, ValidationSchema>
+): FormOptions<Values, ValidationSchema> {
+	if (globalValidator) {
+		return {
+			validator: globalValidator as Validator<ValidationSchema>,
+			...options,
+		};
+	}
+
+	return options;
 }

@@ -1,13 +1,13 @@
 import FieldBaseInstance from "src/FieldBase";
 import FormInstance from "src/Form";
 import { FieldMeta, FieldOptions, ToArray, ValidateError } from "src/models";
-import { isEqual, uniqueId } from "src/utilities";
+import { uniqueId } from "src/utilities";
 import { toArray } from "src/utilities/array";
 
 type GetArrayItemType<T> = ToArray<T>[number];
 
-export type FieldArrayEvents<Value, FormValues> = {
-	change: [field: FieldArrayInstance<Value, FormValues>];
+export type FieldArrayEvents<Value, FormValues, ValidationSchema> = {
+	change: [field: FieldArrayInstance<Value, FormValues, ValidationSchema>];
 	"change:value": [value: Value, oldValue: Value];
 	"change:meta": [meta: FieldMeta];
 	error: [errors: ValidateError[]];
@@ -30,11 +30,13 @@ export type FieldArrayEvents<Value, FormValues> = {
 
 export default class FieldArrayInstance<
 	FieldValue,
-	FormValues
+	FormValues,
+	ValidationSchema
 > extends FieldBaseInstance<
 	FieldValue,
 	FormValues,
-	FieldArrayEvents<FieldValue, FormValues>
+	ValidationSchema,
+	FieldArrayEvents<FieldValue, FormValues, ValidationSchema>
 > {
 	protected managerName = "FieldArray";
 	private get fields(): FieldValue {
@@ -47,8 +49,8 @@ export default class FieldArrayInstance<
 	private keys: string[] = [];
 
 	constructor(
-		form: FormInstance<FormValues>,
-		options: FieldOptions<FieldValue, FormValues>
+		form: FormInstance<FormValues, ValidationSchema>,
+		options: FieldOptions<FieldValue, FormValues, ValidationSchema>
 	) {
 		super(form, options);
 	}
@@ -67,57 +69,6 @@ export default class FieldArrayInstance<
 			  })
 			: [];
 	}
-
-	mount = () => {
-		this.form.addField(this);
-
-		const offChangeValue = this.form.on("change:value", () => {
-			const newValue = this.getValue();
-			const oldValue = this.value;
-
-			if (this.value !== newValue) {
-				this.value = newValue;
-				this.setMetaKey("dirty", true);
-
-				this.trigger("change:value", this.value, oldValue);
-				this.trigger("change", this);
-			}
-		});
-
-		const offThisChangeMeta = this.on("change:meta", () => {
-			const { dirty, touched } = this.meta;
-
-			dirty && this.form.setMetaKey("dirty", true);
-			touched && this.form.setMetaKey("touched", true);
-		});
-
-		const offFormReset = this.form.on("reset", () => {
-			this.initialize();
-		});
-
-		const offFormReInitialize = this.form.on("reInitialize", () => {
-			this.initialize();
-		});
-
-		const offFormChangeMeta = this.form.on("change:meta", () => {
-			const nextErrors = this.form.meta.errors.filter((error) =>
-				error.field.startsWith(this.name)
-			);
-
-			if (!isEqual(this.meta.errors, nextErrors)) {
-				this.setMetaKey("errors", nextErrors);
-			}
-		});
-
-		return () => {
-			offChangeValue();
-			offThisChangeMeta();
-			offFormReInitialize();
-			offFormReset();
-			this.form.removeField(this);
-			offFormChangeMeta();
-		};
-	};
 
 	private copyFields(): FieldValue {
 		if (Array.isArray(this.fields)) {
@@ -270,8 +221,8 @@ export default class FieldArrayInstance<
 	getItemFieldInstances(index: number) {
 		return this.form.filterFields((field) => {
 			return (
-				(field.name as string).startsWith(`${this.name}[${index}]`) ||
-				(field.name as string).startsWith(`${this.name}.${index}`)
+				field.name.startsWith(`${this.name}[${index}]`) ||
+				field.name.startsWith(`${this.name}.${index}`)
 			);
 		});
 	}

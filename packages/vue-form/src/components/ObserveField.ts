@@ -3,6 +3,7 @@ import {
 	type FormInstance,
 	type GetKeys,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { useField } from "src/index";
 import { useInjectForm } from "src/provides/form";
 import { defineComponent, type PropType } from "vue";
@@ -34,11 +35,11 @@ const ObserveFieldImpl = defineComponent({
 	setup(props, ctx) {
 		const form = useInjectForm();
 		const field = useField({
-			name: props.name,
+			name: props.name as never,
 			// preserveValue: true,
 			registerInstance: false,
 		});
-		form.removeField(field);
+		form.removeField(field as unknown as FieldInstance<any, unknown, unknown>);
 		const value = field.useFieldValue<unknown>(props.selector);
 
 		return () => ctx.slots.default?.({ form, field, value: value.value });
@@ -51,16 +52,16 @@ export default ObserveField;
 
 type BaseObserveFieldType = typeof ObserveFieldImpl;
 
-export type ObserveFieldComponent<FormValues> = Omit<
-	BaseObserveFieldType,
-	"$props"
-> & {
+export type ObserveFieldComponent<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = Omit<BaseObserveFieldType, "$props"> & {
 	new (): {
 		$props: ObserveFieldProps<FormValues>;
 		$slots: {
 			default: (helpers: {
-				field: FieldInstance<any, FormValues>;
-				form: FormInstance<FormValues>;
+				field: FieldInstance<any, FormValues, ValidationSchema>;
+				form: FormInstance<FormValues, ValidationSchema>;
 				value: any;
 			}) => void;
 		};

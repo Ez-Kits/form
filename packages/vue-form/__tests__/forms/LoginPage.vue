@@ -1,6 +1,6 @@
 <template>
 	<Form>
-		<form v-bind="form.getFormProps()">
+		<form v-bind="loginForm.getFormProps()">
 			<Field name="username">
 				<EzBindingFieldInput>
 					<input data-testid="usernameInput" />
@@ -36,8 +36,7 @@ import {
 	EzBindingFieldInput,
 	EzFieldErrors as FieldErrors,
 	useForm,
-	type FieldValidationSchema,
-	type ValidationSchema,
+	type DefaultValidationSchema,
 } from "src/index";
 export interface LoginForm {
 	username: string;
@@ -46,13 +45,13 @@ export interface LoginForm {
 
 const props = defineProps<{
 	initialValues?: LoginForm;
-	validationSchema?: ValidationSchema;
-	passwordValidationSchema?: FieldValidationSchema;
+	validationSchema?: DefaultValidationSchema;
+	passwordValidationSchema?: DefaultValidationSchema;
 }>();
 
-const form = useForm<LoginForm>({
+const loginForm = useForm<LoginForm>({
 	initialValues: props.initialValues,
 	validationSchema: props.validationSchema,
 });
-const { Form, Field } = form;
+const { Form, Field } = loginForm;
 </script>

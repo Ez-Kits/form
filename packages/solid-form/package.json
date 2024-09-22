@@ -34,21 +34,7 @@
 		"@ez-kits/form-core": "*"
 	},
 	"peerDependencies": {
-		"async-validator": "^4.2.5",
-		"solid-js": "^1.7.8",
-		"yup": "^1.2.0",
-		"zod": "^3.21.4"
-	},
-	"peerDependenciesMeta": {
-		"async-validator": {
-			"optional": true
-		},
-		"yup": {
-			"optional": true
-		},
-		"zod": {
-			"optional": true
-		}
+		"solid-js": "^1.7.8"
 	},
 	"devDependencies": {
 		"@typescript-eslint/eslint-plugin": "^5.61.0",
@@ -57,7 +43,13 @@
 		"solid-js": "^1.7.8",
 		"tsup": "^7.1.0",
 		"tsup-preset-solid": "^2.0.2",
-		"typescript": "^5.0.2"
+		"typescript": "^5.0.2",
+		"@ez-kits/form-async-validator": "*",
+		"@ez-kits/form-yup-validator": "*",
+		"@ez-kits/form-zod-validator": "*",
+		"async-validator": "^4.2.5",
+		"yup": "^1.4.0",
+		"zod": "^3.23.8"
 	},
 	"browser": {},
 	"exports": {

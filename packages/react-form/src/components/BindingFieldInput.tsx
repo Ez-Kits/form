@@ -17,8 +17,8 @@ export type BindingFieldInputProps = {
 	children?:
 		| ReactNode
 		| ((helpers: {
-				form: FormInstance<any>;
-				field: FieldInstance<any, any>;
+				form: FormInstance<any, any>;
+				field: FieldInstance<any, any, any>;
 		  }) => ReactNode);
 	inputIndex?: number;
 };

@@ -20,7 +20,7 @@ $(document).ready(function () {
 	form.createField({
 		name: "referer",
 		handleInput(field) {
-			const select = $("js-example-basic-multiple");
+			const select = $(".js-example-basic-multiple");
 			select.select2();
 			select.val(field.getValue());
 
@@ -49,7 +49,6 @@ $(document).ready(function () {
 		itemTemplate(index) {
 			const containerEl = document.createElement("div");
 			containerEl.id = `user-item-${index}`;
-			containerEl.classList.add("user-item");
 
 			containerEl.innerHTML = `<h4>User ${index + 1}</h4>
 					<div class="mb-3">
@@ -75,7 +74,7 @@ $(document).ready(function () {
 		itemFieldsCreator(index, field) {
 			return [
 				field.createField({
-					name: `username`,
+					name: "username",
 					index,
 				}),
 				field.createField({
@@ -84,7 +83,6 @@ $(document).ready(function () {
 				}),
 			];
 		},
-		itemsSelector: ".user-item",
 	});
 
 	form.el.querySelector("#add-user-btn")?.addEventListener("click", () => {
@@ -95,7 +93,7 @@ $(document).ready(function () {
 	});
 
 	form.el.querySelector("#user-action-btn")?.addEventListener("click", () => {
-		usersField.remove(0);
+		usersField.remove(1);
 	});
 
 	form.on("submit", () => {

@@ -1,10 +1,17 @@
 import type { FieldInstance } from "@ez-kits/form-core";
 import { createContext } from "solid-js";
+import type { DefaultValidationSchema } from "src/global";
 
-export interface FieldContext<FieldValues = unknown, FormValues = unknown> {
-	field: FieldInstance<FieldValues, FormValues>;
+export interface FieldContext<
+	FieldValues = unknown,
+	FormValues = unknown,
+	ValidationSchema = DefaultValidationSchema
+> {
+	field: FieldInstance<FieldValues, FormValues, ValidationSchema>;
 }
 
-const fieldContext = createContext<FieldContext | undefined>(undefined);
+const fieldContext = createContext<FieldContext<any, any, any> | undefined>(
+	undefined
+);
 
 export default fieldContext;

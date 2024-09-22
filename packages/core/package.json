@@ -29,29 +29,10 @@
 		"README.md",
 		"package.json"
 	],
-	"peerDependencies": {
-		"async-validator": "^4.2.5",
-		"yup": "^1.2.0",
-		"zod": "^3.21.4"
-	},
-	"peerDependenciesMeta": {
-		"async-validator": {
-			"optional": true
-		},
-		"yup": {
-			"optional": true
-		},
-		"zod": {
-			"optional": true
-		}
-	},
 	"devDependencies": {
 		"@types/node": "^20.4.2",
-		"async-validator": "^4.2.5",
 		"jsdom": "^22.1.0",
 		"tsup": "^7.1.0",
-		"typescript": "^5.1.6",
-		"yup": "^1.2.0",
-		"zod": "^3.21.4"
+		"typescript": "^5.1.6"
 	}
 }

@@ -5,6 +5,7 @@ import type {
 	FormMeta,
 } from "@ez-kits/form-core";
 import { useRef } from "react";
+import type { DefaultValidationSchema } from "src/global";
 import { useSyncExternalStore } from "use-sync-external-store/shim";
 
 export interface UseFormDataValues<FormValues> {
@@ -12,8 +13,12 @@ export interface UseFormDataValues<FormValues> {
 	values: FormValues;
 }
 
-export function useFormData<FormValues, T = UseFormDataValues<FormValues>>(
-	form: FormInstance<FormValues>,
+export function useFormData<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = UseFormDataValues<FormValues>
+>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: UseFormDataValues<FormValues>) => T
 ): T {
 	const dataRef = useRef<UseFormDataValues<FormValues>>({
@@ -48,8 +53,12 @@ export function useFormData<FormValues, T = UseFormDataValues<FormValues>>(
 	);
 }
 
-export function useFormValues<FormValues, T = FormValues>(
-	form: FormInstance<FormValues>,
+export function useFormValues<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FormValues
+>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: FormValues) => T
 ): T {
 	return useFormData(form, ({ values }) =>
@@ -57,8 +66,12 @@ export function useFormValues<FormValues, T = FormValues>(
 	) as T;
 }
 
-export function useFormMeta<FormValues, T = FormMeta>(
-	form: FormInstance<FormValues>,
+export function useFormMeta<
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FormMeta
+>(
+	form: FormInstance<FormValues, ValidationSchema>,
 	selector?: (values: FormMeta) => T
 ) {
 	return useFormData(form, ({ meta }) =>
@@ -74,9 +87,10 @@ export interface UseFieldDataValues<FieldValue> {
 export function useFieldData<
 	FieldValue,
 	FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	T = UseFormDataValues<FieldValue>
 >(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: UseFieldDataValues<FieldValue>) => T
 ): T {
 	const dataRef = useRef<UseFieldDataValues<FieldValue>>({
@@ -111,8 +125,13 @@ export function useFieldData<
 	);
 }
 
-export function useFieldValue<FieldValue, FormValues, T = FieldValue>(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+export function useFieldValue<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FieldValue
+>(
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: FieldValue) => T
 ): T {
 	return useFieldData(field, ({ value }) =>
@@ -120,8 +139,13 @@ export function useFieldValue<FieldValue, FormValues, T = FieldValue>(
 	) as T;
 }
 
-export function useFieldMeta<FieldValue, FormValues, T = FieldValue>(
-	field: FieldBaseInstance<FieldValue, FormValues>,
+export function useFieldMeta<
+	FieldValue,
+	FormValues,
+	ValidationSchema = DefaultValidationSchema,
+	T = FieldValue
+>(
+	field: FieldBaseInstance<FieldValue, FormValues, ValidationSchema>,
 	selector?: (values: FieldMeta) => T
 ) {
 	return useFieldData(field, ({ meta }) =>

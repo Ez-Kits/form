@@ -52,10 +52,10 @@
 
 <script lang="ts" setup>
 import {
+	DefaultValidationSchema,
 	EzFieldErrors as FieldErrors,
+	FieldValidationSchema,
 	useForm,
-	type FieldValidationSchema,
-	type ValidationSchema,
 } from "@ez-kits/form-vue";
 import { watchEffect } from "vue";
 
@@ -67,8 +67,8 @@ export interface LoginForm {
 
 const props = defineProps<{
 	initialValues?: LoginForm;
-	validationSchema?: ValidationSchema;
-	passwordValidationSchema?: FieldValidationSchema;
+	validationSchema?: DefaultValidationSchema;
+	passwordValidationSchema?: FieldValidationSchema<DefaultValidationSchema>;
 }>();
 
 const form = useForm<LoginForm>({

@@ -1,6 +1,12 @@
+import FieldInstance from "src/Field";
+import FieldArrayInstance from "src/FieldArray";
+import FormInstance from "src/Form";
 import { GetKeys } from "src/models/Utilities";
-import type { ValidateError, ValidateTrigger } from "src/models/Validation";
-import { FieldValidationSchema } from "src/validation/ValidationSchema";
+import type {
+	ValidateError,
+	ValidateTrigger,
+	ValidationSchemaInput,
+} from "src/models/Validation";
 
 export interface FieldMeta {
 	errors?: ValidateError[];
@@ -10,13 +16,30 @@ export interface FieldMeta {
 	validationCount: number;
 }
 
-export interface FieldOptions<FieldValue, FormValues> {
+export type FieldValidationSchemaFunction<
+	FieldValue,
+	FormValues,
+	ValidationSchema
+> = (
+	value: FieldValue,
+	otherInfo: {
+		field: FieldValue extends any[]
+			? FieldArrayInstance<FieldValue, FormValues, ValidationSchema>
+			: FieldInstance<FieldValue, FormValues, ValidationSchema>;
+		form: FormInstance<FormValues, ValidationSchema>;
+	}
+) =>
+	| PromiseLike<ValidationSchemaInput<ValidationSchema>>
+	| ValidationSchemaInput<ValidationSchema>;
+
+export interface FieldOptions<FieldValue, FormValues, ValidationSchema> {
 	name: GetKeys<FormValues>;
 	label?: string;
 	initialValue?: FieldValue;
 	validateTrigger?: ValidateTrigger | ValidateTrigger[];
-	validationSchema?: FieldValidationSchema;
-	validateFirst?: boolean;
+	validationSchema?:
+		| ValidationSchemaInput<ValidationSchema>
+		| FieldValidationSchemaFunction<FieldValue, FormValues, ValidationSchema>;
 	// preserveValue?: boolean;
 	onChange?: (value: FieldValue) => void;
 	onBlur?: (event: any) => void;

@@ -1,18 +1,20 @@
+import { yupValidator } from "@ez-kits/form-yup-validator";
 import { render, screen } from "@solidjs/testing-library";
 import "@testing-library/jest-dom";
 import user from "@testing-library/user-event";
 import type { Accessor } from "solid-js";
 import {
 	FieldErrors,
+	registerGlobalValidator,
 	useForm,
-	yupFieldSchema,
-	yupSchema,
 	type ValidateError,
 } from "src/index";
 import { describe, it } from "vitest";
 import * as yup from "yup";
 
-describe("Async Validator", () => {
+describe("Yup Validator", () => {
+	registerGlobalValidator(yupValidator);
+
 	const renderErrors =
 		(testId: string) => (errors: Accessor<ValidateError[]>) =>
 			(
@@ -33,13 +35,9 @@ describe("Async Validator", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>({
-				validationSchema: yupSchema<LoginForm>({
-					username: [
-						{
-							schema: yup.string().required().length(6),
-						},
-					],
+			const form = useForm<LoginForm, yup.Schema>({
+				validationSchema: yup.object({
+					username: yup.string().required().length(6),
 				}),
 			});
 
@@ -59,12 +57,10 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={yupFieldSchema({
-								schema: yup
-									.string()
-									.required()
-									.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-							})}
+							validationSchema={yup
+								.string()
+								.required()
+								.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"))}
 						>
 							{({ field }) => (
 								<>
@@ -124,7 +120,7 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm, yup.Schema>({});
 
 			return (
 				<form.Form>
@@ -136,12 +132,10 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="password"
-							validationSchema={yupFieldSchema({
-								schema: yup
-									.string()
-									.required()
-									.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$")),
-							})}
+							validationSchema={yup
+								.string()
+								.required()
+								.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"))}
 						>
 							{({ field }) => (
 								<>
@@ -156,16 +150,14 @@ describe("Async Validator", () => {
 						</form.Field>
 						<form.Field
 							name="confirmPassword"
-							validationSchema={yupFieldSchema([
-								{
-									schema: yup
-										.string()
-										.oneOf(
-											[yup.ref("password"), undefined],
-											"Confirm password doesn't match password."
-										),
-								},
-							])}
+							validationSchema={(_, { form }) =>
+								yup
+									.string()
+									.oneOf(
+										[form.getFieldValue("password"), undefined],
+										"Confirm password doesn't match password."
+									)
+							}
 						>
 							{({ field }) => (
 								<>

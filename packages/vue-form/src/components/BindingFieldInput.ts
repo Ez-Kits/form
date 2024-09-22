@@ -6,6 +6,7 @@ import type {
 	FieldMeta,
 	FormInstance,
 } from "@ez-kits/form-core";
+import type { DefaultValidationSchema } from "src/global";
 import { useInjectField } from "src/provides/field";
 import { useInjectForm } from "src/provides/form";
 import { Fragment, defineComponent, h, type Slot, type VNode } from "vue";
@@ -88,8 +89,8 @@ const EzBindingFieldInput = BindingFieldInputImpl as unknown as Omit<
 		$props: BindingFieldInputProps;
 		$slots: {
 			default: (helpers: {
-				field: FieldInstance<any, any>;
-				form: FormInstance;
+				field: FieldInstance<any, any, DefaultValidationSchema>;
+				form: FormInstance<any, DefaultValidationSchema>;
 				value: any;
 				meta: FieldMeta;
 			}) => any;

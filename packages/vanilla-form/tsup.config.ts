@@ -3,6 +3,7 @@ import { defineConfig } from "tsup";
 export default defineConfig({
 	entry: ["src/index.ts"],
 	format: ["cjs", "esm"],
+	target: "es2016",
 	splitting: true,
 	sourcemap: false,
 	clean: true,
@@ -10,12 +11,7 @@ export default defineConfig({
 	dts: true,
 	skipNodeModulesBundle: true,
 	minify: false,
-	external: [
-		"react",
-		"react-dom",
-		"@ez-kits/form-core",
-		"use-sync-external-store",
-	],
+	external: ["@ez-kits/form-core"],
 	injectStyle: false,
 	keepNames: true,
 });

@@ -16,21 +16,18 @@ export type { FieldArrayProps } from "src/components/FieldArray";
 export type { FieldErrorProps } from "src/components/FieldErrors";
 export type { FormProps } from "src/components/Form";
 export type { ObserveFieldProps, ObserveProps } from "src/components/Observe";
+export { registerGlobalValidator } from "src/global";
+export type {
+	DefaultValidationSchema,
+	GlobalRegister,
+	GlobalValidator,
+} from "src/global";
 export type { UseFieldProps } from "src/hooks/useField";
 export type { UseFieldArrayProps } from "src/hooks/useFieldArray";
 export type { UseFormProps } from "src/hooks/useForm";
 export * from "src/hooks/useInstance";
 
-export {
-	asyncFieldSchema,
-	asyncSchema,
-	getFieldInstance,
-	getFormInstance,
-	yupFieldSchema,
-	yupSchema,
-	zodFieldSchema,
-	zodSchema,
-} from "@ez-kits/form-core";
+export { getFieldInstance, getFormInstance } from "@ez-kits/form-core";
 
 export {
 	BindingFieldInput,

@@ -1,12 +1,16 @@
+import { asyncValidator } from "@ez-kits/form-async-validator";
+import type { FormInstance } from "@ez-kits/form-core";
 import "@testing-library/jest-dom";
 import user from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import LoginPageVue from "__tests__/forms/LoginPage.vue";
 import RegisterPageVue from "__tests__/forms/RegisterPage.vue";
-import { asyncFieldSchema, asyncSchema } from "src/index";
+import type { Rule } from "async-validator";
+import { registerGlobalValidator } from "src/global";
 import { describe, it } from "vitest";
 
 describe("Async Validator", () => {
+	registerGlobalValidator(asyncValidator);
 	it("Login Form", async () => {
 		interface LoginForm {
 			username: string;
@@ -20,20 +24,23 @@ describe("Async Validator", () => {
 
 		render(LoginPageVue, {
 			props: {
-				validationSchema: asyncSchema<LoginForm>({
-					username: [
-						{
-							required: true,
-							type: "string",
-							len: 6,
-						},
-					],
-				}),
-				passwordValidationSchema: asyncFieldSchema({
+				validationSchema: {
+					type: "object",
+					fields: {
+						username: [
+							{
+								required: true,
+								type: "string",
+								len: 6,
+							},
+						],
+					},
+				},
+				passwordValidationSchema: {
 					type: "string",
 					pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 					required: true,
-				}),
+				},
 			},
 		});
 
@@ -78,14 +85,17 @@ describe("Async Validator", () => {
 
 		render(RegisterPageVue, {
 			props: {
-				passwordValidationSchema: asyncFieldSchema({
+				passwordValidationSchema: {
 					type: "string",
 					pattern: new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
 					required: true,
-				}),
-				confirmPasswordValidationSchema: asyncFieldSchema({
-					validator(_, __, ___, source) {
-						if (source.password !== source.confirmPassword) {
+				},
+				confirmPasswordValidationSchema: (
+					confirmPassword: string,
+					{ form }: { form: FormInstance<RegisterForm, Rule> }
+				) => ({
+					validator() {
+						if (form.getFieldValue("password") !== confirmPassword) {
 							return ["Confirm password doesn't match password."];
 						}
 

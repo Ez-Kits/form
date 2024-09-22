@@ -19,16 +19,14 @@ declare module "@vue/runtime-core" {
 	}
 }
 
-const EzFormPlugin: Plugin = {
-	install(app) {
-		app.component("EzForm", EzForm);
-		app.component("EzField", EzField);
-		app.component("EzFieldArray", EzFieldArray);
-		app.component("EzBindingFieldInput", EzBindingFieldInput);
-		app.component("EzFieldErrors", EzFieldErrors);
-		app.component("EzObserve", EzObserve);
-		app.component("EzObserveField", EzObserveField);
-	},
+const EzFormPlugin: Plugin = (app) => {
+	app.component("EzForm", EzForm);
+	app.component("EzField", EzField);
+	app.component("EzFieldArray", EzFieldArray);
+	app.component("EzBindingFieldInput", EzBindingFieldInput);
+	app.component("EzFieldErrors", EzFieldErrors);
+	app.component("EzObserve", EzObserve);
+	app.component("EzObserveField", EzObserveField);
 };
 
 export default EzFormPlugin;

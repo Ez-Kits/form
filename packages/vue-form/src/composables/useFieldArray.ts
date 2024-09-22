@@ -22,6 +22,7 @@ import {
 	useFieldsInfo,
 	type UseFieldDataValues,
 } from "src/composables/useValue";
+import type { DefaultValidationSchema } from "src/global";
 import { provideFieldArray } from "src/provides/fieldArray";
 import { useInjectForm } from "src/provides/form";
 import type { FieldNameProps } from "src/utilities/field";
@@ -37,9 +38,9 @@ import {
 } from "vue";
 
 declare module "@ez-kits/form-core" {
-	interface FieldArrayInstance<FieldValue, FormValues> {
-		useField: UseField<FormValues, FieldValue>;
-		useFieldArray: UseFieldArray<FormValues, FieldValue>;
+	interface FieldArrayInstance<FieldValue, FormValues, ValidationSchema> {
+		useField: UseField<FormValues, FieldValue, ValidationSchema>;
+		useFieldArray: UseFieldArray<FormValues, FieldValue, ValidationSchema>;
 
 		useFieldValue: <T = FieldValue>(
 			selector?: (values: FieldValue) => T
@@ -50,25 +51,31 @@ declare module "@ez-kits/form-core" {
 		) => Ref<T>;
 		useFieldsInfo: () => Ref<FieldArrayItemInfo[]>;
 
-		Field: FieldComponent<FormValues, FieldValue>;
-		FieldArray: FieldArrayComponent<FormValues, FieldValue>;
+		Field: FieldComponent<FormValues, FieldValue, ValidationSchema>;
+		FieldArray: FieldArrayComponent<FormValues, FieldValue, ValidationSchema>;
 	}
 }
 
 export type UseFieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues>, "name">;
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
 
 export default function useFieldArray<
 	FormValues = unknown,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
->(options: MaybeRef<UseFieldArrayProps<FormValues, ParentValue, N>>) {
-	const form = useInjectForm<FormValues>();
+>(
+	options: MaybeRef<
+		UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
+	>
+) {
+	const form = useInjectForm<FormValues, ValidationSchema>();
 
 	const name = computed(() => {
 		const optionsValue = toValue(options);
@@ -151,9 +158,13 @@ export default function useFieldArray<
 	return field;
 }
 
-export type UseFieldArray<FormValues, ParentValue = FormValues> = <
+export type UseFieldArray<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 >(
-	options: UseFieldArrayProps<FormValues, ParentValue, N>
-) => FieldArrayInstance<FieldValue, FormValues>;
+	options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
+) => FieldArrayInstance<FieldValue, FormValues, ValidationSchema>;

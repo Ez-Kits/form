@@ -7,10 +7,10 @@
 	"type": "module",
 	"scripts": {
 		"nx": "nx",
-		"build": "nx run-many --projects=packages/** --target=build --parallel=6",
-		"dev": "nx run-many --projects=packages/** --target=dev --parallel=6",
+		"build": "nx run-many --projects=packages/** --target=build --parallel=11",
+		"dev": "nx run-many --projects=packages/** --target=dev --parallel=11",
 		"test": "vitest",
-		"test:coverage": "vitest test --coverage",
+		"test:coverage": "vitest run --coverage",
 		"publish-packages": "node scripts/publish.js"
 	},
 	"devDependencies": {
@@ -22,15 +22,15 @@
 		"@testing-library/user-event": "^14.4.3",
 		"@testing-library/vue": "^7.0.0",
 		"@vitejs/plugin-vue": "^4.2.3",
-		"@vitest/coverage-v8": "^0.33.0",
-		"@vitest/ui": "^0.33.0",
+		"@vitest/coverage-v8": "^2.1.1",
+		"@vitest/ui": "^2.1.1",
 		"fast-glob": "^3.3.1",
 		"jsdom": "^22.1.0",
 		"nx": "16.5.2",
 		"nx-cloud": "latest",
 		"semver": "^7.5.4",
 		"vite-plugin-solid": "^2.7.0",
-		"vitest": "^1.2.0"
+		"vitest": "^2.1.1"
 	},
 	"nx": {
 		"targets": {}

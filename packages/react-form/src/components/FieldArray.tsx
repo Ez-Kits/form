@@ -12,6 +12,7 @@ import type {
 } from "@ez-kits/form-core";
 import { type ReactElement, type ReactNode } from "react";
 import fieldArrayContext from "src/contexts/fieldArrayContext";
+import type { DefaultValidationSchema } from "src/global";
 import useFieldArray from "src/hooks/useFieldArray";
 import { useFormContext } from "src/index";
 import type { FieldNameProps } from "src/utilities";
@@ -19,29 +20,40 @@ import type { FieldNameProps } from "src/utilities";
 export type FieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema,
 	N extends string = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
 		| ReactNode
 		| ((helpers: {
-				form: FormInstance<FormValues>;
-				fieldArray: FieldArrayInstance<FieldValue, FormValues>;
+				form: FormInstance<FormValues, ValidationSchema>;
+				fieldArray: FieldArrayInstance<
+					FieldValue,
+					FormValues,
+					ValidationSchema
+				>;
 				fieldsInfo: FieldArrayItemInfo[];
 				value: FieldValue;
 				meta: FieldMeta;
 		  }) => ReactNode);
 } & Omit<
-		FieldOptions<FieldValue, FormValues>,
+		FieldOptions<FieldValue, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
 	>;
 
-function FieldArray<FormValues, ParentValue = FormValues>({
+function FieldArray<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+>({
 	children,
 	...options
-}: FieldArrayProps<FormValues, ParentValue>) {
-	const fieldArray = useFieldArray<FormValues, ParentValue>(options as any);
-	const form = useFormContext<FormValues>();
+}: FieldArrayProps<FormValues, ParentValue, ValidationSchema>) {
+	const fieldArray = useFieldArray<FormValues, ParentValue, ValidationSchema>(
+		options as any
+	);
+	const form = useFormContext<FormValues, ValidationSchema>();
 	const value = fieldArray.useFieldValue();
 	const meta = fieldArray.useFieldMeta();
 
@@ -64,8 +76,10 @@ FieldArray.displayName = "FieldArray";
 
 export default FieldArray;
 
-export type FieldArrayComponent<FormValues, ParentValue = FormValues> = <
-	N extends string = GetKeys<ParentValue>
->(
-	props: FieldArrayProps<FormValues, ParentValue, N>
+export type FieldArrayComponent<
+	FormValues,
+	ParentValue = FormValues,
+	ValidationSchema = DefaultValidationSchema
+> = <N extends string = GetKeys<ParentValue>>(
+	props: FieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
 ) => ReactElement;
