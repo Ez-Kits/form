@@ -1,0 +1,32 @@
+// #region form-instance
+import { createForm } from "@ez-kits/form-vanilla";
+
+const form = createForm({
+	// form options go here
+});
+// #endregion form-instance
+
+
+// #region field-instance
+import { createForm } from "@ez-kits/form-vanilla";
+
+const form = createForm({
+	// form options go here
+});
+
+const usernameField = form.createField({
+	name: "username"
+})
+// #endregion field-instance
+
+// #region field-array-instance
+import { createForm } from "@ez-kits/form-vanilla";
+
+const form = createForm({
+	// form options go here
+});
+
+const usernameField = form.createFieldArray({
+	name: "list"
+})
+// #endregion field-array-instance

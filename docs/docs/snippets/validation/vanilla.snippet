@@ -1,0 +1,136 @@
+// #region html
+<form id="sign-in-form">
+  <label>
+    Username:
+    <input name="username" />
+    <span id="username-errors" />
+  </label>
+  <label>
+    Password:
+    <input name="password" type="password" />
+    <span id="password-errors" />
+  </label>
+  <button type="submit">Submit</button>
+</form>
+// #endregion html
+
+// #region field-level
+import { createForm } from "@ez-kits/form-vanilla";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = createForm<SignInFormValues, z.Schema>({
+  el: "#sign-in-form",
+  validator: zodValidator,
+  onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+
+signInForm.createField({
+  name: "username",
+  validationSchema: {
+    onChange: z.string().trim().min(1, "Username is required."),
+  },
+});
+
+signInForm.createField({
+  name: "password",
+  validationSchema:
+    password: z.string().trim().min(1, "Password is required.")
+});
+// #endregion field-level
+
+// #region form-level
+import { createForm } from "@ez-kits/form-vanilla";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+const signInForm = createForm<SignInFormValues, z.Schema>({
+  el: "#sign-in-form",
+  validator: zodValidator,
+  validationSchema: {
+    onChange: z.object({
+      username: z.string().trim().min(1, "Username is required."),
+      password: z.string().trim().min(1, "Password is required.")
+    }),
+  },
+  onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+
+signInForm.createField({
+  name: "username",
+});
+
+signInForm.createField({
+  name: "password",
+});
+// #endregion form-level
+
+// #region display-errors
+import { createForm } from "@ez-kits/form-vanilla";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = createForm<SignInFormValues, z.Schema>({
+  el: "#sign-in-form",
+  validator: zodValidator,
+  validationSchema: {
+    onChange: z.object({
+      username: z.string().trim().min(1, "Username is required."),
+      password: z.string().trim().min(1, "Password is required.")
+    }),
+  },
+  onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+
+const usernameField = signInForm.createField({
+  name: "username",
+});
+
+const passwordField = signInForm.createField({
+  name: "password",
+});
+
+usernameField.on("change:meta", ({ errors }) => {
+  if(errors) {
+    const errorEl = document.getElementById("username-errors");
+    errorEl.innerHTML = errors.flatMap(({messages}) => messages).join("<br/>");
+  }
+});
+
+passwordField.on("change:meta", ({ errors }) => {
+  if(errors) {
+    const errorEl = document.getElementById("password-errors");
+    errorEl.innerHTML = errors.flatMap(({messages}) => messages).join("<br/>");
+  }
+});
+// #endregion display-errors
