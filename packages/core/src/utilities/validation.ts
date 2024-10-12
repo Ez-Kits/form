@@ -1,10 +1,11 @@
-import {
+import type {
 	ToEvent,
 	ValidateError,
 	ValidateTrigger,
 	ValidationOptions,
+	ValidationSchemaArrayRecord,
 	ValidationSchemaInput,
-	ValidationSChemaRecord,
+	ValidationSchemaRecord,
 } from "src/models";
 import { toArray } from "src/utilities/array";
 import { toEvent } from "src/utilities/mixed";
@@ -20,37 +21,46 @@ export function normalizeErrors(
 	errors: ValidateError[],
 	replace?: boolean
 ): ValidateError[] {
-	const groupedErrors = errors.reduce<Record<string, ValidateError>>(
-		(errors, error) => {
-			const { field, messages } = error;
-			if (!field || !messages) {
-				return errors;
-			}
-
-			if (field in errors) {
-				if (replace) {
-					errors[field]!.messages = messages;
-				} else {
-					errors[field]!.messages = errors[field]!.messages.concat(messages);
-				}
-			} else {
-				errors[field] = {
-					field,
-					messages,
-				};
-			}
-
+	const groupedErrors = errors.reduce<
+		Record<string, Record<ValidateTrigger, string[]>>
+	>((errors, error) => {
+		const { field, messages, trigger } = error;
+		if (!field || !messages) {
 			return errors;
-		},
-		{}
-	);
+		}
+		const group = trigger;
 
-	return Object.values(groupedErrors);
+		if (field in errors) {
+			if (replace) {
+				errors[field]![group] = messages;
+			} else {
+				errors[field]![group] = errors[field]![group].concat(messages);
+			}
+		} else {
+			errors[field] = {
+				[group]: messages,
+			} as Record<ValidateTrigger, string[]>;
+		}
+
+		return errors;
+	}, {});
+
+	return Object.keys(groupedErrors).flatMap((field) => {
+		const error = groupedErrors[field]!;
+		const triggers = Object.keys(error) as ValidateTrigger[];
+		return triggers.map((trigger) => {
+			return {
+				field,
+				messages: error[trigger],
+				trigger,
+			};
+		});
+	});
 }
 
 export function isValidationSchemaRecord<Schema>(
 	input: ValidationSchemaInput<Schema>
-): input is ValidationSChemaRecord<Schema> {
+): input is ValidationSchemaRecord<Schema> {
 	if (Array.isArray(input)) {
 		return false;
 	}
@@ -70,22 +80,25 @@ export function isValidationSchemaRecord<Schema>(
 
 export function groupValidationSchemaInputByTrigger<Schema>(
 	input: ValidationSchemaInput<Schema>
-): ValidationSChemaRecord<Schema> | Schema[] {
+): ValidationSchemaArrayRecord<Schema> | Schema[] {
 	if (Array.isArray(input)) {
 		return input;
 	}
 
 	if (isValidationSchemaRecord(input)) {
-		return mapValues(input, (schema) => {
-			if (!schema) {
-				return [];
-			}
+		return mapValues<ValidationSchemaRecord<Schema>, Schema[]>(
+			input,
+			(schema) => {
+				if (!schema) {
+					return [];
+				}
 
-			return toArray(schema);
-		});
+				return toArray(schema as Schema | Schema[]);
+			}
+		);
 	}
 
-	return [input as Schema];
+	return [input];
 }
 
 export function getValidationSchema<ValidationSchema>(
@@ -102,7 +115,5 @@ export function getValidationSchema<ValidationSchema>(
 		return Object.values(groupedValidationSchemas).flat();
 	}
 
-	return toArray(options.trigger).flatMap((trigger) => {
-		return groupedValidationSchemas[toEvent(trigger)] ?? [];
-	});
+	return groupedValidationSchemas[toEvent(options.trigger)] ?? [];
 }

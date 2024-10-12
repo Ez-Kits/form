@@ -1,6 +1,11 @@
 import FieldBaseInstance from "src/FieldBase";
 import FormInstance from "src/Form";
-import { FieldMeta, FieldOptions, ToArray, ValidateError } from "src/models";
+import type {
+	FieldMeta,
+	FieldOptions,
+	ToArray,
+	ValidateError,
+} from "src/models";
 import { uniqueId } from "src/utilities";
 import { toArray } from "src/utilities/array";
 

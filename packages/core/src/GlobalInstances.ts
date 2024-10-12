@@ -1,5 +1,5 @@
-import FieldBaseInstance from "src/FieldBase";
-import FormInstance from "src/Form";
+import type FieldBaseInstance from "src/FieldBase";
+import type FormInstance from "src/Form";
 import { EventListenersManager } from "src/utilities";
 
 type GlobalInstanceMap = Record<

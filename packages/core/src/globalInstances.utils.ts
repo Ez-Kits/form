@@ -2,7 +2,7 @@ import FieldInstance from "src/Field";
 import FieldArrayInstance from "src/FieldArray";
 import FormInstance from "src/Form";
 import GlobalInstances from "src/GlobalInstances";
-import { GetKeys, GetType } from "src/models";
+import type { GetKeys, GetType } from "src/models";
 
 export function getFormInstance<Values, ValidationSchema>(
 	name: string

@@ -13,6 +13,7 @@
 		"preserveSymlinks": true,
 		"isolatedModules": true,
 		"strict": true,
+		"verbatimModuleSyntax": true,
 		"moduleResolution": "Bundler"
 	},
 	"exclude": ["dist"],

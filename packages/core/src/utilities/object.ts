@@ -1,4 +1,4 @@
-import { NamePath } from "src/models";
+import type { NamePath } from "src/models";
 
 // export function emptyObject<T>(obj: T): T {
 // 	for (const key in obj) {

@@ -1,5 +1,5 @@
 import FieldBaseInstance from "src/FieldBase";
-import { FieldMeta, ValidateError } from "src/models";
+import type { FieldMeta, ValidateError } from "src/models";
 
 export type FieldEvents<Value, ValidationSchema> = {
 	change: [field: FieldInstance<any, any, ValidationSchema>];
@@ -39,13 +39,13 @@ export default class FieldInstance<
 
 		this.setValue(value, { dirty: true, touched: true });
 		this.options.onChange?.(value);
-		this.form.validateFields(this.name, { trigger: ["change"] });
+		this.form.validateFields(this.name, { trigger: "change" });
 	};
 
 	handleBlur = (event: Event) => {
 		this.setMetaKey("touched", true);
 		this.form.setMetaKey("touched", true);
 		this.options.onBlur?.(event);
-		this.form.validateFields(this.name, { trigger: ["blur"] });
+		this.form.validateFields(this.name, { trigger: "blur" });
 	};
 }
