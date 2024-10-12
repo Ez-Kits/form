@@ -1,8 +1,9 @@
-import type {
-	FieldBaseInstance,
-	FieldMeta,
-	FormInstance,
-	FormMeta,
+/* eslint-disable @typescript-eslint/no-unsafe-call */
+import {
+	type FieldBaseInstance,
+	type FieldMeta,
+	type FormInstance,
+	type FormMeta,
 } from "@ez-kits/form-core";
 import { useRef } from "react";
 import type { DefaultValidationSchema } from "src/global";
@@ -30,8 +31,8 @@ export function useFormData<
 		(listener) =>
 			form.on("change", () => {
 				dataRef.current = {
-					meta: form.meta,
-					values: form.values,
+					meta: { ...form.meta },
+					values: { ...form.values },
 				};
 
 				return listener();
@@ -102,8 +103,12 @@ export function useFieldData<
 		(listener) =>
 			field.on("change", () => {
 				dataRef.current = {
-					meta: field.meta,
-					value: field.value,
+					meta: { ...field.meta },
+					value: (Array.isArray(field.value)
+						? [...field.value]
+						: typeof field.value === "object"
+						? { ...field.value }
+						: field.value) as FieldValue,
 				};
 
 				return listener();

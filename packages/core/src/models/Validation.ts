@@ -1,9 +1,9 @@
-import { ToEvent } from "src/models/Utilities";
+import type { ToEvent } from "src/models/Utilities";
 
 export type ValidateTrigger = "change" | "blur" | "submit";
 
 export interface ValidationOptions {
-	trigger?: ValidateTrigger | ValidateTrigger[];
+	trigger: ValidateTrigger;
 }
 
 export const GLOBAL_ERROR_FIELD = "__form_global__";
@@ -14,12 +14,17 @@ export interface ValidateError {
 	 */
 	field: string;
 	messages: string[];
+	trigger: ValidateTrigger;
 }
 
 export interface ValidationResult {
 	valid: boolean;
 	errors: ValidateError[];
 }
+
+export type ValidationResultOrEmptySchema =
+	| ValidationResult
+	| { emptySchema: true };
 
 export interface ValidatorProps<Schema> {
 	schema: Schema;
@@ -30,17 +35,25 @@ export interface ValidatorProps<Schema> {
 	value: any;
 }
 
+export interface ValidatorResult {
+	valid: boolean;
+	errors: Omit<ValidateError, "trigger">[];
+}
+
 export type Validator<Schema> = {
-	validate: (props: ValidatorProps<Schema>) => PromiseLike<ValidationResult>;
+	validate: (props: ValidatorProps<Schema>) => PromiseLike<ValidatorResult>;
 };
 
-export type ValidationSChemaRecord<Schema> = {
+export type ValidationSchemaRecord<Schema> = {
+	[trigger in ToEvent<ValidateTrigger>]?: Schema | Schema[];
+};
+export type ValidationSchemaArrayRecord<Schema> = {
 	[trigger in ToEvent<ValidateTrigger>]?: Schema[];
 };
 
 export type ValidationSchemaInput<Schema> =
 	| Schema
 	| Schema[]
-	| ValidationSChemaRecord<Schema>;
+	| ValidationSchemaRecord<Schema>;
 
 export type GetValidatorSchema<V> = V extends Validator<infer S> ? S : never;
