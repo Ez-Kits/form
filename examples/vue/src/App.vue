@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import UsersForm from "./UsersForm.vue";
+import MembersForm from "./MembersForm.vue";
 </script>
 
 <template>
@@ -25,7 +25,8 @@ import UsersForm from "./UsersForm.vue";
 			})
 		"
 	/> -->
-	<UsersForm></UsersForm>
+	<!-- <UsersForm></UsersForm> -->
+	<MembersForm />
 </template>
 
 <style scoped>

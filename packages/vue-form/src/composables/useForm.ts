@@ -88,12 +88,26 @@ export default function useForm<
 
 		form.useField = useField as any;
 		form.useFieldArray = useFieldArray as any;
-		form.Field = Field as unknown as FieldComponent<
-			FormValues,
-			FormValues,
-			ValidationSchema
-		>;
-		form.FieldArray = EzFieldArray as unknown as FieldArrayComponent<
+		form.Field = ((props: any, { slots }: { slots: Slots }) => {
+			return h(
+				Field,
+				{
+					form: form,
+					...props,
+				},
+				slots
+			);
+		}) as unknown as FieldComponent<FormValues, FormValues, ValidationSchema>;
+		form.FieldArray = ((props: any, { slots }: { slots: Slots }) => {
+			return h(
+				EzFieldArray,
+				{
+					form: form,
+					...props,
+				},
+				slots
+			);
+		}) as unknown as FieldArrayComponent<
 			FormValues,
 			FormValues,
 			ValidationSchema

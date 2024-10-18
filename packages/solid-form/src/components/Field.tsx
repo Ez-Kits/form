@@ -13,7 +13,7 @@ import { splitProps, type Accessor, type JSXElement } from "solid-js";
 import fieldContext from "src/contexts/fieldContext";
 import type { DefaultValidationSchema } from "src/global";
 import useField from "src/hooks/useField";
-import useFormContext from "src/hooks/useFormContext";
+import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
 import type { FieldNameProps } from "src/utilities";
 
 export type FieldProps<
@@ -31,7 +31,9 @@ export type FieldProps<
 				value: Accessor<FieldValue>;
 				meta: Accessor<FieldMeta>;
 		  }) => JSXElement);
-} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name">;
+} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name"> & {
+		form?: FormInstance<FormValue, ValidationSchema>;
+	};
 
 function Field<
 	FormValues,
@@ -39,7 +41,9 @@ function Field<
 	ValidationSchema = DefaultValidationSchema
 >(props: FieldProps<FormValues, ParentValue, ValidationSchema>) {
 	const [local, options] = splitProps(props, ["children"]);
-	const form = useFormContext<FormValues, ValidationSchema>();
+	const form = useFormPropsOrContext<FormValues, ValidationSchema>({
+		form: options.form,
+	});
 	const field = useField<FormValues, ParentValue, ValidationSchema>(
 		options as any
 	);
