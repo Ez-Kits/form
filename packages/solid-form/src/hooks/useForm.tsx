@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
+/* eslint-disable @typescript-eslint/no-unsafe-return */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -94,10 +96,22 @@ export default function useForm<
 
 		const formInstance = new FormInstance(options);
 
-		formInstance.Field = Field as any;
-		formInstance.FieldArray = FieldArray as any;
-		formInstance.useField = useField;
-		formInstance.useFieldArray = useFieldArray as any;
+		formInstance.Field = (props) => {
+			return <Field form={form} {...(props as any)} />;
+		};
+		formInstance.FieldArray = (props) => {
+			return <FieldArray form={form} {...(props as any)} />;
+		};
+		formInstance.useField = ((props: any) =>
+			useField({
+				form: formInstance,
+				...props,
+			})) as any;
+		formInstance.useFieldArray = (props) =>
+			useFieldArray({
+				form: formInstance,
+				...(props as any),
+			}) as any;
 		formInstance.Observe = Observe;
 		formInstance.ObserveField = ObserveField as any;
 		formInstance.Form = (props) => <Form form={formInstance} {...props} />;

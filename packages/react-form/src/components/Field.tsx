@@ -13,7 +13,7 @@ import type { ReactElement, ReactNode } from "react";
 import fieldContext from "src/contexts/fieldContext";
 import type { DefaultValidationSchema } from "src/global";
 import useField from "src/hooks/useField";
-import useFormContext from "src/hooks/useFormContext";
+import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
 import type { FieldNameProps } from "src/utilities";
 
 export type FieldProps<
@@ -31,7 +31,9 @@ export type FieldProps<
 				value: FieldValue;
 				meta: FieldMeta;
 		  }) => ReactNode);
-} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name">;
+} & Omit<FieldOptions<FieldValue, FormValue, ValidationSchema>, "name"> & {
+		form?: FormInstance<FormValue, ValidationSchema>;
+	};
 
 export default function Field<
 	FormValues,
@@ -44,7 +46,9 @@ export default function Field<
 	const field = useField<FormValues, ParentValue, ValidationSchema>(
 		options as any
 	);
-	const form = useFormContext<FormValues, ValidationSchema>();
+	const form = useFormPropsOrContext<FormValues, ValidationSchema>({
+		form: options.form,
+	});
 	const value = field.useFieldValue();
 	const meta = field.useFieldMeta();
 

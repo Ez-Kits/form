@@ -6,7 +6,7 @@ import {
 	useForm,
 } from "@ez-kits/form-react";
 import { zodValidator } from "@ez-kits/form-zod-validator";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { z } from "zod";
 import "./App.css";
 import reactLogo from "./assets/react.svg";
@@ -193,16 +193,6 @@ function LoginPage() {
 function FieldMeta() {
 	const field = useFieldContext();
 	const fieldMeta = field.useFieldMeta();
-
-	useEffect(() => {
-		return field.on("change", (f) => {
-			console.log("change", f.meta);
-		});
-	}, [field]);
-
-	useEffect(() => {
-		console.log("fieldMeta", fieldMeta);
-	}, [fieldMeta]);
 
 	return (
 		<div>

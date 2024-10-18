@@ -4,6 +4,7 @@ import {
 	FieldArrayInstance,
 	type FieldMeta,
 	type FieldOptions,
+	type FormInstance,
 	type GetKeys,
 	type GetType,
 } from "@ez-kits/form-core";
@@ -13,7 +14,7 @@ import Field from "src/components/Field";
 import type { FieldArrayComponent } from "src/components/FieldArray";
 import FieldArray from "src/components/FieldArray";
 import type { DefaultValidationSchema } from "src/global";
-import useFormContext from "src/hooks/useFormContext";
+import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
 import {
 	useFieldData,
 	useFieldMeta,
@@ -45,7 +46,9 @@ export type UseFieldArrayProps<
 	Omit<
 		FieldOptions<FieldValue, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
-	>;
+	> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 export default function useFieldArray<
 	FormValues = unknown,
@@ -53,7 +56,9 @@ export default function useFieldArray<
 	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 >(options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>) {
-	const form = useFormContext<FormValues, ValidationSchema>();
+	const form = useFormPropsOrContext<FormValues, ValidationSchema>({
+		form: options.form,
+	});
 
 	const name = useMemo(() => {
 		const { index, namePrefix, name } = options as any;
@@ -86,10 +91,22 @@ export default function useFieldArray<
 		};
 
 		fieldInstance.Field = (props) => {
-			return <Field namePrefix={fieldInstance.name} {...(props as any)} />;
+			return (
+				<Field
+					namePrefix={fieldInstance.name}
+					form={form}
+					{...(props as any)}
+				/>
+			);
 		};
 		fieldInstance.FieldArray = (props) => {
-			return <FieldArray namePrefix={fieldInstance.name} {...(props as any)} />;
+			return (
+				<FieldArray
+					namePrefix={fieldInstance.name}
+					form={form}
+					{...(props as any)}
+				/>
+			);
 		};
 
 		return fieldInstance;
@@ -109,9 +126,10 @@ export default function useFieldArray<
 export type UseFieldArray<
 	FormValues,
 	ParentValue = FormValues,
-	ValidationSchema = DefaultValidationSchema,
+	ValidationSchema = DefaultValidationSchema
+> = <
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue extends any[] = GetType<ParentValue, N> & []
-> = (
+>(
 	options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
 ) => FieldArrayInstance<FieldValue, FormValues, ValidationSchema>;

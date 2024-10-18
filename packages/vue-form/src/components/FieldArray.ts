@@ -21,23 +21,30 @@ export type FieldArrayProps<
 	Omit<
 		FieldOptions<any, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
-	>;
+	> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 const FieldArrayImpl = defineComponent({
 	name: "EzField",
 	props: fieldProps(),
 	setup(props, ctx) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
-		const field = useFieldArray(props as any);
-		const form = useInjectForm();
+		const fieldArray = useFieldArray(props as any);
+		const form = props.form || useInjectForm();
+		const fieldsInfo = fieldArray.useFieldsInfo();
 
 		const componentInstance = getCurrentInstance();
 		if (componentInstance) {
-			field.uid = componentInstance.uid.toString();
+			fieldArray.uid = componentInstance.uid.toString();
 		}
 
 		return () =>
-			ctx.slots.default?.({ field, form, fieldsInfo: field.getFieldsInfo() });
+			ctx.slots.default?.({
+				fieldArray,
+				form,
+				fieldsInfo: fieldsInfo.value,
+			});
 	},
 });
 
@@ -46,6 +53,16 @@ const EzFieldArray = FieldArrayImpl as unknown as FieldArrayComponent<any>;
 export default EzFieldArray;
 
 type BaseFieldArrayType = typeof FieldArrayImpl;
+
+export type FieldArrayInstanceForSlot<FormValues, ValidationSchema> = Omit<
+	FieldArrayInstance<any, FormValues, ValidationSchema>,
+	| "Field"
+	| "FieldArray"
+	| "useFieldMeta"
+	| "useFieldValue"
+	| "useFieldData"
+	| "useFieldsInfo"
+>;
 
 export type FieldArrayComponent<
 	FormValues,
@@ -58,7 +75,7 @@ export type FieldArrayComponent<
 		$slots: {
 			default: (helpers: {
 				form: FormInstance<FormValues, ValidationSchema>;
-				fieldArray: FieldArrayInstance<any, FormValues, ValidationSchema>;
+				fieldArray: FieldArrayInstanceForSlot<FormValues, ValidationSchema>;
 				fieldsInfo: FieldArrayItemInfo[];
 			}) => any;
 		};
