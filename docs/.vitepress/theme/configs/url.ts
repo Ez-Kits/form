@@ -1,2 +1,2 @@
-export const baseUrl = "/ez-form";
+export const baseUrl = "/form";
 export const vitepressBaseUrl = baseUrl + "/";
