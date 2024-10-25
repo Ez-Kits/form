@@ -79,7 +79,7 @@ export default defineConfig({
 	srcDir: "src",
 	title: "Ez Form",
 	description: "Powerful, type-safe, easy-to-use form package.",
-	head: [["link", { rel: "icon", href: "/ez-form/favicon.ico" }]],
+	head: [["link", { rel: "icon", href: `${vitepressBaseUrl}favicon.ico` }]],
 	themeConfig: {
 		siteTitle: "Ez Form",
 		logo: "/logo.png",
