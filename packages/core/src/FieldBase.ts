@@ -1,26 +1,28 @@
 import type FormInstance from "src/Form";
 import GlobalInstances from "src/GlobalInstances";
-import {
+import type {
 	FieldMeta,
 	FieldOptions,
+	FieldValidationOptions,
 	UpdateValueOptions,
 	ValidateError,
 	ValidationOptions,
 	ValidationResult,
 	ValidationSchemaInput,
 } from "src/models";
-import { GetKeys } from "src/models/Utilities";
+import type { GetKeys } from "src/models/Utilities";
 import {
 	EventListenersManager,
 	clone,
 	get,
 	getValidationSchema,
 	isEqual,
+	normalizeErrors,
 	set,
 	uniqueId,
 } from "src/utilities";
 import {
-	ControlledPromise,
+	type ControlledPromise,
 	createControlledPromise,
 } from "src/utilities/promise";
 
@@ -212,41 +214,37 @@ export default abstract class FieldBaseInstance<
 		return getValidationSchema(fieldValidationSchemas, options);
 	};
 
-	validate = async (options?: ValidationOptions): Promise<ValidationResult> => {
+	validate = async (
+		options: FieldValidationOptions
+	): Promise<ValidationResult> => {
 		const validator = this.form.options.validator;
 
 		if (!validator) {
 			this.setMetaKey("errors", []);
 			return Promise.resolve({ valid: true, errors: [] });
 		}
-
-		this.setMetaKey("validationCount", this.meta.validationCount + 1);
-		this.setMetaKey("validating", true);
+		this.setMeta({
+			...this.meta,
+			validating: true,
+			validationCount: this.meta.validationCount + 1,
+		});
 
 		this.validationPromise = createControlledPromise();
-		this.validationPromise
-			.then(() => {
-				this.setMetaKey("validating", false);
-			})
-			.catch(() => {
-				this.setMetaKey("validating", false);
-			});
+		this.validationPromise.finally(() => {
+			this.setMetaKey("validating", false);
+		});
 
 		const validationSchemas = await this.getValidationSchema({
 			trigger: options?.trigger,
 		});
 
-		if (options?.trigger && validationSchemas.length === 0) {
+		if (validationSchemas.length === 0) {
+			this.setMetaKey("errors", []);
 			this.validationPromise.resolve({
-				valid: !!this.meta.errors?.length,
-				errors: this.meta.errors ?? [],
+				valid: true,
+				errors: [],
 			});
 
-			return this.validationPromise;
-		}
-
-		if (validationSchemas.length === 0) {
-			this.validationPromise.resolve({ valid: true, errors: [] });
 			return this.validationPromise;
 		}
 
@@ -258,28 +256,66 @@ export default abstract class FieldBaseInstance<
 					field: this.name,
 				});
 			})
-		).then((results) => {
-			if (!this.validationPromise) {
-				return;
-			}
+		)
+			.then((results) => {
+				if (!this.validationPromise) {
+					return;
+				}
 
-			const valid = results.every((result) => result.valid);
-			if (!valid) {
-				const errors = this.normalizeValidateErrors(
-					results
-						.filter((result) => !result.valid)
-						.flatMap((result) => result.errors)
-				);
+				const valid = results.every((result) => result.valid);
+				const syncErrorWithForm = options?.syncErrorWithForm ?? true;
+				// Only get errors that are not triggered by current validation
+				const filteredFormErrors = syncErrorWithForm
+					? this.form.meta.errors.filter(({ trigger, field }) => {
+							const isSameTrigger = options.trigger === trigger;
 
-				this.setMetaKey("errors", errors);
-				this.trigger("error", errors);
+							return this.name !== field || !isSameTrigger;
+					  })
+					: [];
 
-				this.validationPromise.resolve({ valid: false, errors });
-			} else {
-				this.setMetaKey("errors", []);
-				this.validationPromise.resolve({ valid: true, errors: [] });
-			}
-		});
+				if (!valid) {
+					const errors = this.normalizeValidateErrors(
+						results
+							.filter((result) => !result.valid)
+							.flatMap((result) => result.errors)
+							.map((error) => {
+								return {
+									...error,
+									trigger: options?.trigger,
+								};
+							})
+					);
+
+					this.setMetaKey("errors", errors);
+					this.trigger("error", errors);
+
+					if (syncErrorWithForm) {
+						const mergedErrors = normalizeErrors(
+							filteredFormErrors.concat(errors),
+							true
+						);
+
+						this.form.setMetaKey("errors", mergedErrors);
+					}
+
+					this.validationPromise.resolve({ valid: false, errors });
+				} else {
+					this.setMetaKey("errors", []);
+
+					if (syncErrorWithForm) {
+						this.form.setMetaKey("errors", filteredFormErrors);
+					}
+
+					this.validationPromise.resolve({ valid: true, errors: [] });
+				}
+			})
+			.catch((error) => {
+				if (!this.validationPromise) {
+					return;
+				}
+
+				this.validationPromise.reject(error);
+			});
 
 		return this.validationPromise;
 	};

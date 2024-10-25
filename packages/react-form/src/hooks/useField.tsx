@@ -4,6 +4,7 @@ import {
 	FieldInstance,
 	type FieldMeta,
 	type FieldOptions,
+	type FormInstance,
 	type GetKeys,
 	type GetType,
 } from "@ez-kits/form-core";
@@ -13,7 +14,7 @@ import Field from "src/components/Field";
 import type { FieldArrayComponent } from "src/components/FieldArray";
 import FieldArray from "src/components/FieldArray";
 import type { DefaultValidationSchema } from "src/global";
-import useFormContext from "src/hooks/useFormContext";
+import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
 import {
 	useFieldData,
 	useFieldMeta,
@@ -50,7 +51,9 @@ export type UseFieldProps<
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name"> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 export default function useField<
 	FormValues = unknown,
@@ -58,7 +61,9 @@ export default function useField<
 	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 >(options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>) {
-	const form = useFormContext<FormValues, ValidationSchema>();
+	const form = useFormPropsOrContext<FormValues, ValidationSchema>({
+		form: options.form,
+	});
 
 	const name = useMemo(
 		() =>
@@ -117,10 +122,22 @@ export default function useField<
 		};
 
 		fieldInstance.Field = (props) => {
-			return <Field namePrefix={fieldInstance.name} {...(props as any)} />;
+			return (
+				<Field
+					namePrefix={fieldInstance.name}
+					form={form}
+					{...(props as any)}
+				/>
+			);
 		};
 		fieldInstance.FieldArray = (props) => {
-			return <FieldArray namePrefix={fieldInstance.name} {...(props as any)} />;
+			return (
+				<FieldArray
+					namePrefix={fieldInstance.name}
+					form={form}
+					{...(props as any)}
+				/>
+			);
 		};
 
 		return fieldInstance;
@@ -140,9 +157,10 @@ export default function useField<
 export type UseField<
 	FormValues,
 	ParentValue = FormValues,
-	ValidationSchema = DefaultValidationSchema,
+	ValidationSchema = DefaultValidationSchema
+> = <
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
-> = (
+>(
 	options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>
 ) => FieldInstance<FieldValue, FormValues, ValidationSchema>;

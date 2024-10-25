@@ -14,7 +14,7 @@ import { type ReactElement, type ReactNode } from "react";
 import fieldArrayContext from "src/contexts/fieldArrayContext";
 import type { DefaultValidationSchema } from "src/global";
 import useFieldArray from "src/hooks/useFieldArray";
-import { useFormContext } from "src/index";
+import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
 import type { FieldNameProps } from "src/utilities";
 
 export type FieldArrayProps<
@@ -40,7 +40,9 @@ export type FieldArrayProps<
 } & Omit<
 		FieldOptions<FieldValue, FormValues, ValidationSchema>,
 		"name" | "valuePropName" | "onChangePropName" | "onBlurPropName"
-	>;
+	> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 function FieldArray<
 	FormValues,
@@ -53,7 +55,9 @@ function FieldArray<
 	const fieldArray = useFieldArray<FormValues, ParentValue, ValidationSchema>(
 		options as any
 	);
-	const form = useFormContext<FormValues, ValidationSchema>();
+	const form = useFormPropsOrContext<FormValues, ValidationSchema>({
+		form: options.form,
+	});
 	const value = fieldArray.useFieldValue();
 	const meta = fieldArray.useFieldMeta();
 

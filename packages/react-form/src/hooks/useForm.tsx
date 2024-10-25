@@ -1,3 +1,5 @@
+/* eslint-disable react-hooks/rules-of-hooks */
+/* eslint-disable @typescript-eslint/no-unsafe-argument */
 /* eslint-disable @typescript-eslint/no-unsafe-assignment */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
@@ -87,10 +89,24 @@ export default function useForm<
 
 		const formInstance = new FormInstance(mergeFormOptions(options));
 
-		formInstance.useField = useField;
-		formInstance.useFieldArray = useFieldArray as any;
-		formInstance.Field = Field as any;
-		formInstance.FieldArray = FieldArray as any;
+		formInstance.useField = ((props: any) => {
+			return useField({
+				form: formInstance,
+				...props,
+			});
+		}) as any;
+		formInstance.useFieldArray = ((props: any) => {
+			return useFieldArray({
+				form: formInstance,
+				...props,
+			});
+		}) as any;
+		formInstance.Field = (props) => {
+			return <Field form={form} {...(props as any)} />;
+		};
+		formInstance.FieldArray = (props) => {
+			return <FieldArray form={form} {...(props as any)} />;
+		};
 		formInstance.Observe = Observe;
 		formInstance.ObserveField = ObserveField as any;
 		formInstance.Form = (props) => (

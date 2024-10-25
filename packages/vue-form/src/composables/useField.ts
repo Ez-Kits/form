@@ -3,6 +3,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	FieldInstance,
+	FormInstance,
 	type FieldMeta,
 	type FieldOptions,
 	type GetKeys,
@@ -14,6 +15,7 @@ import EzFieldArray, {
 } from "src/components/FieldArray";
 import type { UseFieldArray } from "src/composables/useFieldArray";
 import useFieldArray from "src/composables/useFieldArray";
+import { useFormPropsOrInjected } from "src/composables/useFormPropsOrInjected";
 import {
 	useFieldData,
 	useFieldMeta,
@@ -22,7 +24,6 @@ import {
 } from "src/composables/useValue";
 import type { DefaultValidationSchema } from "src/global";
 import { provideField } from "src/provides/field";
-import { useInjectForm } from "src/provides/form";
 import type { FieldNameProps } from "src/utilities/field";
 import {
 	computed,
@@ -69,7 +70,9 @@ export type UseFieldProps<
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name">;
+	Omit<FieldOptions<FieldValue, FormValues, ValidationSchema>, "name"> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 export default function useField<
 	FormValues = unknown,
@@ -79,7 +82,9 @@ export default function useField<
 >(
 	options: MaybeRef<UseFieldProps<FormValues, ParentValue, ValidationSchema, N>>
 ) {
-	const form = useInjectForm<FormValues, ValidationSchema>();
+	const form = useFormPropsOrInjected<FormValues, ValidationSchema>({
+		form: toValue(options).form,
+	});
 
 	const name = computed(() => {
 		const optionsValue = toValue(options);
@@ -155,15 +160,17 @@ export default function useField<
 
 	field.useField = ((props: any) => {
 		return useField({
-			...props,
 			namePrefix: field.name,
+			form: form,
+			...props,
 		});
 	}) as any;
 
 	field.useFieldArray = ((props: any) => {
 		return useFieldArray({
-			...props,
 			namePrefix: field.name,
+			form: form,
+			...props,
 		});
 	}) as any;
 
@@ -172,13 +179,22 @@ export default function useField<
 			EzField as any,
 			{
 				namePrefix: field.name,
+				form: form,
 				...props,
 			},
 			slots
 		);
 	}) as any;
 	field.FieldArray = ((props: any, { slots }: { slots: Slots }) => {
-		return h(EzFieldArray as any, { namePrefix: field.name, ...props }, slots);
+		return h(
+			EzFieldArray as any,
+			{
+				namePrefix: field.name,
+				form: form,
+				...props,
+			},
+			slots
+		);
 	}) as any;
 
 	watch(

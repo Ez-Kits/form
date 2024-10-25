@@ -2,6 +2,7 @@ import {
 	BindingFieldInput,
 	FieldErrors,
 	registerGlobalValidator,
+	useFieldContext,
 	useForm,
 } from "@ez-kits/form-react";
 import { zodValidator } from "@ez-kits/form-zod-validator";
@@ -36,7 +37,7 @@ function App() {
 			<p className="read-the-docs">
 				Click on the Vite and React logos to learn more
 			</p>
-			<LoginPage />
+			{count % 2 === 0 && <LoginPage />}
 		</>
 	);
 }
@@ -79,23 +80,41 @@ function LoginPage() {
 					{({ value: addresses }) => <span>{addresses?.join(",")}</span>}
 				</form.ObserveField>
 				<br />
-				<form.Field name="username">
-					<BindingFieldInput>
-						<input data-testid="usernameInput" />
-					</BindingFieldInput>
-				</form.Field>
 				<form.Field
-					name="password"
-					label="Password"
-					validationSchema={z
-						.string()
-						.min(1, "Password is required")
-						.regex(
-							new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"),
-							"Password must contain 8 or more characters with at least one letter and one number"
-						)
-						.default("")}
+					name="username"
+					validationSchema={() => {
+						return new Promise((resolve) => {
+							setTimeout(() => {
+								resolve({
+									onChange: z
+										.string()
+										.min(1, "Username is required")
+										.default(""),
+									onBlur: z
+										.string()
+										.min(6, "Username must be at least 6 characters")
+										.default(""),
+								});
+							}, 1000);
+						});
+					}}
 				>
+					<BindingFieldInput>
+						<input
+							data-testid="usernameInput"
+							autoComplete="off"
+							autoCorrect="off"
+						/>
+					</BindingFieldInput>
+					<br />
+					<FieldErrors>
+						{(errors) => errors?.map((error) => error.messages)}
+					</FieldErrors>
+					<br />
+					<FieldMeta />
+				</form.Field>
+				<br />
+				<form.Field name="password" label="Password">
 					<BindingFieldInput>
 						<input data-testid="passwordInput" type="password" />
 					</BindingFieldInput>
@@ -127,7 +146,6 @@ function LoginPage() {
 												index={field.index}
 												name="lineTwo"
 												label="Line two"
-												validationSchema={z.string()}
 											>
 												<BindingFieldInput>
 													<input />
@@ -167,14 +185,26 @@ function LoginPage() {
 						);
 					}}
 				</form.FieldArray>
-				<form.Field name="job">
-					{({ field, value }) => (
-						<div>
-							<field.Field name="position">{({ value }) => value}</field.Field>
-						</div>
-					)}
-				</form.Field>
 			</form>
 		</form.Form>
+	);
+}
+
+function FieldMeta() {
+	const field = useFieldContext();
+	const fieldMeta = field.useFieldMeta();
+
+	return (
+		<div>
+			<button
+				type="button"
+				onClick={() => field.validate({ trigger: "change" })}
+			>
+				Validate
+			</button>
+			<pre>
+				<code>{JSON.stringify(fieldMeta, null, 2)}</code>
+			</pre>
+		</div>
 	);
 }

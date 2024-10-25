@@ -110,13 +110,13 @@ export default function setupDevtool(app: any) {
 					},
 					{
 						icon: "done_all",
-						tooltip: "Validate Form",
+						tooltip: "Validate Form (Change)",
 						async action() {
 							if (!SELECTED_FORM) {
 								return alert("Please select a form first!");
 							}
 
-							await SELECTED_FORM.instance.validate();
+							await SELECTED_FORM.instance.validate({ trigger: "change" });
 						},
 					},
 					{
@@ -173,15 +173,15 @@ export default function setupDevtool(app: any) {
 					},
 					{
 						icon: "done_all",
-						tooltip: "Validate",
+						tooltip: "Validate (Change)",
 						async action() {
 							if (SELECTED_FORM) {
-								await SELECTED_FORM.instance.validate();
+								await SELECTED_FORM.instance.validate({ trigger: "change" });
 								return;
 							}
 
 							if (SELECTED_ITEM) {
-								await SELECTED_ITEM.instance.validate();
+								await SELECTED_ITEM.instance.validate({ trigger: "change" });
 								return;
 							}
 
@@ -189,7 +189,7 @@ export default function setupDevtool(app: any) {
 								SELECTED_LIST.instance
 									.getItemFieldInstances(SELECTED_LIST_ITEM_INDEX)
 									.forEach((field) => {
-										field.validate().catch(() => {
+										field.validate({ trigger: "change" }).catch(() => {
 											//
 										});
 									});
@@ -197,7 +197,7 @@ export default function setupDevtool(app: any) {
 							}
 
 							if (SELECTED_LIST) {
-								await SELECTED_LIST.instance.validate();
+								await SELECTED_LIST.instance.validate({ trigger: "change" });
 								return;
 							}
 

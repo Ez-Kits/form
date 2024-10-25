@@ -1,14 +1,15 @@
 import type FieldBaseInstance from "src/FieldBase";
 import GlobalInstances from "src/GlobalInstances";
-import {
+import type {
 	FormMeta,
 	FormOptions,
 	UpdateValueOptions,
 	ValidateError,
 	ValidationOptions,
 	ValidationResult,
+	ValidatorResult,
 } from "src/models";
-import { GetKeys, GetType } from "src/models/Utilities";
+import type { GetKeys, GetType } from "src/models/Utilities";
 import {
 	EventListenersManager,
 	clone,
@@ -20,7 +21,10 @@ import {
 	uniqueId,
 } from "src/utilities";
 import { toArray } from "src/utilities/array";
-import { ControlledPromise } from "src/utilities/promise";
+import {
+	type ControlledPromise,
+	createControlledPromise,
+} from "src/utilities/promise";
 
 type FormEvents<Values, ValidationInput> = {
 	change: [form: FormInstance<Values, ValidationInput>];
@@ -155,7 +159,7 @@ export default class FormInstance<
 
 		this.trigger("change", this);
 		this.trigger("change:value", this.values, oldValues);
-		options?.validate && this.validate();
+		options?.validate && this.validate({ trigger: "change" });
 	};
 
 	getValues = (): Values => {
@@ -266,6 +270,9 @@ export default class FormInstance<
 
 		this.trigger("change", this);
 		this.trigger("change:value", this.values, oldValues);
+		if (options?.validate) {
+			this.validateFields(name, { trigger: "change" });
+		}
 	};
 
 	getFieldValue = <N extends GetKeys<Values>>(name: N): GetType<Values, N> => {
@@ -331,24 +338,52 @@ export default class FormInstance<
 		return this.options.validationSchema;
 	};
 
-	validate = (options?: ValidationOptions) => {
-		return this.validateFields(undefined, options);
+	validate = (options: ValidationOptions) => {
+		this.setMetaKey("validationCount", this.meta.validationCount + 1);
+		this.setMetaKey("validating", true);
+
+		this.validationPromise = createControlledPromise();
+		this.validationPromise
+			.then(() => {
+				this.setMetaKey("validating", false);
+			})
+			.catch(() => {
+				this.setMetaKey("validating", false);
+			});
+
+		this.validateFields(undefined, options)
+			.then((result) => {
+				if (!this.validationPromise) {
+					return;
+				}
+
+				this.setMetaKey("valid", result.valid);
+				this.setMetaKey("errors", result.errors);
+				this.validationPromise.resolve(result);
+
+				return result;
+			})
+			.finally(() => {
+				this.setMetaKey("validating", false);
+			});
+
+		return this.validationPromise;
 	};
 
 	validateFields = async <Field extends GetKeys<Values>>(
-		fields?: Field | Field[],
-		options?: ValidationOptions
+		fields: Field | Field[] | undefined,
+		options: ValidationOptions
 	): Promise<ValidationResult> => {
 		const validator = this.options.validator;
 		if (!validator) {
-			this.setMetaKey("errors", []);
 			return {
 				valid: true,
 				errors: [],
 			};
 		}
 
-		const fieldValidationPromises: PromiseLike<ValidationResult>[] = [];
+		// Form level validation
+		const formValidationPromises: PromiseLike<ValidatorResult>[] = [];
 
 		if (this.options.validationSchema) {
 			const promises = getValidationSchema(
@@ -361,45 +396,108 @@ export default class FormInstance<
 				});
 			});
 
-			fieldValidationPromises.push(...promises);
+			formValidationPromises.push(...promises);
 		}
 
+		const formValidationResult = Promise.all(formValidationPromises).then(
+			(results) => {
+				const invalidResults = results.filter(({ valid }) => !valid);
+				const errors = invalidResults
+					.flatMap((result) => result.errors)
+					.filter((error) => {
+						if (fields) {
+							return toArray(fields).includes(error.field as Field);
+						}
+
+						return true;
+					})
+					.map((error) => {
+						return {
+							...error,
+							trigger: options.trigger,
+						};
+					});
+
+				return {
+					valid: errors.length === 0,
+					errors,
+				};
+			}
+		);
+
+		// Field level validation
+		const fieldValidationPromises: PromiseLike<ValidationResult>[] = [];
 		if (fields) {
 			const fieldList = toArray(fields);
 
 			this.fields.forEach((field) => {
 				if (fieldList.includes(field.name as any)) {
-					fieldValidationPromises.push(field.validate(options));
+					fieldValidationPromises.push(
+						field.validate({
+							...options,
+							syncErrorWithForm: false,
+						})
+					);
 				}
 			});
 		} else {
 			this.fields.forEach((field) => {
-				fieldValidationPromises.push(field.validate(options));
+				fieldValidationPromises.push(
+					field.validate({
+						...options,
+						syncErrorWithForm: false,
+					})
+				);
 			});
 		}
 
-		return Promise.all(fieldValidationPromises).then((results) => {
-			const invalidResults = results.filter(({ valid }) => !valid);
+		const fieldsValidationResult = Promise.all(fieldValidationPromises).then(
+			(results) => {
+				const invalidResults = results.filter(({ valid }) => !valid);
+				const errors = invalidResults.flatMap((result) => result.errors);
 
-			const errors = normalizeErrors(
-				fields
-					? this.meta.errors
-							.filter((error) => {
-								const fieldList = toArray(fields);
-								return !fieldList.includes(error.field as any);
-							})
-							.concat(invalidResults.flatMap((result) => result.errors))
-					: invalidResults.flatMap((result) => result.errors)
-			);
+				return {
+					valid: errors.length === 0,
+					errors,
+				};
+			}
+		);
 
-			this.setMetaKey("errors", errors);
-			this.setMetaKey("valid", errors.length === 0);
+		// Form and field level validation
+		return Promise.all([fieldsValidationResult, formValidationResult]).then(
+			([fieldsResult, formResult]) => {
+				const valid = fieldsResult.valid && formResult.valid;
+				// Only get errors that are not triggered by current validation
+				const filteredFormErrors = this.meta.errors.filter(
+					({ trigger, field }) => {
+						const isSameTrigger = options.trigger === trigger;
 
-			return {
-				valid: errors.length === 0,
-				errors,
-			};
-		});
+						if (fields) {
+							return (
+								!toArray(fields).includes(field as Field) || !isSameTrigger
+							);
+						}
+
+						return !isSameTrigger;
+					}
+				);
+
+				const errors = normalizeErrors(
+					filteredFormErrors.concat(
+						formResult.errors.concat(fieldsResult.errors)
+					),
+					true
+				);
+
+				this.setMetaKey("errors", errors);
+				this.setMetaKey("valid", valid);
+
+				return {
+					valid,
+					errors,
+				};
+			}
+		);
 	};
 
 	// TODO: Should cancel current validating too

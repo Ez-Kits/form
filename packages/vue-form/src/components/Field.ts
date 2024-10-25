@@ -18,7 +18,9 @@ export type FieldProps<
 	ValidationSchema = DefaultValidationSchema,
 	N extends GetKeys<ParentValue> = GetKeys<ParentValue>
 > = FieldNameProps<ParentValue, N> &
-	Omit<FieldOptions<any, FormValues, ValidationSchema>, "name">;
+	Omit<FieldOptions<any, FormValues, ValidationSchema>, "name"> & {
+		form?: FormInstance<FormValues, ValidationSchema>;
+	};
 
 const FieldImpl = defineComponent({
 	name: "EzField",
@@ -26,7 +28,7 @@ const FieldImpl = defineComponent({
 	setup(props, ctx) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const field = useField(props as any);
-		const form = useInjectForm();
+		const form = props.form || useInjectForm();
 		const value = field.useFieldValue();
 		const meta = field.useFieldMeta();
 
@@ -49,6 +51,11 @@ const EzField = FieldImpl as unknown as FieldComponent<any>;
 
 export default EzField;
 
+export type FieldInstanceForSlot<FormValues, ValidationSchema> = Omit<
+	FieldInstance<any, FormValues, ValidationSchema>,
+	"Field" | "FieldArray" | "useFieldMeta" | "useFieldValue" | "useFieldData"
+>;
+
 type BaseFieldType = typeof FieldImpl;
 export type FieldComponent<
 	FormValues,
@@ -61,7 +68,7 @@ export type FieldComponent<
 		$slots: {
 			default: (helpers: {
 				form: FormInstance<FormValues, ValidationSchema>;
-				field: FieldInstance<any, FormValues, ValidationSchema>;
+				field: FieldInstanceForSlot<FormValues, ValidationSchema>;
 				value: any;
 				meta: FieldMeta;
 			}) => any;

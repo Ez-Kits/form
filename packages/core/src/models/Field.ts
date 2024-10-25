@@ -1,10 +1,11 @@
-import FieldInstance from "src/Field";
-import FieldArrayInstance from "src/FieldArray";
-import FormInstance from "src/Form";
-import { GetKeys } from "src/models/Utilities";
+import type FieldInstance from "src/Field";
+import type FieldArrayInstance from "src/FieldArray";
+import type FormInstance from "src/Form";
+import type { GetKeys } from "src/models/Utilities";
 import type {
 	ValidateError,
 	ValidateTrigger,
+	ValidationOptions,
 	ValidationSchemaInput,
 } from "src/models/Validation";
 
@@ -54,4 +55,12 @@ export interface ValueTransformer<In = any, Out = any> {
 export interface FieldArrayItemInfo {
 	key: string;
 	index: number;
+}
+
+export interface FieldValidationOptions extends ValidationOptions {
+	/**
+	 * Should sync errors with form.
+	 * @default true
+	 */
+	syncErrorWithForm?: boolean;
 }

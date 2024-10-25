@@ -1,4 +1,4 @@
-import { ToEvent } from "src/models";
+import type { ToEvent } from "src/models";
 
 export function isEqual(a: any, b: any): boolean {
 	if (

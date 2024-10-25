@@ -1,5 +1,6 @@
 import type {
 	FieldOptions,
+	FormInstance,
 	GetKeys,
 	ValidateTrigger,
 } from "@ez-kits/form-core";
@@ -56,6 +57,10 @@ export function fieldProps<
 					ValidationSchema
 				>["validationSchema"]
 			>,
+			required: false,
+		},
+		form: {
+			type: Object as PropType<FormInstance<FieldValue, ValidationSchema>>,
 			required: false,
 		},
 		// preserveValue: {
@@ -124,6 +129,10 @@ export function fieldArrayProps<
 					ValidationSchema
 				>["validationSchema"]
 			>,
+			required: false,
+		},
+		form: {
+			type: Object as PropType<FormInstance<FieldValue, ValidationSchema>>,
 			required: false,
 		},
 		// preserveValue: {
