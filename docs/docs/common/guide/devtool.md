@@ -18,7 +18,7 @@ Devtool provides a form tree that displays the main state of your forms. It also
 
 
 
-![](../public/devtool.gif)
+![](/devtool.gif)
 
 <style>
 	.main img {
