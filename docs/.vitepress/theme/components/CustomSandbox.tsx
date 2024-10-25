@@ -10,8 +10,6 @@ export const CustomSandbox = defineComponent({
 	name: "MySandbox",
 	props: sandboxProps,
 	setup(props, { slots }) {
-		console.log("Sandbox props", props);
-
 		return () => (
 			<Sandbox
 				{...props}

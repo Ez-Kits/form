@@ -153,7 +153,9 @@ export default function localSearch({
 			const { anchor, text, titles } = section;
 			const id = anchor ? [fileId, anchor].join("#") : fileId;
 			const newTitles = computeTitles ? computeTitles(id, titles) : titles;
-
+			if (index.has(id)) {
+				index.discard(id);
+			}
 			index.add({
 				id,
 				text,

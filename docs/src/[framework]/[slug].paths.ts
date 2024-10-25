@@ -11,7 +11,7 @@ export default {
 				return {
 					params: {
 						framework: config.id,
-						slug: path.replace("docs/docs/common", "").replace(".md", ""),
+						slug: path.replace("docs/docs/common/", "").replace(".md", ""),
 					},
 					content: readFileSync(path, "utf-8"),
 				};
