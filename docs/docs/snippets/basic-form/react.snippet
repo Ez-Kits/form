@@ -1,0 +1,104 @@
+// #region types
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+// #endregion types
+
+// #region form
+import { useForm } from "@ez-kits/form-react";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+export function SignInForm() {
+	const signInForm = useForm<SignInFormValues>({
+		// form options go here
+	});
+	
+	return <signInForm.Form>
+		<form {...signInForm.getFormProps()}>
+			{/* form fields */}
+		</form>
+	</signInForm.Form>
+}
+// #endregion form
+
+// #region fields
+import { useForm, BindingFieldInput } from "@ez-kits/form-react";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+export function SignInForm() {
+	const signInForm = useForm<SignInFormValues>({
+		// form options go here
+	});
+
+	return <signInForm.Form>
+		<form {...signInForm.getFormProps()}>
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<BindingFieldInput>
+						<input />
+					</BindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<BindingFieldInput>
+						<input type="password" />
+					</BindingFieldInput>
+				</label>
+			</signInForm.Field>
+		</form>
+	</signInForm.Form>
+}
+// #endregion fields
+
+// #region submission
+import { useForm, BindingFieldInput } from "@ez-kits/form-react";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+export function SignInForm() {
+	const signInForm = useForm<SignInFormValues>({
+		onSubmit(values) {
+			console.log(values);
+		}
+	});
+
+	return <signInForm.Form>
+		<form {...signInForm.getFormProps()}>
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<BindingFieldInput>
+						<input />
+					</BindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<BindingFieldInput>
+						<input type="password" />
+					</BindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<button type="submit">
+				Submit
+			</button>
+		</form>
+	</signInForm.Form>
+}
+// #endregion submission

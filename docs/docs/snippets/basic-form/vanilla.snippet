@@ -1,0 +1,68 @@
+// #region html
+<form id="sign-in-form">
+	<label>
+		Username:
+		<input name="username" />
+	</label>
+	<label>
+		Password:
+		<input name="password" type="password" />
+	</label>
+	<button type="submit">Submit</button>
+</form>
+// #endregion html
+
+// #region types
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+// #endregion types
+
+// #region form
+import { createForm } from "@ez-kits/form-vanilla";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = createForm<SignInFormValues>({
+	el: "#sign-in-form", // Match with id of form tag in html file.
+});
+// #endregion form
+
+// #region fields
+import { createForm } from "@ez-kits/form-vanilla";
+
+const signInForm = createForm<SignInFormValues>({
+	el: "#sign-in-form",
+});
+
+signInForm.createField({
+	name: "username", // Match with name of input tag in html file.
+});
+
+signInForm.createField({
+	name: "password", // Match with name of input tag in html file.
+});
+// #endregion fields
+
+// #region submission
+import { createForm } from "@ez-kits/form-vanilla";
+
+const signInForm = createForm<SignInFormValues>({
+	el: "#sign-in-form",
+	onSubmit(values) {
+		console.log(values);
+	}
+});
+
+signInForm.createField({
+	name: "username",
+});
+
+signInForm.createField({
+	name: "password",
+});
+// #endregion submission

@@ -1,0 +1,112 @@
+// #region types
+<script setup lang="ts">
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+</script>
+// #endregion types
+
+// #region form
+<script setup lang="ts">
+import { useForm } from "@ez-kits/form-vue";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues>({
+	// form options go here
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<!-- form fields -->
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion form
+
+// #region fields
+<script setup lang="ts">
+import { useForm, EzBindingFieldInput } from "@ez-kits/form-vue";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues>({
+	// form options go here
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<EzBindingFieldInput>
+						<input />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<EzBindingFieldInput>
+						<input type="password" />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion fields
+
+// #region submission
+<script setup lang="ts">
+import { useForm, EzBindingFieldInput } from "@ez-kits/form-vue";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues>({
+	onSubmit(values) {
+		console.log(values);
+	}
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<EzBindingFieldInput>
+						<input />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<EzBindingFieldInput>
+						<input type="password" />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<button type="submit">
+				Submit
+			</button>
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion submission

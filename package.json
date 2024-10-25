@@ -11,7 +11,10 @@
 		"dev": "nx run-many --projects=packages/** --target=dev --parallel=11",
 		"test": "vitest",
 		"test:coverage": "vitest run --coverage",
-		"publish-packages": "node scripts/publish.js"
+		"publish-packages": "node scripts/publish.js",
+		"docs:dev": "vitepress dev docs",
+		"docs:build": "vitepress build docs",
+		"docs:preview": "vitepress preview docs"
 	},
 	"devDependencies": {
 		"@solidjs/router": "^0.8.2",
@@ -21,15 +24,26 @@
 		"@testing-library/react-hooks": "^8.0.1",
 		"@testing-library/user-event": "^14.4.3",
 		"@testing-library/vue": "^7.0.0",
+		"@types/markdown-it": "^14.1.2",
+		"@types/node": "^22.7.4",
 		"@vitejs/plugin-vue": "^4.2.3",
+		"@vitejs/plugin-vue-jsx": "^4.0.1",
 		"@vitest/coverage-v8": "^2.1.1",
 		"@vitest/ui": "^2.1.1",
 		"fast-glob": "^3.3.1",
+		"gray-matter": "^4.0.3",
 		"jsdom": "^22.1.0",
+		"markdown-it": "^14.1.0",
+		"markdown-it-conditional-render": "^0.1.0",
 		"nx": "16.5.2",
 		"nx-cloud": "latest",
+		"p-map": "^7.0.2",
 		"semver": "^7.5.4",
+		"vite-plugin-restart": "^0.4.1",
 		"vite-plugin-solid": "^2.7.0",
+		"vitepress": "^1.3.4",
+		"vitepress-plugin-sandpack": "^1.1.4",
+		"vitepress-plugin-tabs": "^0.5.0",
 		"vitest": "^2.1.1"
 	},
 	"nx": {
@@ -39,5 +53,8 @@
 		"packages/*",
 		"examples/*"
 	],
-	"packageManager": "yarn@1.22.17"
+	"packageManager": "yarn@1.22.17",
+	"dependencies": {
+		"@vue/tsconfig": "^0.5.1"
+	}
 }

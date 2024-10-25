@@ -1,0 +1,23 @@
+// #region form-instance
+import { useForm } from "@ez-kits/form-vue";
+
+const form = useForm({
+	// form options go here
+});
+// #endregion form-instance
+
+// #region field-instance
+import { useField } from "@ez-kits/form-vue";
+
+const field = useField({
+	name: "username"
+});
+// #endregion field-instance
+
+// #region field-array-instance
+import { useFieldArray } from "@ez-kits/form-vue";
+
+const field = useFieldArray({
+	name: "list"
+});
+// #endregion field-array-instance

@@ -1,0 +1,176 @@
+// #region field-level
+<script setup lang="ts">
+import { useForm, EzBindingFieldInput } from "@ez-kits/form-vue";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues, z.Schema>({
+	validator: zodValidator,
+	onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<signInForm.Field
+				name="username"
+				:validation-schema="z.string().trim().min(1, 'Username is required.')"
+			>
+				<label>
+					Username:
+					<EzBindingFieldInput>
+						<input />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field
+				name="password"
+				:validation-schema="{
+					onChange: z.string().trim().min(1, 'Password is required.'),
+				}"
+			>
+				<label>
+					Password:
+					<EzBindingFieldInput>
+						<input type="password" />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<button type="submit">
+				Submit
+			</button>
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion field-level
+
+// #region form-level
+<script setup lang="ts">
+import { useForm, EzBindingFieldInput } from "@ez-kits/form-vue";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues, z.Schema>({
+	validator: zodValidator,
+	validationSchema: {
+		onChange: z.object({
+	    username: z.string().trim().min(1, "Username is required."),
+	    password: z.string().trim().min(1, "Password is required.")
+	  }),
+	},
+	onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<EzBindingFieldInput>
+						<input />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<EzBindingFieldInput>
+						<input type="password" />
+					</EzBindingFieldInput>
+				</label>
+			</signInForm.Field>
+			<button type="submit">
+				Submit
+			</button>
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion form-level
+
+// #region display-errors
+<script setup lang="ts">
+import { useForm, EzBindingFieldInput, EzFieldErrors } from "@ez-kits/form-vue";
+import { zodValidator } from "@ez-kits/form-zod-validator";
+import { z } from "zod";
+
+export interface SignInFormValues {
+	username: string; // Or email: string;
+	password: string;
+}
+
+const signInForm = useForm<SignInFormValues, z.Schema>({
+	validator: zodValidator,
+	validationSchema: {
+		onChange: z.object({
+	    username: z.string().trim().min(1, "Username is required."),
+	    password: z.string().trim().min(1, "Password is required.")
+	  }),
+	},
+	onSubmit(values) {
+    console.log(values);
+  },
+  onErrors(errors) {
+    console.log(errors);
+  }
+});
+</script>
+
+<template>
+  <signInForm.Form>
+		<form v-bind="signInForm.getFormProps()">
+			<signInForm.Field name="username">
+				<label>
+					Username:
+					<EzBindingFieldInput>
+						<input />
+					</EzBindingFieldInput>
+				</label>
+				<EzFieldErrors v-slot="{ errors }">
+					<span v-for="message in errors.flatMap(({ messages }) => messages)">
+						{{ message }}
+					</span>
+				</EzFieldErrors>
+			</signInForm.Field>
+			<signInForm.Field name="password">
+				<label>
+					Password:
+					<EzBindingFieldInput>
+						<input type="password" />
+					</EzBindingFieldInput>
+				</label>
+				<EzFieldErrors v-slot="{ errors }">
+					<span v-for="message in errors.flatMap(({ messages }) => messages)">
+						{{ message }}
+					</span>
+				</EzFieldErrors>
+			</signInForm.Field>
+			<button type="submit">
+				Submit
+			</button>
+		</form>
+	</signInForm.Form>
+</template>
+// #endregion display-errors

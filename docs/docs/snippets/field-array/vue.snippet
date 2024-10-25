@@ -1,0 +1,81 @@
+// #region form
+<script lang="ts" setup>
+import { useForm, EzBindingFieldInput } from "@ez-kits/form-vue";
+import Member from "./Member.vue";
+
+export interface Member {
+  fullName: string;
+  age: number;
+}
+
+export interface MembersFormValues {
+  members: Member[];
+}
+
+const membersForm = useForm<MembersFormValues>({
+  initialValues: {
+    members: [{
+      fullName: "Test member",
+      age: 18,
+    }],
+  },
+});
+</script>
+
+<template>
+<membersForm.Form>
+  <form v-bind="membersForm.getFormProps()">
+    <membersForm.FieldArray name="members" v-slot="{fieldArray, fieldsInfo}">
+      <div> 
+        <Member v-for="(_, index) in fieldsInfo" :key="index" :index="index" />
+        <button @click="fieldArray.push({
+          fullName: '',
+          age: 18,
+        })">
+          Add member
+        </button>
+      </div>
+    </membersForm.FieldArray>
+  </form>
+</membersForm.Form>
+</template>
+// #endregion form
+
+// #region field-item
+<script lang="ts" setup>
+import { useInjectFieldArray, EzBindingFieldInput } from "@ez-kits/form-vue";
+
+defineProps<{
+  index: number;
+}>();
+
+const field = useInjectFieldArray();
+</script>
+
+<template>
+<div>
+  Member {{index + 1}}:
+  <div>
+    <field.Field :index="index" name="fullName">
+      <label>
+        Full name:
+        <EzBindingFieldInput>
+          <input />
+        </EzBindingFieldInput>
+      </label>
+    </field.Field>
+    <field.Field :index="index" name="age">
+      <label>
+        Age:
+          <EzBindingFieldInput>
+            <input type="number" />
+          </EzBindingFieldInput>
+      </label>	
+    </field.Field>
+  </div>
+  <button @click="field.remove(index)">
+    Remove member {{index + 1}}
+  </button>
+</div>
+</template>
+// #endregion field-item

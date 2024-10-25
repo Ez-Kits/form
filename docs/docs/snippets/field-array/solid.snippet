@@ -1,0 +1,69 @@
+import { useForm } from "@ez-kits/form-solid";
+import { For } from "solid-js";
+export interface Member {
+  fullName: string;
+  age: number;
+}
+
+export interface MembersFormValues {
+  members: Member[];
+}
+
+export function MembersForm() {
+  const membersForm = useForm<MembersFormValues>({
+    initialValues: {
+      members: [{
+        fullName: "Test member",
+        age: 18,
+      }],
+    },
+  });
+
+  return <membersForm.Form>
+    <form {...membersForm.getFormProps()}>
+      <membersForm.FieldArray name="members">
+        {({fieldArray, fieldsInfo}) => {
+          return <div>
+            {
+              <For each={fieldsInfo()}>
+                {(_, index) => (
+                  <div>
+                    Member {index() + 1}:
+                    <div>
+                      <fieldArray.Field index={index()} name="fullName">
+                        {({field}) => (
+                          <label>
+                            Full name:
+                              <input {...field.getInputProps()} />
+                          </label>
+                        )}
+                      </fieldArray.Field>
+                      <fieldArray.Field index={index()} name="age">
+                        {({field}) => (
+                          <label>
+                            Age:
+                              <input {...field.getInputProps()} type="number" />
+                          </label>
+                        )}
+                      </fieldArray.Field>
+                    </div>
+                    <button onClick={() => fieldArray.remove(index())}>
+                      Remove member {index() + 1}
+                    </button>
+                  </div>
+                )}
+              </For>
+            }
+
+            <button onClick={() => fieldArray.push({
+              fullName: "",
+              age: 18,
+            })}>
+              Add member
+            </button>
+          </div>
+        }}
+      </membersForm.FieldArray>
+    </form>
+  </membersForm.Form>;
+}
