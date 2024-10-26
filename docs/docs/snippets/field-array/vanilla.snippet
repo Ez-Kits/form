@@ -1,0 +1,83 @@
+// #region html
+<form id="members-form">
+  <div id="members"></div>
+  <button type="button" id="add-member">Add member</button>
+</form>
+// #endregion html
+
+// #region form
+import { createForm } from "@ez-kits/form-vanilla";
+
+export interface Member {
+  fullName: string;
+  age: number;
+}
+
+export interface MembersFormValues {
+  members: Member[];
+}
+
+const form = createForm<MembersFormValues>({
+  el: "#members-form",
+  initialValues: {
+    members: [{
+      fullName: "Test member",
+      age: 18,
+    }],
+  },
+});
+
+const membersField = form.createFieldArray({
+  name: "members",
+  el: "#members",
+  itemTemplate(index, fieldArray) {
+    const containerEl = document.createElement("div");
+    
+    containerEl.innerHTML = `
+      Member ${index + 1}
+      <div>
+        <label>
+          Full name:
+          <input name="members.${index}.fullName" />
+        </label>
+        <label>
+          Age:
+          <input name="members.${index}.age" type="number" />
+        </label>
+      </div>
+      `;
+
+    const removeButtonEl = document.createElement("button");
+    removeButtonEl.type = "button";
+    removeButtonEl.innerHTML = `Remove member ${index + 1}`;
+    removeButtonEl.addEventListener("click", () => {
+      fieldArray.remove(index);
+    });
+    
+    containerEl.append(removeButtonEl);
+
+    return containerEl;
+  },
+  itemFieldsCreator(index, field) {
+    return [
+      field.createField({
+        name: "fullName",
+        index,
+      }),
+      field.createField({
+        name: `age`,
+        index,
+      }),
+    ];
+  },
+});
+
+const addMemberButtonEl = document.getElementById("add-member");
+
+addMemberButtonEl.addEventListener("click", () => {
+  membersField.push({
+    fullName: "",
+    age: 18,
+  });
+})
+// #endregion form
