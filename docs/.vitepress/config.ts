@@ -3,13 +3,13 @@ import markdownConditionalRender from "markdown-it-conditional-render";
 import container from "markdown-it-container";
 import { resolve } from "path";
 import ViteRestart from "vite-plugin-restart";
-import { defineConfig } from "vitepress";
+import { defineConfig, HeadConfig } from "vitepress";
 import { renderSandbox } from "vitepress-plugin-sandpack";
 import { tabsMarkdownPlugin } from "vitepress-plugin-tabs";
 import localSearch from "./plugins/localSearch";
 import { frameworks } from "./theme/configs/frameworks";
 import { generateSidebar } from "./theme/configs/sidebar";
-import { vitepressBaseUrl } from "./theme/configs/url";
+import { productionUrl, vitepressBaseUrl } from "./theme/configs/url";
 
 export default defineConfig({
 	vite: {
@@ -79,7 +79,33 @@ export default defineConfig({
 	srcDir: "src",
 	title: "Ez Form",
 	description: "Powerful, type-safe, easy-to-use form package.",
-	head: [["link", { rel: "icon", href: `${vitepressBaseUrl}favicon.ico` }]],
+	head: [
+		["link", { rel: "icon", href: `${vitepressBaseUrl}favicon.ico` }],
+		["meta", { property: "og:image", content: `${productionUrl}/logo.png` }],
+	],
+	transformHead({ pageData, siteConfig }) {
+		const heads: HeadConfig[] = [];
+		const title = pageData.frontmatter.title;
+		const description =
+			pageData.frontmatter.description || siteConfig.userConfig.description;
+
+		if (title) {
+			heads.push([
+				"meta",
+				{ property: "og:title", content: title + " | Ez Form" },
+			]);
+		}
+
+		if (description) {
+			heads.push(["meta", { name: "description", content: description }]);
+			heads.push([
+				"meta",
+				{ property: "og:description", content: description },
+			]);
+		}
+
+		return heads;
+	},
 	themeConfig: {
 		siteTitle: "Ez Form",
 		logo: "/logo.png",
