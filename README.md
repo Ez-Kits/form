@@ -15,9 +15,12 @@ Easy & Fast Form
 	<a href="https://npm-stat.com/charts.html?package=@ez-kits/form-core" target="_blank">
 		<img src="https://img.shields.io/npm/dm/@ez-kits/form-core.svg?label=&color=F09E18">
 	</a>
-	<!-- <a href="https://ez-kits.github.io/form/" target="_blank">
+	<a href="https://bundlephobia.com/package/@ez-kits/form-core">
+		<img src="https://img.shields.io/bundlephobia/minzip/@ez-kits/form-core@latest?label=">
+	</a>
+	<a href="https://ez-kits.github.io/form/" target="_blank">
 		<img src="https://img.shields.io/badge/-Documentation-09BA4D">
-	</a> -->
+	</a>
 </p>
 <br>
 <br>
@@ -29,16 +32,14 @@ Easy & Fast Form
 
 🤏 **Minimal:** Only handles form logics. You have full controls of form's input.
 
-✍ **Validation:** Validate your form very easy with Async validator.
+✍ **Validation:** Validate your form very easy with built-in validators.
 
 🛠️ **Simple:** Starting build your form with no configuration.
 
-🔌 **Devtool:** Inspect your forms with Vue Devtool.
+🔌 **Devtool:** Inspect your forms with Ez Form Devtool (Supports Vue for now).
 
 <br>
 
 ## 📖 Documentation:
 
-<!-- [Read Documentation](https://niku98.github.io/form/) -->
-
-Documentation is still in progress, please checkout examples folder to know how to use.
+[Read Documentation](https://ez-kits.github.io/form/)
