@@ -37,7 +37,7 @@ async function renderHook<T>(composable: () => T, options?: { wrapper: any }) {
 		setup() {
 			return () =>
 				options?.wrapper
-					? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+					? // eslint-disable-next-line @typescript-eslint/no-unsafe-argument, no-mixed-spaces-and-tabs
 					  h(options.wrapper, undefined, () => h(Runner))
 					: h(Runner);
 		},

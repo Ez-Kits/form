@@ -3,7 +3,7 @@
 		<form v-bind="loginForm.getFormProps()">
 			<Field name="username">
 				<EzBindingFieldInput>
-					<input data-testid="usernameInput" />
+					<CustomInput data-testid="usernameInput" />
 				</EzBindingFieldInput>
 				<FieldErrors v-slot="{ errors }">
 					<span data-testid="usernameErrors">
@@ -38,6 +38,8 @@ import {
 	useForm,
 	type DefaultValidationSchema,
 } from "src/index";
+import CustomInput from "./CustomInput.vue";
+
 export interface LoginForm {
 	username: string;
 	password: string;
@@ -50,6 +52,7 @@ const props = defineProps<{
 }>();
 
 const loginForm = useForm<LoginForm>({
+	name: "Login Form",
 	initialValues: props.initialValues,
 	validationSchema: props.validationSchema,
 });
