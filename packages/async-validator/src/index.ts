@@ -29,50 +29,18 @@ export const createAsyncValidator = (
 						errors: [],
 					};
 				})
-				.catch(({ errors }) => {
+				.catch(({ errors }: { errors: ValidateError[] }) => {
 					return {
 						valid: false,
-						errors: Array.isArray(errors)
-							? (errors as ValidateError[]).map((error) => {
-									return {
-										field: getFieldPath(error.field ?? "", field),
-										messages: [getErrorMessage(error.message ?? "", field)],
-									};
-							  })
-							: [],
+						errors: errors.map((error) => {
+							return {
+								field: getFieldPath(error.field ?? "", field),
+								messages: [getErrorMessage(error.message ?? "", field)],
+							};
+						}),
 					};
 				});
 		},
-
-		// extractSchema(schema, field) {
-		// 	try {
-		// 		const paths = castPath(field);
-		// 		let resultSchema = schema;
-		// 		for (const path of paths) {
-		// 			const maybeNumberPath = Number(path);
-		// 			const isNumberPath = !Number.isNaN(maybeNumberPath);
-
-		// 			if (isNumberPath) {
-		// 				resultSchema = Array.isArray(resultSchema)
-		// 					? (resultSchema
-		// 							.map((schema) => schema.defaultField)
-		// 							.filter(Boolean) as RuleItem[])
-		// 					: ((resultSchema.defaultField ??
-		// 							resultSchema.fields?.[maybeNumberPath]) as RuleItem);
-		// 			} else {
-		// 				resultSchema = Array.isArray(resultSchema)
-		// 					? (resultSchema
-		// 							.map((schema) => schema.fields?.[path])
-		// 							.filter(Boolean) as RuleItem[])
-		// 					: (resultSchema.fields?.[path] as RuleItem);
-		// 			}
-		// 		}
-
-		// 		return resultSchema;
-		// 	} catch {
-		// 		return schema;
-		// 	}
-		// },
 	};
 };
 
