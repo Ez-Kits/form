@@ -45,7 +45,6 @@
 		"jsdom": "^22.1.0",
 		"tsup": "^7.1.0",
 		"typescript": "^5.1.6",
-		"yup": "^1.2.0",
-		"@ez-kits/form-yup-validator": "*"
+		"yup": "^1.2.0"
 	}
 }

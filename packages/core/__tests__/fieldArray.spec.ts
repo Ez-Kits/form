@@ -1,10 +1,10 @@
-import { yupValidator } from "@ez-kits/form-yup-validator";
 import FieldInstance from "src/Field";
 import FieldArrayInstance from "src/FieldArray";
 import FormInstance from "src/Form";
 import { clone } from "src/utilities";
 import { describe, it } from "vitest";
 import * as yup from "yup";
+import { yupValidator } from "./yup-validator";
 
 describe("Field Array - Operators", () => {
 	interface User {

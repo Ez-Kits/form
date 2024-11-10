@@ -1,9 +1,9 @@
-import { yupValidator } from "@ez-kits/form-yup-validator";
 import FieldInstance from "src/Field";
 import FieldArrayInstance from "src/FieldArray";
 import FormInstance from "src/Form";
 import { describe, it, vi } from "vitest";
 import * as yup from "yup";
+import { yupValidator } from "./yup-validator";
 
 describe("Form", () => {
 	it("Basic Login Form", ({ expect }) => {

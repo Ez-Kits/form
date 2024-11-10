@@ -1,9 +1,9 @@
-import { yupValidator } from "@ez-kits/form-yup-validator";
 import userEvent from "@testing-library/user-event";
 import FieldInstance from "src/Field";
 import FormInstance from "src/Form";
 import { describe, it, vi } from "vitest";
 import * as yup from "yup";
+import { yupValidator } from "./yup-validator";
 
 describe("Field - Basic", () => {
 	it("Handle change - Input", async ({ expect }) => {

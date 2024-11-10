@@ -11617,11 +11617,6 @@
         "source": "@ez-kits/form-core",
         "target": "npm:yup@1.2.0",
         "type": "static"
-      },
-      {
-        "source": "@ez-kits/form-core",
-        "target": "@ez-kits/form-yup-validator",
-        "type": "static"
       }
     ],
     "vue-example": [
