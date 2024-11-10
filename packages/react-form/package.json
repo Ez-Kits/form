@@ -12,6 +12,9 @@
 		"url": "https://github.com/Ez-Kits/form"
 	},
 	"type": "module",
+	"types": "dist/index.d.ts",
+	"main": "dist/index.cjs",
+	"module": "dist/index.js",
 	"exports": {
 		".": {
 			"import": {
