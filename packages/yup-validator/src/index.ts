@@ -23,7 +23,7 @@ export const createYupValidator = (
 						valid: false,
 						errors: yupError.inner.map((error) => ({
 							messages: error.errors,
-							field: error.path ? `${field}.${error.path}` : field,
+							field: getFieldPath(error.path ?? "", field),
 						})),
 					};
 				}
@@ -32,7 +32,7 @@ export const createYupValidator = (
 					valid: false,
 					errors: yupError.inner.map((error) => ({
 						messages: error.errors,
-						field: error.path ?? GLOBAL_ERROR_FIELD,
+						field: getFieldPath(error.path ?? ""),
 					})),
 				};
 			}
@@ -43,6 +43,17 @@ export const createYupValidator = (
 		// },
 	};
 };
+
+function getFieldPath(path: string, field?: string) {
+	if (field) {
+		const joinedPath = path.length > 0 ? `${field}.${path}` : field;
+		return joinedPath.replace(/\[([0-9]+)\]/g, "$1");
+	}
+
+	return path.length > 0
+		? path.replace(/\[([0-9]+)\]/g, "$1")
+		: GLOBAL_ERROR_FIELD;
+}
 
 export const yupValidator: Validator<Schema> = createYupValidator({
 	abortEarly: false,
