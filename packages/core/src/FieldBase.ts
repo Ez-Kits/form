@@ -114,7 +114,7 @@ export default abstract class FieldBaseInstance<
 			const newValue = this.getValue();
 			const oldValue = this.value;
 
-			if (oldValue !== newValue) {
+			if (!isEqual(newValue, oldValue)) {
 				this.value = newValue;
 				this.setMetaKey("dirty", true);
 
@@ -191,7 +191,24 @@ export default abstract class FieldBaseInstance<
 
 	// Handle reset
 	reset = () => {
-		this.initialize();
+		this.value = (this.options.initialValue ??
+			clone(get(this.form.options.initialValues, this.name))) as FieldValue;
+
+		this.form.setFieldValue(this.name, this.value as any, {
+			validate: false,
+			dirty: false,
+			touched: false,
+		});
+
+		this.meta = {
+			dirty: false,
+			touched: false,
+			errors: undefined,
+			validating: false,
+			validationCount: 0,
+		};
+
+		this.cancelValidate();
 		this.trigger("reset");
 	};
 
@@ -230,9 +247,11 @@ export default abstract class FieldBaseInstance<
 		});
 
 		this.validationPromise = createControlledPromise();
-		this.validationPromise.finally(() => {
-			this.setMetaKey("validating", false);
-		});
+		this.validationPromise
+			.finally(() => {
+				this.setMetaKey("validating", false);
+			})
+			.catch(() => {});
 
 		const validationSchemas = await this.getValidationSchema({
 			trigger: options?.trigger,
@@ -240,7 +259,8 @@ export default abstract class FieldBaseInstance<
 
 		if (validationSchemas.length === 0) {
 			this.setMetaKey("errors", []);
-			this.validationPromise.resolve({
+
+			this.validationPromise?.resolve({
 				valid: true,
 				errors: [],
 			});

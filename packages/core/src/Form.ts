@@ -146,7 +146,7 @@ export default class FormInstance<
 	// Handle values
 	setValues = (values: Values, options?: UpdateValueOptions) => {
 		const oldValues = { ...this.values };
-		this.values = values;
+		this.values = clone(values);
 		if (options?.touched) {
 			this.setMetaKey("touched", true);
 		}
@@ -334,10 +334,6 @@ export default class FormInstance<
 	};
 
 	// Handle validate
-	getValidationSchema = () => {
-		return this.options.validationSchema;
-	};
-
 	validate = (options: ValidationOptions) => {
 		this.setMetaKey("validationCount", this.meta.validationCount + 1);
 		this.setMetaKey("validating", true);
@@ -453,7 +449,9 @@ export default class FormInstance<
 
 		const fieldsValidationResult = Promise.all(fieldValidationPromises).then(
 			(results) => {
-				const invalidResults = results.filter(({ valid }) => !valid);
+				const invalidResults = results.filter(
+					(result) => result && !result.valid
+				);
 				const errors = invalidResults.flatMap((result) => result.errors);
 
 				return {
