@@ -1,13 +1,11 @@
-name: Publish to NPM
+name: Update Coverage Badge
 
 on:
-  release:
-    types: [created]
-
+  push:
+    branches: [main]
 jobs:
-  publish:
+  update-coverage-badge:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'Ez-Kits/form' && github.repository_owner == 'Ez-Kits' }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -22,12 +20,8 @@ jobs:
         run: yarn install --frozen-lockfile
 
       - name: Run tests
-        run: yarn test
+        run: yarn test:coverage
 
-      - name: Build
-        run: yarn build
-
-      - name: Publish
-        run: yarn publish-packages ${{ github.ref_name }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+      - name: Update Coverage Badge
+        if: github.ref == format('refs/heads/{0}', github.event.repository.default_branch)
+        uses: we-cli/coverage-badge-action@main
