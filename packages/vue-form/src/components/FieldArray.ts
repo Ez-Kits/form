@@ -9,7 +9,7 @@ import {
 import useFieldArray from "src/composables/useFieldArray";
 import type { DefaultValidationSchema } from "src/global";
 import { useInjectForm } from "src/provides/form";
-import { fieldProps, type FieldNameProps } from "src/utilities/field";
+import { fieldArrayProps, type FieldNameProps } from "src/utilities/field";
 import { defineComponent, getCurrentInstance } from "vue";
 
 export type FieldArrayProps<
@@ -26,8 +26,8 @@ export type FieldArrayProps<
 	};
 
 const FieldArrayImpl = defineComponent({
-	name: "EzField",
-	props: fieldProps(),
+	name: "EzFieldArray",
+	props: fieldArrayProps(),
 	setup(props, ctx) {
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-argument
 		const fieldArray = useFieldArray(props as any);

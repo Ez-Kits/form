@@ -22,7 +22,7 @@ export function fieldProps<
 	return {
 		name: {
 			type: String as unknown as PropType<GetKeys<FormValues>>,
-			required: true,
+			required: false,
 		},
 		namePrefix: {
 			type: String,
