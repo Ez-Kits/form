@@ -1,13 +1,13 @@
-name: Publish to NPM
+name: Run Tests
 
 on:
-  release:
-    types: [created]
-
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
 jobs:
-  publish:
+  run-tests:
     runs-on: ubuntu-latest
-    if: ${{ github.repository == 'Ez-Kits/form' && github.repository_owner == 'Ez-Kits' }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -26,8 +26,3 @@ jobs:
 
       - name: Run tests
         run: yarn test
-
-      - name: Publish
-        run: yarn publish-packages ${{ github.ref_name }}
-        env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}

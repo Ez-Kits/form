@@ -18,6 +18,7 @@ Easy & Fast Form
 	<a href="https://bundlephobia.com/package/@ez-kits/form-core">
 		<img src="https://img.shields.io/bundlephobia/minzip/@ez-kits/form-core@latest?label=">
 	</a>
+  [![cov](https://ez-kits.github.io/form/badges/coverage.svg)](https://github.com/ez-kits/form/actions)
 	<a href="https://ez-kits.github.io/form/" target="_blank">
 		<img src="https://img.shields.io/badge/-Documentation-09BA4D">
 	</a>
