@@ -9,7 +9,7 @@ import type {
 import type { DefaultValidationSchema } from "src/global";
 import { useInjectField } from "src/provides/field";
 import { useInjectForm } from "src/provides/form";
-import { Fragment, defineComponent, h, type Slot, type VNode } from "vue";
+import { defineComponent, h, type Slot, type VNode } from "vue";
 
 export type BindingFieldInputProps = {
 	inputIndex?: number;
@@ -42,27 +42,7 @@ const BindingFieldInputImpl = defineComponent({
 		};
 
 		const getVNodeFromSlot = (slot: Slot): VNode[] => {
-			const vNodes = (slot && slot()) ?? [];
-
-			if (vNodes.length && vNodes[0]?.type === Fragment) {
-				const { children } = vNodes[0];
-				if (children === null) {
-					return [];
-				}
-
-				if (typeof children === "string") {
-					return [h(children)];
-				}
-
-				return [
-					...(Array.isArray(children)
-						? (children as VNode[])
-						: getVNodeFromSlot(children["default"] as any)),
-					...vNodes.slice(1),
-				];
-			}
-
-			return (slots.default && slots.default(slotData())) ?? [];
+			return slot(slotData());
 		};
 
 		return () =>
