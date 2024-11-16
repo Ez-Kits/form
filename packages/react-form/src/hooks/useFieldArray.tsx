@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	FieldArrayInstance,
+	type FieldArrayItemInfo,
 	type FieldMeta,
 	type FieldOptions,
 	type FormInstance,
@@ -26,6 +27,7 @@ import type { FieldNameProps } from "src/utilities";
 declare module "@ez-kits/form-core" {
 	interface FieldArrayInstance<FieldValue, FormValues, ValidationSchema> {
 		useFieldValue: <T = FieldValue>(selector?: (values: FieldValue) => T) => T;
+		useFieldsInfo: () => FieldArrayItemInfo[];
 		useFieldMeta: <T = FieldMeta>(selector?: (meta: FieldMeta) => T) => T;
 		useFieldData: <T = UseFieldDataValues<FieldValue>>(
 			selector?: (values: UseFieldDataValues<FieldValue>) => T
@@ -80,6 +82,18 @@ export default function useFieldArray<
 
 		fieldInstance.useFieldValue = function useFieldValueImpl(selector) {
 			return useFieldValue(fieldInstance, selector);
+		};
+
+		fieldInstance.useFieldsInfo = function useFieldInfoImpl() {
+			const [fieldsInfo, setFieldsInfo] = useState(field.getFieldsInfo());
+
+			useEffect(() => {
+				return field.on("change:value", () => {
+					setFieldsInfo(field.getFieldsInfo());
+				});
+			}, []);
+
+			return fieldsInfo;
 		};
 
 		fieldInstance.useFieldMeta = function useFieldMetaImpl(selector) {

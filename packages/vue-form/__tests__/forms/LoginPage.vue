@@ -1,7 +1,7 @@
 <template>
 	<Form>
 		<form v-bind="loginForm.getFormProps()">
-			<Field name="username">
+			<EzField name="username">
 				<EzBindingFieldInput>
 					<CustomInput data-testid="usernameInput" />
 				</EzBindingFieldInput>
@@ -13,7 +13,7 @@
 						>
 					</span>
 				</FieldErrors>
-			</Field>
+			</EzField>
 			<Field name="password" :validationSchema="passwordValidationSchema">
 				<EzBindingFieldInput>
 					<input data-testid="passwordInput" type="password" />
@@ -34,6 +34,7 @@
 <script lang="ts" setup>
 import {
 	EzBindingFieldInput,
+	EzField,
 	EzFieldErrors as FieldErrors,
 	useForm,
 	type DefaultValidationSchema,

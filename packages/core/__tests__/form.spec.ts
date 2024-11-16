@@ -286,7 +286,11 @@ describe("Form", () => {
 			cardNumbers: ["123"],
 		};
 
-		const form = new FormInstance<RegisterForm, unknown>();
+		const onSubmit = vi.fn(() => {});
+
+		const form = new FormInstance<RegisterForm, unknown>({
+			onSubmit,
+		});
 		const unmount = form.mount();
 		const userName = new FieldInstance<string, RegisterForm, unknown>(form, {
 			name: "username",
@@ -336,7 +340,7 @@ describe("Form", () => {
 		const values = await form.submitAsync();
 
 		expect(values).toMatchObject(formData);
-
+		expect(onSubmit).toBeCalled();
 		unmount();
 	});
 
@@ -361,12 +365,15 @@ describe("Form", () => {
 			},
 			cardNumbers: ["123"],
 		};
-
+		const onError = vi.fn(() => {});
 		const form = new FormInstance<RegisterForm, yup.Schema>({
 			validator: yupValidator,
-			validationSchema: yup.object({
-				username: yup.string().required().min(8),
-			}),
+			validationSchema: [
+				yup.object({
+					username: yup.string().required().min(8),
+				}),
+			],
+			onError,
 		});
 		const unmount = form.mount();
 		const userName = new FieldInstance<string, RegisterForm, yup.Schema>(form, {
@@ -418,7 +425,7 @@ describe("Form", () => {
 		await expect(async () => {
 			await form.submitAsync();
 		}).rejects.toThrow(Array);
-
+		expect(onError).toBeCalled();
 		unmount();
 	});
 
@@ -678,6 +685,101 @@ describe("Form", () => {
 
 		expect(firstCardNumberField).instanceOf(FieldInstance);
 		expect(firstCardNumberField.getValue()).toBe(formData.cardNumbers[0]);
+
+		unmount();
+	});
+
+	it("Remove Field By Uid", ({ expect }) => {
+		const form = new FormInstance();
+		const field = new FieldInstance(form, {
+			name: "name",
+		});
+		field.uid = "test-field";
+		field.mount();
+		const unmount = form.mount();
+
+		expect(form.getFieldByName("name")).toBe(field);
+		form.removeFieldByUid(field.uid);
+		expect(() => {
+			form.getFieldByName("name");
+		}).toThrowError();
+		unmount();
+	});
+
+	it("Remove Field Does Not Exist", ({ expect }) => {
+		const form = new FormInstance();
+		const form2 = new FormInstance();
+		const field = new FieldInstance(form2, {
+			name: "name",
+		});
+		field.mount();
+		const unmount = form.mount();
+		const unmount2 = form2.mount();
+
+		expect(() => {
+			form.getFieldByName("name");
+		}).toThrowError();
+		expect(form2.getFieldByName("name")).toBe(field);
+		form.removeField(field);
+		expect(() => {
+			form.getFieldByName("name");
+		}).toThrowError();
+
+		unmount();
+		unmount2();
+	});
+
+	it("Update Form Options", ({ expect }) => {
+		const form = new FormInstance({
+			enableReinitialize: true,
+			name: "login-form",
+			initialValues: {
+				name: "default-name",
+			},
+		});
+		const unmount = form.mount();
+
+		expect(form.getFieldValue("name")).toEqual("default-name");
+
+		form.updateOptions({
+			enableReinitialize: true,
+			initialValues: {
+				name: "new-name",
+			},
+		});
+
+		expect(form.getFieldValue("name")).toEqual("new-name");
+
+		unmount();
+	});
+
+	it("Validate Field On Update Value", async ({ expect }) => {
+		const form = new FormInstance({
+			initialValues: {
+				name: "default-name",
+			},
+			validator: yupValidator,
+			validationSchema: yup.object({
+				name: yup
+					.string()
+					.required()
+					.equals(["default-name"], "Name must be default-name"),
+			}),
+		});
+		const unmount = form.mount();
+
+		expect(form.getFieldValue("name")).toEqual("default-name");
+
+		form.setFieldValue("name", "new-name", {
+			validate: true,
+			dirty: true,
+			touched: true,
+		});
+
+		await new Promise((resolve) => setTimeout(resolve, 100));
+
+		expect(form.getFieldValue("name")).toEqual("new-name");
+		expect(form.meta.errors?.length).toEqual(1);
 
 		unmount();
 	});

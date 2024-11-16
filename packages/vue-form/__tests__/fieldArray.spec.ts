@@ -2,7 +2,12 @@ import type { FieldArrayInstance } from "@ez-kits/form-core";
 import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import UsersFormVue from "__tests__/forms/UsersForm.vue";
-import { EzBindingFieldInput, useForm, useInjectFieldArray } from "src/index";
+import {
+	EzBindingFieldInput,
+	EzFieldArray,
+	useForm,
+	useInjectFieldArray,
+} from "src/index";
 import { describe, it } from "vitest";
 import { h } from "vue";
 
@@ -658,5 +663,204 @@ describe("Field Array", () => {
 		const cardNumbersDataEl = screen.getByTestId("cardNumbersData[0]");
 		const cardNumbersData = cardNumbersDataEl.innerHTML;
 		expect(cardNumbersData).toMatch('"value":["123456"]');
+	});
+
+	it("Nested Field - Import FieldArray", async ({ expect }) => {
+		const formData = {
+			users: [
+				{
+					username: "",
+					cardNumbers: ["123"],
+				},
+			],
+		};
+		type FormData = typeof formData;
+
+		const UsersFieldMeta = {
+			setup(props: { index: number }) {
+				const field = useInjectFieldArray<FormData["users"], FormData>();
+				const data = field.useFieldMeta();
+				return () => {
+					return [
+						h(
+							"div",
+							{
+								"data-testid": `usersMeta[${props.index}]`,
+							},
+							{
+								default: () => JSON.stringify(data.value),
+							}
+						),
+					];
+				};
+			},
+		};
+
+		const InnerFieldData = {
+			props: {
+				index: {
+					type: Number,
+					required: true,
+				},
+			},
+			setup(props: { index: number }) {
+				const field = useInjectFieldArray<FormData["users"], FormData>();
+				const usernameField = field.useField({
+					name: "username",
+					index: props.index,
+				});
+				const usernameData = usernameField.useFieldData();
+
+				const cardNumbersField = field.useFieldArray({
+					name: "cardNumbers",
+					index: props.index,
+				});
+				const cardNumbersFieldData = cardNumbersField.useFieldData();
+
+				return () => {
+					return [
+						h(
+							"div",
+							{
+								"data-testid": `usernameData[${props.index}]`,
+							},
+							{
+								default: () => JSON.stringify(usernameData.value),
+							}
+						),
+						h(
+							"div",
+							{
+								"data-testid": `cardNumbersData[${props.index}]`,
+							},
+							{
+								default: () => JSON.stringify(cardNumbersFieldData.value),
+							}
+						),
+					];
+				};
+			},
+		};
+
+		const InnerField = {
+			props: {
+				index: {
+					type: Number,
+					required: true,
+				},
+			},
+			setup(props: { index: number }) {
+				const fieldArray = useInjectFieldArray<FormData["users"], FormData>();
+				const cardNumbersField = fieldArray.useFieldArray({
+					name: "cardNumbers",
+					index: props.index,
+				});
+
+				return () => {
+					return [
+						h(
+							fieldArray.Field,
+							{ name: "username", index: props.index },
+							{
+								default: () =>
+									h(EzBindingFieldInput, null, {
+										default: () => [
+											h("input", {
+												"data-testid": `usernameInput[${props.index}]`,
+											}),
+										],
+									}),
+							}
+						),
+						h(
+							fieldArray.FieldArray,
+							{ name: "cardNumbers", index: props.index },
+							{
+								default: ({ fieldsInfo }: { fieldsInfo: unknown[] }) => [
+									h(
+										"div",
+										fieldsInfo.map((_, index) => {
+											return h(
+												cardNumbersField.Field,
+												{ index },
+												{
+													default: () => [
+														h(EzBindingFieldInput, null, {
+															default: () => [
+																h("input", {
+																	"data-testid": `cardNumberInput[${props.index}][${index}]`,
+																}),
+															],
+														}),
+													],
+												}
+											);
+										})
+									),
+								],
+							}
+						),
+					];
+				};
+			},
+		};
+
+		render({
+			setup() {
+				const form = useForm({
+					initialValues: formData,
+				});
+
+				return () => {
+					return h(form.Form, null, {
+						default: () => [
+							h(
+								EzFieldArray,
+								{
+									name: "users",
+								},
+								{
+									default: ({ fieldsInfo }: { fieldsInfo: unknown[] }) => [
+										h("div", null, {
+											default: () =>
+												fieldsInfo.map((_, index) => {
+													return [
+														h(InnerField, { index }),
+														h(InnerFieldData, { index }),
+													];
+												}),
+										}),
+										h(UsersFieldMeta),
+									],
+								}
+							),
+						],
+					});
+				};
+			},
+		});
+
+		const usernameInput = screen.getByTestId("usernameInput[0]");
+		expect(usernameInput).toBeInTheDocument();
+		await userEvent.type(usernameInput, "johnson");
+
+		const usernameDataEl = screen.getByTestId("usernameData[0]");
+		const usernameData = usernameDataEl.innerHTML;
+		expect(usernameData).toMatch('"value":"johnson"');
+
+		const cardNumberInput = screen.getByTestId("cardNumberInput[0][0]");
+		expect(cardNumberInput).toBeInTheDocument();
+		expect(cardNumberInput).toHaveValue("123");
+		await userEvent.type(cardNumberInput, "456");
+
+		const cardNumbersDataEl = screen.getByTestId("cardNumbersData[0]");
+		const cardNumbersData = cardNumbersDataEl.innerHTML;
+		expect(cardNumbersData).toMatch('"value":["123456"]');
+	});
+
+	it("useInjectFieldArray Outside Form", ({ expect }) => {
+		expect(() => {
+			useInjectFieldArray();
+		}).toThrowError();
 	});
 });

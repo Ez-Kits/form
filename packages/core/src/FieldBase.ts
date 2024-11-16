@@ -108,7 +108,7 @@ export default abstract class FieldBaseInstance<
 
 	// Handle mount and unmount
 	mount = () => {
-		this.form.addField(this);
+		const removeField = this.form.addField(this);
 
 		const offFormChangeValue = this.form.on("change:value", () => {
 			const newValue = this.getValue();
@@ -153,7 +153,7 @@ export default abstract class FieldBaseInstance<
 			offFormReInitialize();
 			offThisChangeMeta();
 			offFormReset();
-			this.form.removeField(this);
+			removeField();
 			offFormChangeMeta();
 		};
 	};
@@ -311,8 +311,8 @@ export default abstract class FieldBaseInstance<
 
 					if (syncErrorWithForm) {
 						const mergedErrors = normalizeErrors(
-							filteredFormErrors.concat(errors),
-							true
+							filteredFormErrors.concat(errors)
+							// true
 						);
 
 						this.form.setMetaKey("errors", mergedErrors);

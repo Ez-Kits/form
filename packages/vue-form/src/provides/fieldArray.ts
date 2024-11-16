@@ -21,7 +21,7 @@ export function useInjectFieldArray<
 >() {
 	const instance = getCurrentInstance() as any;
 
-	const injected = (instance.provides[$fieldArrayInjectKey] ??
+	const injected = (instance?.provides[$fieldArrayInjectKey] ??
 		inject($fieldArrayInjectKey)) as InjectedFieldArrayData;
 
 	if (!injected) {

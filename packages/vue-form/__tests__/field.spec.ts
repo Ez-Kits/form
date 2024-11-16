@@ -140,4 +140,10 @@ describe("Field", () => {
 		const cardNumbersData = cardNumbersDataEl.innerHTML;
 		expect(cardNumbersData).toMatch('"value":["123456"]');
 	});
+
+	it("useInjectField Outside Form", ({ expect }) => {
+		expect(() => {
+			useInjectField();
+		}).toThrowError();
+	});
 });

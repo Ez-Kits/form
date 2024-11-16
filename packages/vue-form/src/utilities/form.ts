@@ -64,24 +64,6 @@ export function formProps<Values, ValidationSchema = DefaultValidationSchema>(
 	};
 }
 
-export function formPropsArray() {
-	return [
-		"form",
-		"name",
-		"initialValues",
-		"enableReinitialize",
-		"validationSchema",
-		"validateTrigger",
-		"validateMessages",
-		"preserveValues",
-		"onValuesChange",
-		"onReset",
-		"onSubmit",
-		"onError",
-		"onValidate",
-	] as const;
-}
-
 export function mergeFormOptions<
 	Values,
 	ValidationSchema = DefaultValidationSchema

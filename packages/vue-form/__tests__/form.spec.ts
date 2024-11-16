@@ -2,6 +2,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import LoginPage from "__tests__/forms/LoginPage.vue";
 import RegisterPage from "__tests__/forms/RegisterPage.vue";
+import { useInjectForm } from "src/index";
 import { describe, it } from "vitest";
 
 describe("Form values", () => {
@@ -156,5 +157,11 @@ describe("Form values", () => {
 		expect(usernameInput).toHaveValue(formData.username + "_2");
 		expect(passwordInput).toHaveValue(formData.password + "_2");
 		expect(observeUsernameEl).toHaveTextContent(formData.username + "_2");
+	});
+
+	it("useInjectForm Outside Form", ({ expect }) => {
+		expect(() => {
+			useInjectForm();
+		}).toThrowError();
 	});
 });
