@@ -11,6 +11,7 @@ import type {
 	GetType,
 } from "@ez-kits/form-core";
 import { splitProps, type Accessor, type JSXElement } from "solid-js";
+import fieldArrayContext from "src/contexts/fieldArrayContext";
 import type { DefaultValidationSchema } from "src/global";
 import useFieldArray from "src/hooks/useFieldArray";
 import { useFormPropsOrContext } from "src/hooks/useFormPropsOrContext";
@@ -57,7 +58,7 @@ function FieldArray<
 	const meta = fieldArray.useFieldMeta();
 
 	return (
-		<>
+		<fieldArrayContext.Provider value={{ fieldArray }}>
 			{typeof local.children === "function"
 				? local.children?.({
 						form,
@@ -67,7 +68,7 @@ function FieldArray<
 						meta,
 				  })
 				: local.children}
-		</>
+		</fieldArrayContext.Provider>
 	);
 }
 

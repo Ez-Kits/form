@@ -76,7 +76,7 @@ export default function useForm<
 	ValidationSchema = DefaultValidationSchema
 >(options: UseFormProps<FormValues, ValidationSchema> = {}) {
 	const [form] = useState(() => {
-		const { form: optionsForm, ...otherOptions } = options ?? {};
+		const { form: optionsForm, ...otherOptions } = options;
 		if (optionsForm) {
 			optionsForm.updateOptions(
 				mergeFormOptions({

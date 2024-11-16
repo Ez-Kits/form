@@ -110,15 +110,15 @@ export function set(
 	}
 }
 
-export function deleteFrom(input: any, path: NamePath) {
-	const keys = castPath(path);
-	input = get(input, keys.slice(0, -1));
+// export function deleteFrom(input: any, path: NamePath) {
+// 	const keys = castPath(path);
+// 	input = get(input, keys.slice(0, -1));
 
-	if (input) {
-		const key = keys.pop();
-		key && delete input[key];
-	}
-}
+// 	if (input) {
+// 		const key = keys.pop();
+// 		key && delete input[key];
+// 	}
+// }
 
 export function mapValues<T extends object, R>(
 	input: T,

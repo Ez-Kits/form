@@ -1,9 +1,10 @@
 import {
 	FieldErrors,
 	registerGlobalValidator,
+	useFieldContext,
 	useForm,
 } from "@ez-kits/form-solid";
-import { createUniqueId, For, type Component } from "solid-js";
+import { createUniqueId, Index, type Component } from "solid-js";
 
 import { zodValidator } from "@ez-kits/form-zod-validator";
 import { z } from "zod";
@@ -35,9 +36,7 @@ const App: Component = () => {
 export default App;
 
 interface LoginForm {
-	username: string;
-	password: string;
-	addresses: { city: string }[];
+	user: { username: string; password: string; addresses: { city: string }[] };
 }
 
 declare module "@ez-kits/form-solid" {
@@ -51,9 +50,11 @@ registerGlobalValidator(zodValidator);
 function LoginPage() {
 	const form = useForm<LoginForm>({
 		initialValues: {
-			username: "",
-			password: "",
-			addresses: [],
+			user: {
+				username: "",
+				password: "",
+				addresses: [],
+			},
 		},
 		validationSchema: z.object({
 			username: z.string().min(1, "This field is required"),
@@ -76,13 +77,18 @@ function LoginPage() {
 				{({ values }) => <span>{JSON.stringify(values())}</span>}
 			</form.Observe>
 			<form {...form.getFormProps()}>
-				<form.Field name="username">
+				<form.Field name="user">
+					<InnerFieldData />
+				</form.Field>
+				<form.Field name="user.username">
 					{({ field }) => (
-						<input data-testid="usernameInput" {...field.getInputProps()} />
+						<>
+							<input data-testid="usernameInput" {...field.getInputProps()} />
+						</>
 					)}
 				</form.Field>
 
-				<form.Field name="password">
+				<form.Field name="user.password">
 					{({ field }) => (
 						<input
 							data-testid="passwordInput"
@@ -91,13 +97,13 @@ function LoginPage() {
 						/>
 					)}
 				</form.Field>
-				<form.FieldArray name="addresses">
+				<form.FieldArray name="user.addresses">
 					{({ fieldArray, fieldsInfo }) => (
 						<div>
 							<div>
-								<For each={fieldsInfo()}>
+								<Index each={fieldsInfo()}>
 									{(_, index) => (
-										<fieldArray.Field index={index()} name="city">
+										<fieldArray.Field index={index} name="city">
 											{({ field }) => (
 												<div>
 													<input {...field.getInputProps()} type="text" />
@@ -114,7 +120,7 @@ function LoginPage() {
 											)}
 										</fieldArray.Field>
 									)}
-								</For>
+								</Index>
 							</div>
 							<div>
 								<button
@@ -130,4 +136,11 @@ function LoginPage() {
 			</form>
 		</form.Form>
 	);
+}
+
+function InnerFieldData() {
+	const field = useFieldContext<LoginForm["user"], FormData>();
+	const fieldData = field.useFieldData();
+
+	return <div data-testid="fieldData">{JSON.stringify(fieldData())}</div>;
 }

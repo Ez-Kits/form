@@ -2,6 +2,7 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import {
 	FieldArrayInstance,
+	type FieldArrayItemInfo,
 	type FieldMeta,
 	type FieldOptions,
 	type FormInstance,
@@ -40,6 +41,7 @@ declare module "@ez-kits/form-core" {
 		useFieldData: <T = UseFieldDataValues<FieldValue>>(
 			selector?: (values: UseFieldDataValues<FieldValue>) => T
 		) => Accessor<T>;
+		useFieldsInfo: () => Accessor<FieldArrayItemInfo[]>;
 		Field: FieldComponent<FormValues, FieldValue, ValidationSchema>;
 		FieldArray: FieldArrayComponent<FormValues, FieldValue, ValidationSchema>;
 	}
@@ -91,6 +93,10 @@ export default function useFieldArray<
 
 	field.useFieldData = function useFieldDataImpl(selector) {
 		return useFieldData(field, selector);
+	};
+
+	field.useFieldsInfo = function useFieldInfoImpl() {
+		return useFieldData(field, () => field.getFieldsInfo());
 	};
 
 	field.Field = (props) => {

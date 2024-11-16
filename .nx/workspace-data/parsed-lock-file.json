@@ -3496,9 +3496,9 @@
       "type": "npm",
       "name": "npm:@vitest/coverage-v8",
       "data": {
-        "version": "2.1.1",
+        "version": "2.1.4",
         "packageName": "@vitest/coverage-v8",
-        "hash": "sha512-md/A7A3c42oTT8JUHSqjP5uKTWJejzUW4jalpvs+rZ27gsURsMU8DEb+8Jf8C6Kj2gwfSHJqobDNBuoqlm0cFw=="
+        "hash": "sha512-FPKQuJfR6VTfcNMcGpqInmtJuVXFSCd9HQltYncfR01AzXhLucMEtQ5SinPdZxsT5x/5BK7I5qFJ5/ApGCmyTQ=="
       }
     },
     "npm:@vitest/expect": {
@@ -6903,18 +6903,18 @@
         "hash": "sha512-h5bgJWpxJNswbU7qCrV0tIKQCaS3blPDrqKWx+QxzuzL1zGUzij9XCWLrSLsJPu5t+eWA/ycetzYAO5IOMcWAQ=="
       }
     },
-    "npm:magic-string": {
+    "npm:magic-string@0.30.11": {
       "type": "npm",
-      "name": "npm:magic-string",
+      "name": "npm:magic-string@0.30.11",
       "data": {
         "version": "0.30.11",
         "packageName": "magic-string",
         "hash": "sha512-+Wri9p0QHMy+545hKww7YAu5NyzF8iomPL/RQazugQ9+Ez4Ic3mERMd8ZTX5rfK944j+560ZJi8iAwgak1Ac7A=="
       }
     },
-    "npm:magic-string@0.30.12": {
+    "npm:magic-string": {
       "type": "npm",
-      "name": "npm:magic-string@0.30.12",
+      "name": "npm:magic-string",
       "data": {
         "version": "0.30.12",
         "packageName": "magic-string",
@@ -13666,7 +13666,7 @@
     },
     {
       "source": "npm:@vitest/mocker",
-      "target": "npm:magic-string@0.30.12",
+      "target": "npm:magic-string",
       "type": "static"
     },
     {
@@ -13701,7 +13701,7 @@
     },
     {
       "source": "npm:@vitest/snapshot",
-      "target": "npm:magic-string@0.30.12",
+      "target": "npm:magic-string",
       "type": "static"
     },
     {
@@ -14026,7 +14026,7 @@
     },
     {
       "source": "npm:@vue/compiler-sfc",
-      "target": "npm:magic-string",
+      "target": "npm:magic-string@0.30.11",
       "type": "static"
     },
     {
@@ -14071,7 +14071,7 @@
     },
     {
       "source": "npm:@vue/compiler-sfc@3.5.9",
-      "target": "npm:magic-string",
+      "target": "npm:magic-string@0.30.11",
       "type": "static"
     },
     {
@@ -14116,7 +14116,7 @@
     },
     {
       "source": "npm:@vue/compiler-sfc@3.5.10",
-      "target": "npm:magic-string",
+      "target": "npm:magic-string@0.30.11",
       "type": "static"
     },
     {
@@ -15097,11 +15097,6 @@
     {
       "source": "npm:debug",
       "target": "npm:ms",
-      "type": "static"
-    },
-    {
-      "source": "npm:debug@4.3.7",
-      "target": "npm:ms@2.1.3",
       "type": "static"
     },
     {
@@ -17535,12 +17530,12 @@
       "type": "static"
     },
     {
-      "source": "npm:magic-string",
+      "source": "npm:magic-string@0.30.11",
       "target": "npm:@jridgewell/sourcemap-codec",
       "type": "static"
     },
     {
-      "source": "npm:magic-string@0.30.12",
+      "source": "npm:magic-string",
       "target": "npm:@jridgewell/sourcemap-codec",
       "type": "static"
     },
@@ -19941,7 +19936,7 @@
     },
     {
       "source": "npm:vitest",
-      "target": "npm:magic-string@0.30.12",
+      "target": "npm:magic-string",
       "type": "static"
     },
     {

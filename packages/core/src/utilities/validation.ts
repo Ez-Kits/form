@@ -18,8 +18,8 @@ export const VALIDATE_TRIGGER_EVENTS: ToEvent<ValidateTrigger>[] = [
 ];
 
 export function normalizeErrors(
-	errors: ValidateError[],
-	replace?: boolean
+	errors: ValidateError[]
+	// replace?: boolean
 ): ValidateError[] {
 	const groupedErrors = errors.reduce<
 		Record<string, Record<ValidateTrigger, string[]>>
@@ -31,11 +31,12 @@ export function normalizeErrors(
 		const group = trigger;
 
 		if (field in errors) {
-			if (replace) {
-				errors[field]![group] = messages;
-			} else {
-				errors[field]![group] = errors[field]![group].concat(messages);
-			}
+			errors[field]![group] = messages;
+			// if (replace) {
+			// 	errors[field]![group] = messages;
+			// } else {
+			// 	errors[field]![group] = errors[field]![group].concat(messages);
+			// }
 		} else {
 			errors[field] = {
 				[group]: messages,
@@ -81,21 +82,17 @@ export function isValidationSchemaRecord<Schema>(
 export function groupValidationSchemaInputByTrigger<Schema>(
 	input: ValidationSchemaInput<Schema>
 ): ValidationSchemaArrayRecord<Schema> | Schema[] {
-	if (Array.isArray(input)) {
-		return input;
-	}
-
 	if (isValidationSchemaRecord(input)) {
 		return mapValues<ValidationSchemaRecord<Schema>, Schema[]>(
 			input,
 			(schema) => {
-				if (!schema) {
-					return [];
-				}
-
 				return toArray(schema as Schema | Schema[]);
 			}
 		);
+	}
+
+	if (Array.isArray(input)) {
+		return input;
 	}
 
 	return [input];
@@ -103,16 +100,12 @@ export function groupValidationSchemaInputByTrigger<Schema>(
 
 export function getValidationSchema<ValidationSchema>(
 	input: ValidationSchemaInput<ValidationSchema>,
-	options?: ValidationOptions
+	options: ValidationOptions
 ): ValidationSchema[] {
 	const groupedValidationSchemas = groupValidationSchemaInputByTrigger(input);
 
 	if (Array.isArray(groupedValidationSchemas)) {
 		return groupedValidationSchemas;
-	}
-
-	if (!options?.trigger) {
-		return Object.values(groupedValidationSchemas).flat();
 	}
 
 	return groupedValidationSchemas[toEvent(options.trigger)] ?? [];

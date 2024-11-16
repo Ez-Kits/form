@@ -19,7 +19,7 @@ export function useInjectForm<
 >() {
 	const instance = getCurrentInstance() as any;
 
-	const injected = (instance.provides[$formInjectKey] ??
+	const injected = (instance?.provides[$formInjectKey] ??
 		inject($formInjectKey)) as InjectedFormData;
 
 	if (!injected) {

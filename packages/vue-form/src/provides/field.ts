@@ -21,7 +21,7 @@ export function useInjectField<
 >() {
 	const instance = getCurrentInstance() as any;
 
-	const injected = (instance.provides[$fieldInjectKey] ??
+	const injected = (instance?.provides[$fieldInjectKey] ??
 		inject($fieldInjectKey)) as InjectedFieldData;
 
 	if (!injected) {

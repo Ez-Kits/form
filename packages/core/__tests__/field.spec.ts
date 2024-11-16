@@ -145,7 +145,9 @@ describe("Field - Validation", () => {
 		const form = new FormInstance<unknown, yup.Schema>({
 			validator: yupValidator,
 		});
-		const field = new FieldInstance(form, { name: "test" });
+		const field = new FieldInstance(form, {
+			name: "test",
+		});
 		expect(field).toBeInstanceOf(FieldInstance);
 
 		const unmount = field.mount();
@@ -211,7 +213,7 @@ describe("Field - Validation", () => {
 		});
 		const field = new FieldInstance(form, {
 			name: "test",
-			validationSchema: () => yup.string().required(),
+			validationSchema: [yup.string().required()],
 		});
 		expect(field).toBeInstanceOf(FieldInstance);
 
@@ -235,7 +237,9 @@ describe("Field - Validation", () => {
 		});
 		const field = new FieldInstance(form, {
 			name: "test",
-			validationSchema: () => yup.string().required(),
+			validationSchema: {
+				onChange: yup.string().required(),
+			},
 		});
 		expect(field).toBeInstanceOf(FieldInstance);
 

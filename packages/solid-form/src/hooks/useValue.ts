@@ -4,7 +4,7 @@ import type {
 	FormInstance,
 	FormMeta,
 } from "@ez-kits/form-core";
-import { createSignal, type Accessor } from "solid-js";
+import { createSignal, onCleanup, type Accessor } from "solid-js";
 import type { DefaultValidationSchema } from "src/global";
 
 export interface UseFormDataValues<FormValues> {
@@ -31,8 +31,12 @@ export function useFormData<
 
 	const [data, setData] = createSignal(getData());
 
-	form.on("change", () => {
+	const unsubscribe = form.on("change", () => {
 		setData(() => getData());
+	});
+
+	onCleanup(() => {
+		unsubscribe();
 	});
 
 	return data;
@@ -89,8 +93,12 @@ export function useFieldData<
 
 	const [data, setData] = createSignal(getData());
 
-	field.on("change", () => {
+	const unsubscribe = field.on("change", () => {
 		setData(() => getData());
+	});
+
+	onCleanup(() => {
+		unsubscribe();
 	});
 
 	return data;

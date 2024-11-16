@@ -137,10 +137,9 @@ export default class FormInstance<
 	};
 
 	setMetaKey = <K extends keyof FormMeta>(key: K, value: FormMeta[K]) => {
-		const oldMeta = { ...this.meta };
-		set(this.meta, key, value);
-		this.trigger("change:meta", this.meta, oldMeta);
-		this.trigger("change", this);
+		const newMeta = clone(this.meta);
+		set(newMeta, key, value);
+		this.setMeta(newMeta);
 	};
 
 	// Handle values
@@ -154,8 +153,7 @@ export default class FormInstance<
 			this.setMetaKey("dirty", true);
 		}
 
-		(options?.dirty || options?.touched) &&
-			this.options.onValuesChange?.(values, oldValues);
+		this.options.onValuesChange?.(values, oldValues);
 
 		this.trigger("change", this);
 		this.trigger("change:value", this.values, oldValues);
@@ -183,10 +181,6 @@ export default class FormInstance<
 	removeField = (field: FieldBaseInstance<any, Values, ValidationSchema>) => {
 		const fieldName = field.name;
 		const registerInstance = field.options.registerInstance;
-
-		if (!this.fields.has(field)) {
-			return;
-		}
 
 		const deleted = this.fields.delete(field);
 		if (!deleted) {
@@ -263,16 +257,9 @@ export default class FormInstance<
 		value: GetType<Values, N>,
 		options?: UpdateValueOptions
 	) => {
-		const oldValues = this.values;
-		const values = { ...this.values };
+		const values = clone(this.values);
 		set(values, name, value);
 		this.setValues(values, options);
-
-		this.trigger("change", this);
-		this.trigger("change:value", this.values, oldValues);
-		if (options?.validate) {
-			this.validateFields(name, { trigger: "change" });
-		}
 	};
 
 	getFieldValue = <N extends GetKeys<Values>>(name: N): GetType<Values, N> => {
@@ -282,6 +269,7 @@ export default class FormInstance<
 	// Handle reset
 	reset = () => {
 		this.initialize();
+		this.options.onReset?.();
 		this.trigger("reset");
 	};
 
@@ -294,7 +282,6 @@ export default class FormInstance<
 			trigger: "submit",
 		})
 			.then(({ valid, errors }) => {
-				this.setMetaKey("submitting", false);
 				if (valid) {
 					this.options.onSubmit?.(this.values);
 					this.trigger("submit", this.values);
@@ -303,7 +290,7 @@ export default class FormInstance<
 					this.trigger("error", errors);
 				}
 			})
-			.catch(() => {
+			.finally(() => {
 				this.setMetaKey("submitting", false);
 			});
 	};
@@ -483,8 +470,8 @@ export default class FormInstance<
 				const errors = normalizeErrors(
 					filteredFormErrors.concat(
 						formResult.errors.concat(fieldsResult.errors)
-					),
-					true
+					)
+					// true
 				);
 
 				this.setMetaKey("errors", errors);

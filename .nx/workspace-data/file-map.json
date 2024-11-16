@@ -6,219 +6,132 @@
   "fileMap": {
     "nonProjectFiles": [],
     "projectFileMap": {
-      "solid-example": [
+      "@ez-kits/form-joi-validator": [
         {
-          "file": "examples/solid/.gitignore",
-          "hash": "11091884865853158211"
+          "file": "packages/joi-validator/LICENSE",
+          "hash": "5576629829737622684"
         },
         {
-          "file": "examples/solid/README.md",
-          "hash": "7254910495143603048"
+          "file": "packages/joi-validator/README.md",
+          "hash": "1572745030694899378"
         },
         {
-          "file": "examples/solid/index.html",
-          "hash": "12991144495272562089"
+          "file": "packages/joi-validator/__tests__/basic.spec.ts",
+          "hash": "17638284202691404883"
         },
         {
-          "file": "examples/solid/package.json",
-          "hash": "17423911724747656206",
+          "file": "packages/joi-validator/__tests__/edge.spec.ts",
+          "hash": "9801487979277087076"
+        },
+        {
+          "file": "packages/joi-validator/package.json",
+          "hash": "244570941823264734",
           "deps": [
-            "npm:solid-devtools",
-            "npm:typescript@5.3.3",
+            "@ez-kits/form-core",
+            "npm:joi",
+            "npm:@types/node@20.4.2",
+            "npm:tsup",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/joi-validator/src/index.ts",
+          "hash": "10476944706945341122"
+        },
+        {
+          "file": "packages/joi-validator/tsconfig.json",
+          "hash": "4141034762693374703"
+        },
+        {
+          "file": "packages/joi-validator/tsup.config.ts",
+          "hash": "11698547606821912876"
+        },
+        {
+          "file": "packages/joi-validator/vitest.config.ts",
+          "hash": "8347171620766246208"
+        }
+      ],
+      "react-example": [
+        {
+          "file": "examples/react/.eslintrc.cjs",
+          "hash": "15413245457294240431"
+        },
+        {
+          "file": "examples/react/.gitignore",
+          "hash": "13046175384202504187"
+        },
+        {
+          "file": "examples/react/index.html",
+          "hash": "8461945451843851111"
+        },
+        {
+          "file": "examples/react/package.json",
+          "hash": "7420525678788178139",
+          "deps": [
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:@vitejs/plugin-react",
+            "npm:eslint",
+            "npm:eslint-plugin-react-hooks",
+            "npm:eslint-plugin-react-refresh",
+            "npm:typescript",
             "npm:vite",
-            "npm:vite-plugin-solid",
-            "npm:solid-js",
-            "@ez-kits/form-solid",
             "@ez-kits/form-async-validator",
+            "@ez-kits/form-react",
             "@ez-kits/form-yup-validator",
             "@ez-kits/form-zod-validator",
             "npm:async-validator",
+            "npm:react",
+            "npm:react-dom",
             "npm:yup",
             "npm:zod"
           ]
         },
         {
-          "file": "examples/solid/src/App.module.css",
-          "hash": "6262539446887781464"
+          "file": "examples/react/public/vite.svg",
+          "hash": "16046085400642193116"
         },
         {
-          "file": "examples/solid/src/App.tsx",
-          "hash": "9502457119261931372"
+          "file": "examples/react/src/App.css",
+          "hash": "3739391659270974612"
         },
         {
-          "file": "examples/solid/src/CustomInput.tsx",
-          "hash": "11425707784850005881"
+          "file": "examples/react/src/App.tsx",
+          "hash": "5446846667359931004"
         },
         {
-          "file": "examples/solid/src/TestProvider.tsx",
-          "hash": "8624545584596721207"
+          "file": "examples/react/src/assets/react.svg",
+          "hash": "16069471864800376455"
         },
         {
-          "file": "examples/solid/src/TestUseContext.tsx",
-          "hash": "15239096526080924921"
+          "file": "examples/react/src/index.css",
+          "hash": "14049402097647904024"
         },
         {
-          "file": "examples/solid/src/assets/favicon.ico",
-          "hash": "10308535588029773350"
+          "file": "examples/react/src/main.tsx",
+          "hash": "15899134647676290618"
         },
         {
-          "file": "examples/solid/src/index.css",
-          "hash": "14056909652331273425"
+          "file": "examples/react/src/vite-env.d.ts",
+          "hash": "12946363841406869089"
         },
         {
-          "file": "examples/solid/src/index.tsx",
-          "hash": "9700491825041578286"
+          "file": "examples/react/tsconfig.json",
+          "hash": "376575334049222340"
         },
         {
-          "file": "examples/solid/src/logo.svg",
-          "hash": "7140267077129635146"
+          "file": "examples/react/tsconfig.node.json",
+          "hash": "8586866767247417612"
         },
         {
-          "file": "examples/solid/tsconfig.json",
-          "hash": "9291184023199002656"
+          "file": "examples/react/vite.config.ts",
+          "hash": "7008402861428644331"
         },
         {
-          "file": "examples/solid/vite.config.mts",
-          "hash": "14492452606118585164"
-        },
-        {
-          "file": "examples/solid/yarn.lock",
-          "hash": "15164354931443386984"
-        }
-      ],
-      "@ez-kits/form-valibot-validator": [
-        {
-          "file": "packages/valibot-validator/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/valibot-validator/README.md",
-          "hash": "1572745030694899378"
-        },
-        {
-          "file": "packages/valibot-validator/__tests__/basic.spec.ts",
-          "hash": "11195042379273462975"
-        },
-        {
-          "file": "packages/valibot-validator/__tests__/edge.spec.ts",
-          "hash": "7385230412426300576"
-        },
-        {
-          "file": "packages/valibot-validator/package.json",
-          "hash": "12208560980416972506",
-          "deps": [
-            "@ez-kits/form-core",
-            "npm:valibot",
-            "npm:@types/node@20.4.2",
-            "npm:tsup",
-            "npm:typescript"
-          ]
-        },
-        {
-          "file": "packages/valibot-validator/src/index.ts",
-          "hash": "14922995413590170186"
-        },
-        {
-          "file": "packages/valibot-validator/tsconfig.json",
-          "hash": "4141034762693374703"
-        },
-        {
-          "file": "packages/valibot-validator/tsup.config.ts",
-          "hash": "204847121147607513"
-        },
-        {
-          "file": "packages/valibot-validator/vitest.config.ts",
-          "hash": "8347171620766246208"
-        }
-      ],
-      "@ez-kits/form-async-validator": [
-        {
-          "file": "packages/async-validator/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/async-validator/README.md",
-          "hash": "1572745030694899378"
-        },
-        {
-          "file": "packages/async-validator/__tests__/basic.spec.ts",
-          "hash": "11422186293176659794"
-        },
-        {
-          "file": "packages/async-validator/__tests__/edge.spec.ts",
-          "hash": "9414045320325448120"
-        },
-        {
-          "file": "packages/async-validator/package.json",
-          "hash": "7281423432117518515",
-          "deps": [
-            "@ez-kits/form-core",
-            "npm:async-validator",
-            "npm:@types/node@20.4.2",
-            "npm:tsup",
-            "npm:typescript"
-          ]
-        },
-        {
-          "file": "packages/async-validator/src/index.ts",
-          "hash": "6179084857438171571"
-        },
-        {
-          "file": "packages/async-validator/tsconfig.json",
-          "hash": "4141034762693374703"
-        },
-        {
-          "file": "packages/async-validator/tsup.config.ts",
-          "hash": "10405147853866717701"
-        },
-        {
-          "file": "packages/async-validator/vitest.config.ts",
-          "hash": "8347171620766246208"
-        }
-      ],
-      "@ez-kits/form-yup-validator": [
-        {
-          "file": "packages/yup-validator/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/yup-validator/README.md",
-          "hash": "1572745030694899378"
-        },
-        {
-          "file": "packages/yup-validator/__tests__/basic.spec.ts",
-          "hash": "935914663600812864"
-        },
-        {
-          "file": "packages/yup-validator/__tests__/edge.spec.ts",
-          "hash": "8599771998348707543"
-        },
-        {
-          "file": "packages/yup-validator/package.json",
-          "hash": "14506713179113420945",
-          "deps": [
-            "@ez-kits/form-core",
-            "npm:yup@1.2.0",
-            "npm:@types/node@20.4.2",
-            "npm:tsup",
-            "npm:typescript"
-          ]
-        },
-        {
-          "file": "packages/yup-validator/src/index.ts",
-          "hash": "8416583168087852065"
-        },
-        {
-          "file": "packages/yup-validator/tsconfig.json",
-          "hash": "4141034762693374703"
-        },
-        {
-          "file": "packages/yup-validator/tsup.config.ts",
-          "hash": "14045710840459325806"
-        },
-        {
-          "file": "packages/yup-validator/vitest.config.ts",
-          "hash": "8347171620766246208"
+          "file": "examples/react/yarn.lock",
+          "hash": "12641692827714376571"
         }
       ],
       "@ez-kits/form-core": [
@@ -232,7 +145,7 @@
         },
         {
           "file": "packages/core/__tests__/field.spec.ts",
-          "hash": "17709909836215716488"
+          "hash": "10260378288670788252"
         },
         {
           "file": "packages/core/__tests__/fieldArray.spec.ts",
@@ -240,7 +153,7 @@
         },
         {
           "file": "packages/core/__tests__/form.spec.ts",
-          "hash": "4406205063265454628"
+          "hash": "10889729101984998530"
         },
         {
           "file": "packages/core/__tests__/globalInstances.spec.ts",
@@ -271,11 +184,11 @@
         },
         {
           "file": "packages/core/src/FieldBase.ts",
-          "hash": "15227503905569634548"
+          "hash": "14080205098982682352"
         },
         {
           "file": "packages/core/src/Form.ts",
-          "hash": "16219582734349706712"
+          "hash": "6817336958532759472"
         },
         {
           "file": "packages/core/src/GlobalInstances.ts",
@@ -331,7 +244,7 @@
         },
         {
           "file": "packages/core/src/utilities/object.ts",
-          "hash": "9927241116049393416"
+          "hash": "9459492771060633963"
         },
         {
           "file": "packages/core/src/utilities/promise.ts",
@@ -339,7 +252,7 @@
         },
         {
           "file": "packages/core/src/utilities/validation.ts",
-          "hash": "18232815798004197310"
+          "hash": "17588117666499770554"
         },
         {
           "file": "packages/core/tsconfig.json",
@@ -354,239 +267,136 @@
           "hash": "8347171620766246208"
         }
       ],
-      "@ez-kits/form-joi-validator": [
+      "vanilla": [
         {
-          "file": "packages/joi-validator/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/joi-validator/README.md",
-          "hash": "1572745030694899378"
-        },
-        {
-          "file": "packages/joi-validator/__tests__/basic.spec.ts",
-          "hash": "17638284202691404883"
-        },
-        {
-          "file": "packages/joi-validator/__tests__/edge.spec.ts",
-          "hash": "9801487979277087076"
-        },
-        {
-          "file": "packages/joi-validator/package.json",
-          "hash": "244570941823264734",
-          "deps": [
-            "@ez-kits/form-core",
-            "npm:joi",
-            "npm:@types/node@20.4.2",
-            "npm:tsup",
-            "npm:typescript"
-          ]
-        },
-        {
-          "file": "packages/joi-validator/src/index.ts",
-          "hash": "10476944706945341122"
-        },
-        {
-          "file": "packages/joi-validator/tsconfig.json",
-          "hash": "4141034762693374703"
-        },
-        {
-          "file": "packages/joi-validator/tsup.config.ts",
-          "hash": "11698547606821912876"
-        },
-        {
-          "file": "packages/joi-validator/vitest.config.ts",
-          "hash": "8347171620766246208"
-        }
-      ],
-      "@ez-kits/form-vue": [
-        {
-          "file": "packages/vue-form/.eslintrc.cjs",
-          "hash": "3463883478485648038"
-        },
-        {
-          "file": "packages/vue-form/.gitignore",
+          "file": "examples/vanilla/.gitignore",
           "hash": "13046175384202504187"
         },
         {
-          "file": "packages/vue-form/LICENSE",
-          "hash": "5576629829737622684"
+          "file": "examples/vanilla/index.html",
+          "hash": "949185454381761340"
         },
         {
-          "file": "packages/vue-form/__tests__/field.spec.ts",
-          "hash": "14168902776277802726"
-        },
-        {
-          "file": "packages/vue-form/__tests__/fieldArray.spec.ts",
-          "hash": "129586135569208741"
-        },
-        {
-          "file": "packages/vue-form/__tests__/formValues.spec.ts",
-          "hash": "17806422122264281199"
-        },
-        {
-          "file": "packages/vue-form/__tests__/forms/CustomInput.vue",
-          "hash": "8641903184427439777"
-        },
-        {
-          "file": "packages/vue-form/__tests__/forms/LoginPage.vue",
-          "hash": "2144718525854489665"
-        },
-        {
-          "file": "packages/vue-form/__tests__/forms/RegisterPage.vue",
-          "hash": "1142771334075705156"
-        },
-        {
-          "file": "packages/vue-form/__tests__/forms/UsersForm.vue",
-          "hash": "13494686610949971331"
-        },
-        {
-          "file": "packages/vue-form/__tests__/globalInstances.spec.tsx",
-          "hash": "6967230397526360434"
-        },
-        {
-          "file": "packages/vue-form/__tests__/setup.ts",
-          "hash": "3116608210825768012"
-        },
-        {
-          "file": "packages/vue-form/__tests__/validate.async.spec.tsx",
-          "hash": "13936108262316097787"
-        },
-        {
-          "file": "packages/vue-form/__tests__/validate.yup.spec.tsx",
-          "hash": "8881808252287740322"
-        },
-        {
-          "file": "packages/vue-form/__tests__/validate.zod.spec.tsx",
-          "hash": "9393756199697216903"
-        },
-        {
-          "file": "packages/vue-form/package.json",
-          "hash": "14427723539740034927",
+          "file": "examples/vanilla/package.json",
+          "hash": "4970509808632005818",
           "deps": [
-            "npm:vue",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:eslint",
-            "npm:eslint-plugin-vue",
-            "npm:tsup",
+            "npm:@types/jquery",
             "npm:typescript",
+            "npm:vite",
+            "@ez-kits/form-vanilla"
+          ]
+        },
+        {
+          "file": "examples/vanilla/public/vite.svg",
+          "hash": "16046085400642193116"
+        },
+        {
+          "file": "examples/vanilla/src/counter.ts",
+          "hash": "12697913399767502231"
+        },
+        {
+          "file": "examples/vanilla/src/main.ts",
+          "hash": "8754572605527885842"
+        },
+        {
+          "file": "examples/vanilla/src/style.css",
+          "hash": "1534359794504336057"
+        },
+        {
+          "file": "examples/vanilla/src/typescript.svg",
+          "hash": "8667544980518902788"
+        },
+        {
+          "file": "examples/vanilla/src/vite-env.d.ts",
+          "hash": "12946363841406869089"
+        },
+        {
+          "file": "examples/vanilla/tsconfig.json",
+          "hash": "15337872224458810919"
+        },
+        {
+          "file": "examples/vanilla/yarn.lock",
+          "hash": "6286357929382224951"
+        }
+      ],
+      "solid-example": [
+        {
+          "file": "examples/solid/.gitignore",
+          "hash": "11091884865853158211"
+        },
+        {
+          "file": "examples/solid/README.md",
+          "hash": "7254910495143603048"
+        },
+        {
+          "file": "examples/solid/index.html",
+          "hash": "12991144495272562089"
+        },
+        {
+          "file": "examples/solid/package.json",
+          "hash": "17423911724747656206",
+          "deps": [
+            "npm:solid-devtools",
+            "npm:typescript@5.3.3",
+            "npm:vite",
+            "npm:vite-plugin-solid",
+            "npm:solid-js",
+            "@ez-kits/form-solid",
             "@ez-kits/form-async-validator",
             "@ez-kits/form-yup-validator",
             "@ez-kits/form-zod-validator",
             "npm:async-validator",
             "npm:yup",
-            "npm:zod",
-            "@ez-kits/form-core"
+            "npm:zod"
           ]
         },
         {
-          "file": "packages/vue-form/src/components/BindingFieldInput.ts",
-          "hash": "17486827082890921207"
+          "file": "examples/solid/src/App.module.css",
+          "hash": "6262539446887781464"
         },
         {
-          "file": "packages/vue-form/src/components/Field.ts",
-          "hash": "7354367935982709666"
+          "file": "examples/solid/src/App.tsx",
+          "hash": "13570326424108388222"
         },
         {
-          "file": "packages/vue-form/src/components/FieldArray.ts",
-          "hash": "15511544461825943003"
+          "file": "examples/solid/src/CustomInput.tsx",
+          "hash": "11425707784850005881"
         },
         {
-          "file": "packages/vue-form/src/components/FieldErrors.ts",
-          "hash": "9713929625880319372"
+          "file": "examples/solid/src/TestProvider.tsx",
+          "hash": "8624545584596721207"
         },
         {
-          "file": "packages/vue-form/src/components/Form.ts",
-          "hash": "6448784887411967029"
+          "file": "examples/solid/src/TestUseContext.tsx",
+          "hash": "15239096526080924921"
         },
         {
-          "file": "packages/vue-form/src/components/Observe.ts",
-          "hash": "6724488307937898186"
+          "file": "examples/solid/src/assets/favicon.ico",
+          "hash": "10308535588029773350"
         },
         {
-          "file": "packages/vue-form/src/components/ObserveField.ts",
-          "hash": "18166198280316579393"
+          "file": "examples/solid/src/index.css",
+          "hash": "14056909652331273425"
         },
         {
-          "file": "packages/vue-form/src/composables/useField.ts",
-          "hash": "5087719217221742687"
+          "file": "examples/solid/src/index.tsx",
+          "hash": "9700491825041578286"
         },
         {
-          "file": "packages/vue-form/src/composables/useFieldArray.ts",
-          "hash": "15231452607663032282"
+          "file": "examples/solid/src/logo.svg",
+          "hash": "7140267077129635146"
         },
         {
-          "file": "packages/vue-form/src/composables/useForm.ts",
-          "hash": "9673407699016852273"
+          "file": "examples/solid/tsconfig.json",
+          "hash": "9291184023199002656"
         },
         {
-          "file": "packages/vue-form/src/composables/useFormPropsOrInjected.ts",
-          "hash": "5400339491511567154"
+          "file": "examples/solid/vite.config.mts",
+          "hash": "14492452606118585164"
         },
         {
-          "file": "packages/vue-form/src/composables/useInstance.ts",
-          "hash": "14468821147417874410"
-        },
-        {
-          "file": "packages/vue-form/src/composables/useValue.ts",
-          "hash": "13820181989912631528"
-        },
-        {
-          "file": "packages/vue-form/src/global.ts",
-          "hash": "370937691013495207"
-        },
-        {
-          "file": "packages/vue-form/src/index.ts",
-          "hash": "16919443210880395303"
-        },
-        {
-          "file": "packages/vue-form/src/plugin.ts",
-          "hash": "10906863603359987815"
-        },
-        {
-          "file": "packages/vue-form/src/provides/field.ts",
-          "hash": "16169823106744080522"
-        },
-        {
-          "file": "packages/vue-form/src/provides/fieldArray.ts",
-          "hash": "14905258082707939153"
-        },
-        {
-          "file": "packages/vue-form/src/provides/form.ts",
-          "hash": "13402162701708354814"
-        },
-        {
-          "file": "packages/vue-form/src/utilities/event.ts",
-          "hash": "5735211641557740509"
-        },
-        {
-          "file": "packages/vue-form/src/utilities/field.ts",
-          "hash": "11381101022128966946"
-        },
-        {
-          "file": "packages/vue-form/src/utilities/form.ts",
-          "hash": "2679194376351438405"
-        },
-        {
-          "file": "packages/vue-form/src/utilities/index.ts",
-          "hash": "18344335724404709051"
-        },
-        {
-          "file": "packages/vue-form/src/utilities/object.ts",
-          "hash": "16370528314982757427"
-        },
-        {
-          "file": "packages/vue-form/tsconfig.json",
-          "hash": "833365482652496312"
-        },
-        {
-          "file": "packages/vue-form/tsup.config.ts",
-          "hash": "4193625326797487689"
-        },
-        {
-          "file": "packages/vue-form/vitest.config.ts",
-          "hash": "14254682059311022388"
+          "file": "examples/solid/yarn.lock",
+          "hash": "15164354931443386984"
         }
       ],
       "@ez-kits/form": [
@@ -608,7 +418,7 @@
         },
         {
           "file": ".github/workflows/update-coverage-badge.yml",
-          "hash": "11014381805302843019"
+          "hash": "6690114201173415758"
         },
         {
           "file": ".gitignore",
@@ -636,7 +446,7 @@
         },
         {
           "file": "README.md",
-          "hash": "41086600506213965"
+          "hash": "3658561491898661584"
         },
         {
           "file": "docs/.vitepress/config.ts",
@@ -932,7 +742,7 @@
         },
         {
           "file": "package.json",
-          "hash": "8226762178632364347",
+          "hash": "3329886517864027259",
           "deps": [
             "npm:@solidjs/router",
             "npm:@solidjs/testing-library",
@@ -952,6 +762,7 @@
             "npm:jsdom",
             "npm:markdown-it",
             "npm:markdown-it-conditional-render",
+            "npm:nx",
             "npm:nx-cloud",
             "npm:p-map",
             "npm:semver",
@@ -990,7 +801,673 @@
         },
         {
           "file": "yarn.lock",
-          "hash": "485857530673585399"
+          "hash": "3585195758472628240"
+        }
+      ],
+      "@ez-kits/form-zod-validator": [
+        {
+          "file": "packages/zod-validator/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/zod-validator/README.md",
+          "hash": "1572745030694899378"
+        },
+        {
+          "file": "packages/zod-validator/__tests__/basic.spec.ts",
+          "hash": "13808635597845175087"
+        },
+        {
+          "file": "packages/zod-validator/__tests__/edge.spec.ts",
+          "hash": "7850681653231731855"
+        },
+        {
+          "file": "packages/zod-validator/package.json",
+          "hash": "1450511315655312903",
+          "deps": [
+            "@ez-kits/form-core",
+            "npm:zod",
+            "npm:@types/node@20.4.2",
+            "npm:tsup",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/zod-validator/src/index.ts",
+          "hash": "14619451061122914133"
+        },
+        {
+          "file": "packages/zod-validator/tsconfig.json",
+          "hash": "4141034762693374703"
+        },
+        {
+          "file": "packages/zod-validator/tsup.config.ts",
+          "hash": "2630948901772452891"
+        },
+        {
+          "file": "packages/zod-validator/vitest.config.ts",
+          "hash": "8347171620766246208"
+        }
+      ],
+      "@ez-kits/form-vue-devtools-old": [
+        {
+          "file": "packages/vue-form-devtools-old/.gitignore",
+          "hash": "13046175384202504187"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/package.json",
+          "hash": "13819312386190305192",
+          "deps": [
+            "npm:vue",
+            "npm:tsup",
+            "npm:typescript",
+            "@ez-kits/form-core",
+            "npm:@vue/devtools-api"
+          ]
+        },
+        {
+          "file": "packages/vue-form-devtools-old/src/index.ts",
+          "hash": "6238660731594266513"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/src/models.ts",
+          "hash": "8404582655806854006"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/src/setupDevTool.ts",
+          "hash": "15421271575379724573"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/tsconfig.json",
+          "hash": "18011308286704008364"
+        },
+        {
+          "file": "packages/vue-form-devtools-old/tsup.config.ts",
+          "hash": "12043115130786957011"
+        }
+      ],
+      "@ez-kits/form-vanilla": [
+        {
+          "file": "packages/vanilla-form/.eslintrc.cjs",
+          "hash": "6129292221895008620"
+        },
+        {
+          "file": "packages/vanilla-form/.gitignore",
+          "hash": "13046175384202504187"
+        },
+        {
+          "file": "packages/vanilla-form/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/fieldArray.spec.ts",
+          "hash": "1104813422846649649"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/form.spec.ts",
+          "hash": "8751557188262246390"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/setup.ts",
+          "hash": "11600522488644891880"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/validate.async.spec.tsx",
+          "hash": "17436361004138081114"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/validate.yup.spec.tsx",
+          "hash": "4793273377878505390"
+        },
+        {
+          "file": "packages/vanilla-form/__tests__/validate.zod.spec.tsx",
+          "hash": "5363184450830103539"
+        },
+        {
+          "file": "packages/vanilla-form/package.json",
+          "hash": "10638548814832041860",
+          "deps": [
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:esbuild-plugin-umd-wrapper",
+            "npm:eslint",
+            "npm:eslint-plugin-react-hooks",
+            "npm:eslint-plugin-react-refresh",
+            "npm:tsup",
+            "npm:typescript",
+            "@ez-kits/form-async-validator",
+            "@ez-kits/form-yup-validator",
+            "@ez-kits/form-zod-validator",
+            "npm:async-validator",
+            "npm:yup",
+            "npm:zod",
+            "@ez-kits/form-core"
+          ]
+        },
+        {
+          "file": "packages/vanilla-form/src/global.ts",
+          "hash": "370937691013495207"
+        },
+        {
+          "file": "packages/vanilla-form/src/index.ts",
+          "hash": "13159524674947936068"
+        },
+        {
+          "file": "packages/vanilla-form/src/utilities/array.ts",
+          "hash": "4392570939383175648"
+        },
+        {
+          "file": "packages/vanilla-form/src/utilities/form.ts",
+          "hash": "5511496519215944294"
+        },
+        {
+          "file": "packages/vanilla-form/tsconfig.json",
+          "hash": "4366154176152785466"
+        },
+        {
+          "file": "packages/vanilla-form/tsup.config.ts",
+          "hash": "3970308427321204780"
+        },
+        {
+          "file": "packages/vanilla-form/vitest.config.ts",
+          "hash": "5738174342479579226"
+        }
+      ],
+      "@ez-kits/form-react": [
+        {
+          "file": "packages/react-form/.eslintrc.cjs",
+          "hash": "6129292221895008620"
+        },
+        {
+          "file": "packages/react-form/.gitignore",
+          "hash": "13046175384202504187"
+        },
+        {
+          "file": "packages/react-form/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/react-form/__tests__/field.spec.tsx",
+          "hash": "12456148372323209941"
+        },
+        {
+          "file": "packages/react-form/__tests__/fieldArray.spec.tsx",
+          "hash": "4259513997417911976"
+        },
+        {
+          "file": "packages/react-form/__tests__/form.spec.tsx",
+          "hash": "1767485616679238826"
+        },
+        {
+          "file": "packages/react-form/__tests__/globalInstances.spec.tsx",
+          "hash": "6503868124773229369"
+        },
+        {
+          "file": "packages/react-form/__tests__/setup.ts",
+          "hash": "14849634410647890516"
+        },
+        {
+          "file": "packages/react-form/__tests__/validate.async.spec.tsx",
+          "hash": "1826137881716690510"
+        },
+        {
+          "file": "packages/react-form/__tests__/validate.yup.spec.tsx",
+          "hash": "14374434973076626187"
+        },
+        {
+          "file": "packages/react-form/__tests__/validate.zod.spec.tsx",
+          "hash": "13279400101827024990"
+        },
+        {
+          "file": "packages/react-form/package.json",
+          "hash": "18122380208313654796",
+          "deps": [
+            "npm:react",
+            "npm:react-dom",
+            "npm:@types/react",
+            "npm:@types/react-dom",
+            "npm:@types/use-sync-external-store",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "@ez-kits/form-async-validator",
+            "@ez-kits/form-yup-validator",
+            "@ez-kits/form-zod-validator",
+            "npm:async-validator",
+            "npm:yup",
+            "npm:zod",
+            "npm:eslint",
+            "npm:eslint-plugin-react-hooks",
+            "npm:eslint-plugin-react-refresh",
+            "npm:tsup",
+            "npm:typescript",
+            "@ez-kits/form-core",
+            "npm:use-sync-external-store"
+          ]
+        },
+        {
+          "file": "packages/react-form/src/components/BindingFieldInput.tsx",
+          "hash": "7694514947634269576"
+        },
+        {
+          "file": "packages/react-form/src/components/Field.tsx",
+          "hash": "6066236794611146889"
+        },
+        {
+          "file": "packages/react-form/src/components/FieldArray.tsx",
+          "hash": "14113487484472847990"
+        },
+        {
+          "file": "packages/react-form/src/components/FieldErrors.tsx",
+          "hash": "2086497113574962438"
+        },
+        {
+          "file": "packages/react-form/src/components/Form.tsx",
+          "hash": "3013891215527283541"
+        },
+        {
+          "file": "packages/react-form/src/components/Observe.tsx",
+          "hash": "867461286952698522"
+        },
+        {
+          "file": "packages/react-form/src/contexts/fieldArrayContext.ts",
+          "hash": "3567462812585991065"
+        },
+        {
+          "file": "packages/react-form/src/contexts/fieldContext.ts",
+          "hash": "1089277167519239307"
+        },
+        {
+          "file": "packages/react-form/src/contexts/formContext.ts",
+          "hash": "1430064674344329165"
+        },
+        {
+          "file": "packages/react-form/src/global.ts",
+          "hash": "370937691013495207"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useField.tsx",
+          "hash": "16297426282571986255"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useFieldArray.tsx",
+          "hash": "3804571465043983948"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useFieldArrayContext.ts",
+          "hash": "9337939045999975031"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useFieldContext.ts",
+          "hash": "13234841934265386469"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useForm.tsx",
+          "hash": "5297774078293923893"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useFormContext.ts",
+          "hash": "17217304968288660053"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useFormPropsOrContext.ts",
+          "hash": "9985935809521349664"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useInstance.ts",
+          "hash": "6623220514652384993"
+        },
+        {
+          "file": "packages/react-form/src/hooks/useValue.ts",
+          "hash": "2673980226255301428"
+        },
+        {
+          "file": "packages/react-form/src/index.ts",
+          "hash": "11410980488940426262"
+        },
+        {
+          "file": "packages/react-form/src/utilities.ts",
+          "hash": "419795783382749875"
+        },
+        {
+          "file": "packages/react-form/tsconfig.json",
+          "hash": "4366154176152785466"
+        },
+        {
+          "file": "packages/react-form/tsup.config.ts",
+          "hash": "18141810754524665535"
+        },
+        {
+          "file": "packages/react-form/vitest.config.ts",
+          "hash": "5738174342479579226"
+        }
+      ],
+      "@ez-kits/form-async-validator": [
+        {
+          "file": "packages/async-validator/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/async-validator/README.md",
+          "hash": "1572745030694899378"
+        },
+        {
+          "file": "packages/async-validator/__tests__/basic.spec.ts",
+          "hash": "11422186293176659794"
+        },
+        {
+          "file": "packages/async-validator/__tests__/edge.spec.ts",
+          "hash": "9414045320325448120"
+        },
+        {
+          "file": "packages/async-validator/package.json",
+          "hash": "7281423432117518515",
+          "deps": [
+            "@ez-kits/form-core",
+            "npm:async-validator",
+            "npm:@types/node@20.4.2",
+            "npm:tsup",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/async-validator/src/index.ts",
+          "hash": "6179084857438171571"
+        },
+        {
+          "file": "packages/async-validator/tsconfig.json",
+          "hash": "4141034762693374703"
+        },
+        {
+          "file": "packages/async-validator/tsup.config.ts",
+          "hash": "10405147853866717701"
+        },
+        {
+          "file": "packages/async-validator/vitest.config.ts",
+          "hash": "8347171620766246208"
+        }
+      ],
+      "@ez-kits/form-valibot-validator": [
+        {
+          "file": "packages/valibot-validator/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/valibot-validator/README.md",
+          "hash": "1572745030694899378"
+        },
+        {
+          "file": "packages/valibot-validator/__tests__/basic.spec.ts",
+          "hash": "11195042379273462975"
+        },
+        {
+          "file": "packages/valibot-validator/__tests__/edge.spec.ts",
+          "hash": "7385230412426300576"
+        },
+        {
+          "file": "packages/valibot-validator/package.json",
+          "hash": "12208560980416972506",
+          "deps": [
+            "@ez-kits/form-core",
+            "npm:valibot",
+            "npm:@types/node@20.4.2",
+            "npm:tsup",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/valibot-validator/src/index.ts",
+          "hash": "14922995413590170186"
+        },
+        {
+          "file": "packages/valibot-validator/tsconfig.json",
+          "hash": "4141034762693374703"
+        },
+        {
+          "file": "packages/valibot-validator/tsup.config.ts",
+          "hash": "204847121147607513"
+        },
+        {
+          "file": "packages/valibot-validator/vitest.config.ts",
+          "hash": "8347171620766246208"
+        }
+      ],
+      "@ez-kits/form-vue": [
+        {
+          "file": "packages/vue-form/.eslintrc.cjs",
+          "hash": "3463883478485648038"
+        },
+        {
+          "file": "packages/vue-form/.gitignore",
+          "hash": "13046175384202504187"
+        },
+        {
+          "file": "packages/vue-form/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/vue-form/__tests__/field.spec.ts",
+          "hash": "17216526529179048017"
+        },
+        {
+          "file": "packages/vue-form/__tests__/fieldArray.spec.ts",
+          "hash": "9564043236346959811"
+        },
+        {
+          "file": "packages/vue-form/__tests__/form.spec.ts",
+          "hash": "16064649997891168605"
+        },
+        {
+          "file": "packages/vue-form/__tests__/forms/CustomInput.vue",
+          "hash": "8641903184427439777"
+        },
+        {
+          "file": "packages/vue-form/__tests__/forms/LoginPage.vue",
+          "hash": "9695773171463846362"
+        },
+        {
+          "file": "packages/vue-form/__tests__/forms/RegisterPage.vue",
+          "hash": "1142771334075705156"
+        },
+        {
+          "file": "packages/vue-form/__tests__/forms/UsersForm.vue",
+          "hash": "13494686610949971331"
+        },
+        {
+          "file": "packages/vue-form/__tests__/globalInstances.spec.tsx",
+          "hash": "6967230397526360434"
+        },
+        {
+          "file": "packages/vue-form/__tests__/setup.ts",
+          "hash": "3116608210825768012"
+        },
+        {
+          "file": "packages/vue-form/__tests__/validate.async.spec.tsx",
+          "hash": "13936108262316097787"
+        },
+        {
+          "file": "packages/vue-form/__tests__/validate.yup.spec.tsx",
+          "hash": "8881808252287740322"
+        },
+        {
+          "file": "packages/vue-form/__tests__/validate.zod.spec.tsx",
+          "hash": "9393756199697216903"
+        },
+        {
+          "file": "packages/vue-form/package.json",
+          "hash": "14427723539740034927",
+          "deps": [
+            "npm:vue",
+            "npm:@typescript-eslint/eslint-plugin",
+            "npm:@typescript-eslint/parser",
+            "npm:eslint",
+            "npm:eslint-plugin-vue",
+            "npm:tsup",
+            "npm:typescript",
+            "@ez-kits/form-async-validator",
+            "@ez-kits/form-yup-validator",
+            "@ez-kits/form-zod-validator",
+            "npm:async-validator",
+            "npm:yup",
+            "npm:zod",
+            "@ez-kits/form-core"
+          ]
+        },
+        {
+          "file": "packages/vue-form/src/components/BindingFieldInput.ts",
+          "hash": "17486827082890921207"
+        },
+        {
+          "file": "packages/vue-form/src/components/Field.ts",
+          "hash": "7354367935982709666"
+        },
+        {
+          "file": "packages/vue-form/src/components/FieldArray.ts",
+          "hash": "15511544461825943003"
+        },
+        {
+          "file": "packages/vue-form/src/components/FieldErrors.ts",
+          "hash": "9713929625880319372"
+        },
+        {
+          "file": "packages/vue-form/src/components/Form.ts",
+          "hash": "6448784887411967029"
+        },
+        {
+          "file": "packages/vue-form/src/components/Observe.ts",
+          "hash": "6724488307937898186"
+        },
+        {
+          "file": "packages/vue-form/src/components/ObserveField.ts",
+          "hash": "18166198280316579393"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useField.ts",
+          "hash": "5087719217221742687"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useFieldArray.ts",
+          "hash": "15231452607663032282"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useForm.ts",
+          "hash": "9673407699016852273"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useFormPropsOrInjected.ts",
+          "hash": "5400339491511567154"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useInstance.ts",
+          "hash": "14468821147417874410"
+        },
+        {
+          "file": "packages/vue-form/src/composables/useValue.ts",
+          "hash": "13820181989912631528"
+        },
+        {
+          "file": "packages/vue-form/src/global.ts",
+          "hash": "370937691013495207"
+        },
+        {
+          "file": "packages/vue-form/src/index.ts",
+          "hash": "16919443210880395303"
+        },
+        {
+          "file": "packages/vue-form/src/plugin.ts",
+          "hash": "10906863603359987815"
+        },
+        {
+          "file": "packages/vue-form/src/provides/field.ts",
+          "hash": "9457056893152114539"
+        },
+        {
+          "file": "packages/vue-form/src/provides/fieldArray.ts",
+          "hash": "15915989554776285597"
+        },
+        {
+          "file": "packages/vue-form/src/provides/form.ts",
+          "hash": "7735316659332193560"
+        },
+        {
+          "file": "packages/vue-form/src/utilities/event.ts",
+          "hash": "5735211641557740509"
+        },
+        {
+          "file": "packages/vue-form/src/utilities/field.ts",
+          "hash": "11381101022128966946"
+        },
+        {
+          "file": "packages/vue-form/src/utilities/form.ts",
+          "hash": "12500161817676170709"
+        },
+        {
+          "file": "packages/vue-form/src/utilities/index.ts",
+          "hash": "18344335724404709051"
+        },
+        {
+          "file": "packages/vue-form/src/utilities/object.ts",
+          "hash": "16370528314982757427"
+        },
+        {
+          "file": "packages/vue-form/tsconfig.json",
+          "hash": "833365482652496312"
+        },
+        {
+          "file": "packages/vue-form/tsup.config.ts",
+          "hash": "4193625326797487689"
+        },
+        {
+          "file": "packages/vue-form/vitest.config.ts",
+          "hash": "14254682059311022388"
+        }
+      ],
+      "@ez-kits/form-yup-validator": [
+        {
+          "file": "packages/yup-validator/LICENSE",
+          "hash": "5576629829737622684"
+        },
+        {
+          "file": "packages/yup-validator/README.md",
+          "hash": "1572745030694899378"
+        },
+        {
+          "file": "packages/yup-validator/__tests__/basic.spec.ts",
+          "hash": "935914663600812864"
+        },
+        {
+          "file": "packages/yup-validator/__tests__/edge.spec.ts",
+          "hash": "8599771998348707543"
+        },
+        {
+          "file": "packages/yup-validator/package.json",
+          "hash": "14506713179113420945",
+          "deps": [
+            "@ez-kits/form-core",
+            "npm:yup@1.2.0",
+            "npm:@types/node@20.4.2",
+            "npm:tsup",
+            "npm:typescript"
+          ]
+        },
+        {
+          "file": "packages/yup-validator/src/index.ts",
+          "hash": "8416583168087852065"
+        },
+        {
+          "file": "packages/yup-validator/tsconfig.json",
+          "hash": "4141034762693374703"
+        },
+        {
+          "file": "packages/yup-validator/tsup.config.ts",
+          "hash": "14045710840459325806"
+        },
+        {
+          "file": "packages/yup-validator/vitest.config.ts",
+          "hash": "8347171620766246208"
         }
       ],
       "vue-example": [
@@ -1094,346 +1571,6 @@
           "hash": "2129301855395463087"
         }
       ],
-      "vanilla": [
-        {
-          "file": "examples/vanilla/.gitignore",
-          "hash": "13046175384202504187"
-        },
-        {
-          "file": "examples/vanilla/index.html",
-          "hash": "949185454381761340"
-        },
-        {
-          "file": "examples/vanilla/package.json",
-          "hash": "4970509808632005818",
-          "deps": [
-            "npm:@types/jquery",
-            "npm:typescript",
-            "npm:vite",
-            "@ez-kits/form-vanilla"
-          ]
-        },
-        {
-          "file": "examples/vanilla/public/vite.svg",
-          "hash": "16046085400642193116"
-        },
-        {
-          "file": "examples/vanilla/src/counter.ts",
-          "hash": "12697913399767502231"
-        },
-        {
-          "file": "examples/vanilla/src/main.ts",
-          "hash": "8754572605527885842"
-        },
-        {
-          "file": "examples/vanilla/src/style.css",
-          "hash": "1534359794504336057"
-        },
-        {
-          "file": "examples/vanilla/src/typescript.svg",
-          "hash": "8667544980518902788"
-        },
-        {
-          "file": "examples/vanilla/src/vite-env.d.ts",
-          "hash": "12946363841406869089"
-        },
-        {
-          "file": "examples/vanilla/tsconfig.json",
-          "hash": "15337872224458810919"
-        },
-        {
-          "file": "examples/vanilla/yarn.lock",
-          "hash": "6286357929382224951"
-        }
-      ],
-      "@ez-kits/form-vanilla": [
-        {
-          "file": "packages/vanilla-form/.eslintrc.cjs",
-          "hash": "6129292221895008620"
-        },
-        {
-          "file": "packages/vanilla-form/.gitignore",
-          "hash": "13046175384202504187"
-        },
-        {
-          "file": "packages/vanilla-form/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/vanilla-form/__tests__/formValues.spec.tsx",
-          "hash": "11245615532222193861"
-        },
-        {
-          "file": "packages/vanilla-form/__tests__/setup.ts",
-          "hash": "11600522488644891880"
-        },
-        {
-          "file": "packages/vanilla-form/__tests__/validate.async.spec.tsx",
-          "hash": "17436361004138081114"
-        },
-        {
-          "file": "packages/vanilla-form/__tests__/validate.yup.spec.tsx",
-          "hash": "4793273377878505390"
-        },
-        {
-          "file": "packages/vanilla-form/__tests__/validate.zod.spec.tsx",
-          "hash": "5363184450830103539"
-        },
-        {
-          "file": "packages/vanilla-form/package.json",
-          "hash": "10638548814832041860",
-          "deps": [
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:esbuild-plugin-umd-wrapper",
-            "npm:eslint",
-            "npm:eslint-plugin-react-hooks",
-            "npm:eslint-plugin-react-refresh",
-            "npm:tsup",
-            "npm:typescript",
-            "@ez-kits/form-async-validator",
-            "@ez-kits/form-yup-validator",
-            "@ez-kits/form-zod-validator",
-            "npm:async-validator",
-            "npm:yup",
-            "npm:zod",
-            "@ez-kits/form-core"
-          ]
-        },
-        {
-          "file": "packages/vanilla-form/src/global.ts",
-          "hash": "370937691013495207"
-        },
-        {
-          "file": "packages/vanilla-form/src/index.ts",
-          "hash": "13159524674947936068"
-        },
-        {
-          "file": "packages/vanilla-form/src/utilities/array.ts",
-          "hash": "4392570939383175648"
-        },
-        {
-          "file": "packages/vanilla-form/src/utilities/form.ts",
-          "hash": "5511496519215944294"
-        },
-        {
-          "file": "packages/vanilla-form/tsconfig.json",
-          "hash": "4366154176152785466"
-        },
-        {
-          "file": "packages/vanilla-form/tsup.config.ts",
-          "hash": "3970308427321204780"
-        },
-        {
-          "file": "packages/vanilla-form/vitest.config.ts",
-          "hash": "5738174342479579226"
-        }
-      ],
-      "@ez-kits/form-react": [
-        {
-          "file": "packages/react-form/.eslintrc.cjs",
-          "hash": "6129292221895008620"
-        },
-        {
-          "file": "packages/react-form/.gitignore",
-          "hash": "13046175384202504187"
-        },
-        {
-          "file": "packages/react-form/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/react-form/__tests__/formValues.spec.tsx",
-          "hash": "15987618316278444278"
-        },
-        {
-          "file": "packages/react-form/__tests__/globalInstances.spec.tsx",
-          "hash": "6503868124773229369"
-        },
-        {
-          "file": "packages/react-form/__tests__/setup.ts",
-          "hash": "14849634410647890516"
-        },
-        {
-          "file": "packages/react-form/__tests__/validate.async.spec.tsx",
-          "hash": "1826137881716690510"
-        },
-        {
-          "file": "packages/react-form/__tests__/validate.yup.spec.tsx",
-          "hash": "14374434973076626187"
-        },
-        {
-          "file": "packages/react-form/__tests__/validate.zod.spec.tsx",
-          "hash": "13279400101827024990"
-        },
-        {
-          "file": "packages/react-form/package.json",
-          "hash": "18122380208313654796",
-          "deps": [
-            "npm:react",
-            "npm:react-dom",
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@types/use-sync-external-store",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "@ez-kits/form-async-validator",
-            "@ez-kits/form-yup-validator",
-            "@ez-kits/form-zod-validator",
-            "npm:async-validator",
-            "npm:yup",
-            "npm:zod",
-            "npm:eslint",
-            "npm:eslint-plugin-react-hooks",
-            "npm:eslint-plugin-react-refresh",
-            "npm:tsup",
-            "npm:typescript",
-            "@ez-kits/form-core",
-            "npm:use-sync-external-store"
-          ]
-        },
-        {
-          "file": "packages/react-form/src/components/BindingFieldInput.tsx",
-          "hash": "7694514947634269576"
-        },
-        {
-          "file": "packages/react-form/src/components/Field.tsx",
-          "hash": "6066236794611146889"
-        },
-        {
-          "file": "packages/react-form/src/components/FieldArray.tsx",
-          "hash": "14113487484472847990"
-        },
-        {
-          "file": "packages/react-form/src/components/FieldErrors.tsx",
-          "hash": "2086497113574962438"
-        },
-        {
-          "file": "packages/react-form/src/components/Form.tsx",
-          "hash": "3013891215527283541"
-        },
-        {
-          "file": "packages/react-form/src/components/Observe.tsx",
-          "hash": "867461286952698522"
-        },
-        {
-          "file": "packages/react-form/src/contexts/fieldArrayContext.ts",
-          "hash": "3567462812585991065"
-        },
-        {
-          "file": "packages/react-form/src/contexts/fieldContext.ts",
-          "hash": "1089277167519239307"
-        },
-        {
-          "file": "packages/react-form/src/contexts/formContext.ts",
-          "hash": "1430064674344329165"
-        },
-        {
-          "file": "packages/react-form/src/global.ts",
-          "hash": "370937691013495207"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useField.tsx",
-          "hash": "16297426282571986255"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useFieldArray.tsx",
-          "hash": "15995673058026231258"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useFieldArrayContext.ts",
-          "hash": "9337939045999975031"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useFieldContext.ts",
-          "hash": "13234841934265386469"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useForm.tsx",
-          "hash": "10307951754476863463"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useFormContext.ts",
-          "hash": "17217304968288660053"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useFormPropsOrContext.ts",
-          "hash": "9985935809521349664"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useInstance.ts",
-          "hash": "6623220514652384993"
-        },
-        {
-          "file": "packages/react-form/src/hooks/useValue.ts",
-          "hash": "2673980226255301428"
-        },
-        {
-          "file": "packages/react-form/src/index.ts",
-          "hash": "11410980488940426262"
-        },
-        {
-          "file": "packages/react-form/src/utilities.ts",
-          "hash": "419795783382749875"
-        },
-        {
-          "file": "packages/react-form/tsconfig.json",
-          "hash": "4366154176152785466"
-        },
-        {
-          "file": "packages/react-form/tsup.config.ts",
-          "hash": "18141810754524665535"
-        },
-        {
-          "file": "packages/react-form/vitest.config.ts",
-          "hash": "5738174342479579226"
-        }
-      ],
-      "@ez-kits/form-zod-validator": [
-        {
-          "file": "packages/zod-validator/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/zod-validator/README.md",
-          "hash": "1572745030694899378"
-        },
-        {
-          "file": "packages/zod-validator/__tests__/basic.spec.ts",
-          "hash": "13808635597845175087"
-        },
-        {
-          "file": "packages/zod-validator/__tests__/edge.spec.ts",
-          "hash": "7850681653231731855"
-        },
-        {
-          "file": "packages/zod-validator/package.json",
-          "hash": "1450511315655312903",
-          "deps": [
-            "@ez-kits/form-core",
-            "npm:zod",
-            "npm:@types/node@20.4.2",
-            "npm:tsup",
-            "npm:typescript"
-          ]
-        },
-        {
-          "file": "packages/zod-validator/src/index.ts",
-          "hash": "14619451061122914133"
-        },
-        {
-          "file": "packages/zod-validator/tsconfig.json",
-          "hash": "4141034762693374703"
-        },
-        {
-          "file": "packages/zod-validator/tsup.config.ts",
-          "hash": "2630948901772452891"
-        },
-        {
-          "file": "packages/zod-validator/vitest.config.ts",
-          "hash": "8347171620766246208"
-        }
-      ],
       "@ez-kits/form-solid": [
         {
           "file": "packages/solid-form/.eslintrc.cjs",
@@ -1448,8 +1585,16 @@
           "hash": "5576629829737622684"
         },
         {
-          "file": "packages/solid-form/__tests__/formValues.spec.tsx",
-          "hash": "224604177944111269"
+          "file": "packages/solid-form/__tests__/field.spec.tsx",
+          "hash": "481875123551873793"
+        },
+        {
+          "file": "packages/solid-form/__tests__/fieldArray.spec.tsx",
+          "hash": "2189610766965328308"
+        },
+        {
+          "file": "packages/solid-form/__tests__/form.spec.tsx",
+          "hash": "16836085381720854955"
         },
         {
           "file": "packages/solid-form/__tests__/globalInstances.spec.tsx",
@@ -1497,7 +1642,7 @@
         },
         {
           "file": "packages/solid-form/src/components/FieldArray.tsx",
-          "hash": "3369002774439107343"
+          "hash": "14072601138755081285"
         },
         {
           "file": "packages/solid-form/src/components/FieldErrors.tsx",
@@ -1533,7 +1678,7 @@
         },
         {
           "file": "packages/solid-form/src/hooks/useFieldArray.tsx",
-          "hash": "16296608898784186428"
+          "hash": "5050125803527194442"
         },
         {
           "file": "packages/solid-form/src/hooks/useFieldArrayContext.ts",
@@ -1561,7 +1706,7 @@
         },
         {
           "file": "packages/solid-form/src/hooks/useValue.ts",
-          "hash": "10326296709198138806"
+          "hash": "12149283283182123293"
         },
         {
           "file": "packages/solid-form/src/index.ts",
@@ -1576,136 +1721,16 @@
           "hash": "9504561201599719592"
         },
         {
+          "file": "packages/solid-form/tsup.config.bundled_3e9fw54l2te.mjs",
+          "hash": "12507559090400677239"
+        },
+        {
           "file": "packages/solid-form/tsup.config.ts",
           "hash": "1668463649325855393"
         },
         {
           "file": "packages/solid-form/vitest.config.ts",
           "hash": "8827118192373104215"
-        }
-      ],
-      "react-example": [
-        {
-          "file": "examples/react/.eslintrc.cjs",
-          "hash": "15413245457294240431"
-        },
-        {
-          "file": "examples/react/.gitignore",
-          "hash": "13046175384202504187"
-        },
-        {
-          "file": "examples/react/index.html",
-          "hash": "8461945451843851111"
-        },
-        {
-          "file": "examples/react/package.json",
-          "hash": "7420525678788178139",
-          "deps": [
-            "npm:@types/react",
-            "npm:@types/react-dom",
-            "npm:@typescript-eslint/eslint-plugin",
-            "npm:@typescript-eslint/parser",
-            "npm:@vitejs/plugin-react",
-            "npm:eslint",
-            "npm:eslint-plugin-react-hooks",
-            "npm:eslint-plugin-react-refresh",
-            "npm:typescript",
-            "npm:vite",
-            "@ez-kits/form-async-validator",
-            "@ez-kits/form-react",
-            "@ez-kits/form-yup-validator",
-            "@ez-kits/form-zod-validator",
-            "npm:async-validator",
-            "npm:react",
-            "npm:react-dom",
-            "npm:yup",
-            "npm:zod"
-          ]
-        },
-        {
-          "file": "examples/react/public/vite.svg",
-          "hash": "16046085400642193116"
-        },
-        {
-          "file": "examples/react/src/App.css",
-          "hash": "3739391659270974612"
-        },
-        {
-          "file": "examples/react/src/App.tsx",
-          "hash": "5446846667359931004"
-        },
-        {
-          "file": "examples/react/src/assets/react.svg",
-          "hash": "16069471864800376455"
-        },
-        {
-          "file": "examples/react/src/index.css",
-          "hash": "14049402097647904024"
-        },
-        {
-          "file": "examples/react/src/main.tsx",
-          "hash": "15899134647676290618"
-        },
-        {
-          "file": "examples/react/src/vite-env.d.ts",
-          "hash": "12946363841406869089"
-        },
-        {
-          "file": "examples/react/tsconfig.json",
-          "hash": "376575334049222340"
-        },
-        {
-          "file": "examples/react/tsconfig.node.json",
-          "hash": "8586866767247417612"
-        },
-        {
-          "file": "examples/react/vite.config.ts",
-          "hash": "7008402861428644331"
-        },
-        {
-          "file": "examples/react/yarn.lock",
-          "hash": "12641692827714376571"
-        }
-      ],
-      "@ez-kits/form-vue-devtools-old": [
-        {
-          "file": "packages/vue-form-devtools-old/.gitignore",
-          "hash": "13046175384202504187"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/LICENSE",
-          "hash": "5576629829737622684"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/package.json",
-          "hash": "13819312386190305192",
-          "deps": [
-            "npm:vue",
-            "npm:tsup",
-            "npm:typescript",
-            "@ez-kits/form-core",
-            "npm:@vue/devtools-api"
-          ]
-        },
-        {
-          "file": "packages/vue-form-devtools-old/src/index.ts",
-          "hash": "6238660731594266513"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/src/models.ts",
-          "hash": "8404582655806854006"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/src/setupDevTool.ts",
-          "hash": "15421271575379724573"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/tsconfig.json",
-          "hash": "18011308286704008364"
-        },
-        {
-          "file": "packages/vue-form-devtools-old/tsup.config.ts",
-          "hash": "12043115130786957011"
         }
       ]
     }
