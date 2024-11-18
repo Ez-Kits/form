@@ -513,14 +513,12 @@ describe("Field Array", () => {
 			setup(props: { index: number }) {
 				const field = useInjectFieldArray<FormData["users"], FormData>();
 				const usernameField = field.useField({
-					name: "username",
-					index: props.index,
+					name: `[${props.index}].username`,
 				});
 				const usernameData = usernameField.useFieldData();
 
 				const cardNumbersField = field.useFieldArray({
-					name: "cardNumbers",
-					index: props.index,
+					name: `[${props.index}].cardNumbers`,
 				});
 				const cardNumbersFieldData = cardNumbersField.useFieldData();
 
@@ -559,15 +557,14 @@ describe("Field Array", () => {
 			setup(props: { index: number }) {
 				const fieldArray = useInjectFieldArray<FormData["users"], FormData>();
 				const cardNumbersField = fieldArray.useFieldArray({
-					name: "cardNumbers",
-					index: props.index,
+					name: `[${props.index}].cardNumbers`,
 				});
 
 				return () => {
 					return [
 						h(
 							fieldArray.Field,
-							{ name: "username", index: props.index },
+							{ name: `[${props.index}].username` },
 							{
 								default: () =>
 									h(EzBindingFieldInput, null, {
@@ -581,7 +578,7 @@ describe("Field Array", () => {
 						),
 						h(
 							fieldArray.FieldArray,
-							{ name: "cardNumbers", index: props.index },
+							{ name: `[${props.index}].cardNumbers` },
 							{
 								default: ({ fieldsInfo }: { fieldsInfo: unknown[] }) => [
 									h(
@@ -589,7 +586,7 @@ describe("Field Array", () => {
 										fieldsInfo.map((_, index) => {
 											return h(
 												cardNumbersField.Field,
-												{ index },
+												{ name: `${index}` },
 												{
 													default: () => [
 														h(EzBindingFieldInput, null, {
@@ -706,14 +703,12 @@ describe("Field Array", () => {
 			setup(props: { index: number }) {
 				const field = useInjectFieldArray<FormData["users"], FormData>();
 				const usernameField = field.useField({
-					name: "username",
-					index: props.index,
+					name: `[${props.index}].username`,
 				});
 				const usernameData = usernameField.useFieldData();
 
 				const cardNumbersField = field.useFieldArray({
-					name: "cardNumbers",
-					index: props.index,
+					name: `[${props.index}].cardNumbers`,
 				});
 				const cardNumbersFieldData = cardNumbersField.useFieldData();
 
@@ -752,15 +747,14 @@ describe("Field Array", () => {
 			setup(props: { index: number }) {
 				const fieldArray = useInjectFieldArray<FormData["users"], FormData>();
 				const cardNumbersField = fieldArray.useFieldArray({
-					name: "cardNumbers",
-					index: props.index,
+					name: `[${props.index}].cardNumbers`,
 				});
 
 				return () => {
 					return [
 						h(
 							fieldArray.Field,
-							{ name: "username", index: props.index },
+							{ name: `[${props.index}].username`, index: props.index },
 							{
 								default: () =>
 									h(EzBindingFieldInput, null, {
@@ -774,7 +768,7 @@ describe("Field Array", () => {
 						),
 						h(
 							fieldArray.FieldArray,
-							{ name: "cardNumbers", index: props.index },
+							{ name: `[${props.index}].cardNumbers` },
 							{
 								default: ({ fieldsInfo }: { fieldsInfo: unknown[] }) => [
 									h(
@@ -782,7 +776,7 @@ describe("Field Array", () => {
 										fieldsInfo.map((_, index) => {
 											return h(
 												cardNumbersField.Field,
-												{ index },
+												{ name: `${index}` },
 												{
 													default: () => [
 														h(EzBindingFieldInput, null, {

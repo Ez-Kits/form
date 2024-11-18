@@ -165,4 +165,11 @@ describe("Global instances", () => {
 		fieldInstance = getFieldArrayInstance("test", "firstName");
 		expect(fieldInstance).toBe(undefined);
 	});
+
+	it("EventListenersManager - Off Listener Error", ({ expect }) => {
+		expect(() => {
+			// @ts-expect-error
+			GlobalInstances.off("empty-event", () => {});
+		}).toThrowError();
+	});
 });

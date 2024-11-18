@@ -42,7 +42,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -50,7 +50,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -122,7 +122,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -130,7 +130,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -207,7 +207,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -215,7 +215,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -293,7 +293,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -301,7 +301,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -378,7 +378,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -386,7 +386,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -463,7 +463,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -471,7 +471,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -543,7 +543,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -551,7 +551,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -623,7 +623,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -631,7 +631,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -707,7 +707,7 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo().map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.username.${index}`}
@@ -715,7 +715,7 @@ describe("Field Array - Operators", () => {
 													/>
 												)}
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												{({ field }) => (
 													<input
 														data-testid={`users.password.${index}`}
@@ -856,7 +856,7 @@ describe("Field Array - Values", () => {
 				<Index each={fieldsInfo()}>
 					{(_, index) => (
 						<>
-							<field.Field index={index} name="username">
+							<field.Field name={`[${index}].username`}>
 								{({ field }) => (
 									<CustomInput
 										{...field.getInputProps({
@@ -866,13 +866,13 @@ describe("Field Array - Values", () => {
 									/>
 								)}
 							</field.Field>
-							<field.FieldArray index={index} name="cardNumbers">
+							<field.FieldArray name={`[${index}].cardNumbers`}>
 								{({ fieldsInfo, fieldArray }) => {
 									return (
 										<Index each={fieldsInfo()}>
 											{(_, innerIndex) => {
 												return (
-													<fieldArray.Field index={index} onBlur={onBlur}>
+													<fieldArray.Field name={`${index}`} onBlur={onBlur}>
 														{({ field }) => (
 															<input
 																{...field.getInputProps()}

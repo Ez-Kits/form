@@ -1,6 +1,6 @@
 import { createForm } from "@ez-kits/form-vanilla";
 
-$(document).ready(function () {
+jQuery(function () {
 	const form = createForm({
 		el: "#test-form",
 		initialValues: {
@@ -74,12 +74,10 @@ $(document).ready(function () {
 		itemFieldsCreator(index, field) {
 			return [
 				field.createField({
-					name: "username",
-					index,
+					name: `[${index}].username`,
 				}),
 				field.createField({
-					name: `age`,
-					index,
+					name: `[${index}].age`,
 				}),
 			];
 		},

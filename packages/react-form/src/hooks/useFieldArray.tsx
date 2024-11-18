@@ -42,7 +42,7 @@ export type UseFieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema,
-	N extends string = GetKeys<ParentValue>,
+	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> &
 	Omit<
@@ -63,13 +63,9 @@ export default function useFieldArray<
 	});
 
 	const name = useMemo(() => {
-		const { index, namePrefix, name } = options as any;
+		const { namePrefix, name } = options;
 
-		return (
-			typeof index === "number" ? [namePrefix, index, name] : [namePrefix, name]
-		)
-			.filter((d) => d !== undefined)
-			.join(".");
+		return [namePrefix, name].filter((d) => d !== undefined).join(".");
 	}, [options]);
 
 	const [field] = useState(() => {
@@ -142,7 +138,7 @@ export type UseFieldArray<
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema
 > = <
-	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
+	N extends GetKeys<ParentValue>,
 	FieldValue extends any[] = GetType<ParentValue, N> & []
 >(
 	options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>

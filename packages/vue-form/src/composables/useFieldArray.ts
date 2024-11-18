@@ -84,11 +84,7 @@ export default function useFieldArray<
 
 	const name = computed(() => {
 		const optionsValue = toValue(options);
-		return (
-			typeof optionsValue.index === "number"
-				? [optionsValue.namePrefix, optionsValue.index, optionsValue.name]
-				: [optionsValue.namePrefix, optionsValue.name]
-		)
+		return [optionsValue.namePrefix, optionsValue.name]
 			.filter((d) => d !== undefined)
 			.join(".");
 	});

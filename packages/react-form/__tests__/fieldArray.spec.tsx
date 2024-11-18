@@ -42,14 +42,14 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((field) => {
 									return (
 										<Fragment key={field.key}>
-											<fieldArray.Field index={field.index} name="username">
+											<fieldArray.Field name={`[${field.index}].username`}>
 												<BindingFieldInput>
 													<input
 														data-testid={`users.username.${field.index}`}
 													/>
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={field.index} name="password">
+											<fieldArray.Field name={`[${field.index}].password`}>
 												<BindingFieldInput>
 													<input
 														data-testid={`users.password.${field.index}`}
@@ -120,12 +120,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -208,12 +208,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<Fragment key={index}>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -288,12 +288,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -367,12 +367,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -446,12 +446,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -520,12 +520,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -594,12 +594,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -672,12 +672,12 @@ describe("Field Array - Operators", () => {
 								{fieldsInfo.map((_, index) => {
 									return (
 										<>
-											<fieldArray.Field index={index} name="username">
+											<fieldArray.Field name={`[${index}].username`}>
 												<BindingFieldInput>
 													<input data-testid={`users.username.${index}`} />
 												</BindingFieldInput>
 											</fieldArray.Field>
-											<fieldArray.Field index={index} name="password">
+											<fieldArray.Field name={`[${index}].password`}>
 												<BindingFieldInput>
 													<input data-testid={`users.password.${index}`} />
 												</BindingFieldInput>
@@ -788,18 +788,23 @@ describe("Field Array - Values", () => {
 				<>
 					{fieldsInfo.map((_, index) => (
 						<Fragment key={index}>
-							<field.Field index={index} name="username">
+							<field.Field name={`[${index}].username`}>
 								<BindingFieldInput>
 									<CustomInput data-testid={`usernameInput[${index}]`} />
 								</BindingFieldInput>
 							</field.Field>
-							<field.FieldArray index={index} name="cardNumbers">
+							<field.FieldArray name={`[${index}].cardNumbers`}>
 								{({ fieldsInfo, fieldArray }) => {
+									console.log(fieldArray.name, fieldArray.getValue());
+
 									return (
 										<>
 											{fieldsInfo.map((_, innerIndex) => {
 												return (
-													<fieldArray.Field index={index} onBlur={onBlur}>
+													<fieldArray.Field
+														name={`${innerIndex}`}
+														onBlur={onBlur}
+													>
 														<BindingFieldInput>
 															<input
 																data-testid={`cardNumberInput[${index}][${innerIndex}]`}

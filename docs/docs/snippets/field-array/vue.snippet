@@ -56,7 +56,7 @@ const field = useInjectFieldArray();
 <div>
   Member {{index + 1}}:
   <div>
-    <field.Field :index="index" name="fullName">
+    <field.Field :name="`[${index}].fullName`">
       <label>
         Full name:
         <EzBindingFieldInput>
@@ -64,7 +64,7 @@ const field = useInjectFieldArray();
         </EzBindingFieldInput>
       </label>
     </field.Field>
-    <field.Field :index="index" name="age">
+    <field.Field :name="`[${index}].age`">
       <label>
         Age:
           <EzBindingFieldInput>

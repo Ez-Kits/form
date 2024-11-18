@@ -1,7 +1,7 @@
 import { screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { createForm } from "src/index";
-import { describe } from "vitest";
+import { describe, it } from "vitest";
 
 describe("Field Array - Operators", () => {
 	interface User {
@@ -48,8 +48,10 @@ describe("Field Array - Operators", () => {
 			initialValues: { ...formData },
 		});
 
+		const usersEl = document.getElementById("users");
+
 		const fieldArray = form.createFieldArray({
-			el: "#users",
+			el: usersEl!,
 			name: "users",
 			itemTemplate(index) {
 				const itemEl = document.createElement("div");
@@ -57,11 +59,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -71,12 +73,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -150,11 +150,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -164,12 +164,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -257,11 +255,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -271,12 +269,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -365,11 +361,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -379,12 +375,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -472,11 +466,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -486,12 +480,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -581,11 +573,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -595,12 +587,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -685,11 +675,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -699,12 +689,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -787,11 +775,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -801,12 +789,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -895,11 +881,11 @@ describe("Field Array - Operators", () => {
 				itemEl.innerHTML = `
 					<input
 						data-testid="users.username.${index}"
-						name="users.${index}.username"
+						name="users.[${index}].username"
 					/>
 					<input
 						data-testid="users.password.${index}"
-						name="users.${index}.password"
+						name="users.[${index}].password"
 						type="password"
 					/>
 				`;
@@ -909,12 +895,10 @@ describe("Field Array - Operators", () => {
 			itemFieldsCreator(index, fieldArray) {
 				return [
 					fieldArray.createField({
-						name: "username",
-						index,
+						name: `[${index}].username`,
 					}),
 					fieldArray.createField({
-						name: "password",
-						index,
+						name: `[${index}].password`,
 					}),
 				];
 			},
@@ -984,91 +968,150 @@ describe("Field Array - Operators", () => {
 	});
 });
 
-// describe("FieldArray - Others", () => {
-// 	it("Nested Field", async ({ expect }) => {
-// 		document.body.innerHTML = `
-// 			<form id="usersForm">
-// 				<div id="users">
-// 				</div>
-// 				<span data-testid="users_length" id="users-length"></span>
-// 				<button
-// 					data-testid="action_btn"
-// 					id="action-button"
-// 				>
-// 					Pop user
-// 				</button>
-// 			</form>
-// 		`;
+describe("FieldArray - Others", () => {
+	it("Nested Field", ({ expect }) => {
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+				<span data-testid="users_length" id="users-length"></span>
+				<button
+					data-testid="action_btn"
+					id="action-button"
+				>
+					Pop user
+				</button>
+			</form>
+		`;
 
-// 		const formData = {
-// 			users: [
-// 				{
-// 					username: "",
-// 					cardNumbers: ["123"],
-// 				},
-// 			],
-// 		};
+		const formData = {
+			users: [
+				{
+					username: "",
+					cardNumbers: ["123"],
+				},
+			],
+		};
 
-// 		type UsersForm = typeof formData;
+		type UsersForm = typeof formData;
 
-// 		const form = createForm<UsersForm>({
-// 			el: "#usersForm",
-// 			initialValues: formData,
-// 		});
+		const form = createForm<UsersForm>({
+			el: "#usersForm",
+			initialValues: formData,
+		});
 
-// 		form.createFieldArray({
-// 			name: "users",
-// 			el: "#users",
-// 			itemTemplate(index) {
-// 				const itemEl = document.createElement("div");
+		form.createFieldArray({
+			name: "users",
+			el: "#users",
+			itemTemplate(index) {
+				const itemEl = document.createElement("div");
 
-// 				itemEl.innerHTML = `
-// 					<input
-// 						data-testid="users.username.${index}"
-// 						name="users.${index}.username"
-// 					/>
-// 					<div id="cardNumbers${index}">
-// 					</div>
-// 				`;
+				itemEl.innerHTML = `
+					<input
+						data-testid="users.username.${index}"
+						name="users.[${index}].username"
+					/>
+					<div id="cardNumbers${index}">
+					</div>
+				`;
 
-// 				return itemEl;
-// 			},
-// 			itemFieldsCreator(index, fieldArray) {
-// 				return [
-// 					fieldArray.createField({
-// 						name: "username",
-// 						index,
-// 					}),
-// 					fieldArray.createFieldArray({
-// 						name: "cardNumbers",
-// 						index,
-// 						el: `#cardNumbers${index}`,
-// 						itemTemplate(index) {
-// 							const itemEl = document.createElement("div");
+				return itemEl;
+			},
+			itemFieldsCreator(index, fieldArray) {
+				return [
+					fieldArray.createField({
+						name: `[${index}].username`,
+					}),
+					fieldArray.createFieldArray({
+						name: `[${index}].cardNumbers`,
+						el: `#cardNumbers${index}`,
+						itemTemplate(index) {
+							const itemEl = document.createElement("div");
 
-// 							itemEl.innerHTML = `
-// 								<input
-// 									data-testid="users.cardNumbers.${index}"
-// 									name="users.${index}.username"
-// 								/>
-// 							`;
+							itemEl.innerHTML = `
+								<input
+									data-testid="users.cardNumbers.${index}"
+									name="users.[${index}].cardNumbers.[${index}]"
+								/>
+							`;
 
-// 							return itemEl;
-// 						},
-// 						itemFieldsCreator(index, fieldArray) {
-// 							return [
-// 								fieldArray.createField({
-// 									name: `${index}`,
-// 									index,
-// 								}),
-// 								form.createField({
-// 									name: "users",
-// 								}),
-// 							];
-// 						},
-// 					}),
-// 				];
-// 			},
-// 		});
-// 	});
-// });
+							return itemEl;
+						},
+						itemFieldsCreator(index, fieldArray) {
+							return [
+								fieldArray.createField({
+									name: `[${index}]`,
+								}),
+							];
+						},
+					}),
+				];
+			},
+		});
+
+		const usernameEl = screen.getByTestId("users.username.0");
+		const cardNumbersEl = screen.getByTestId("users.cardNumbers.0");
+
+		expect(usernameEl).toBeInTheDocument();
+		expect(cardNumbersEl).toBeInTheDocument();
+
+		expect(usernameEl).toHaveValue(formData.users[0]?.username);
+		expect(cardNumbersEl).toHaveValue(formData.users[0]?.cardNumbers[0]);
+	});
+
+	it("Container El - Not Found", ({ expect }) => {
+		document.body.innerHTML = `
+			<form id="usersForm">
+			</form>
+		`;
+
+		const form = createForm({
+			el: "#usersForm",
+			initialValues: {
+				users: [
+					{
+						username: "",
+						cardNumbers: ["123"],
+					},
+				],
+			},
+		});
+
+		expect(() => {
+			form.createFieldArray({
+				el: "#users",
+				name: "users",
+				itemTemplate: () => document.createElement("div"),
+				itemFieldsCreator: () => [],
+			});
+		}).toThrowError();
+	});
+
+	it("Empty Initial Values", ({ expect }) => {
+		document.body.innerHTML = `
+			<form id="usersForm">
+				<div id="users">
+				</div>
+			</form>
+		`;
+
+		const form = createForm({
+			el: "#usersForm",
+			initialValues: {
+				users: undefined,
+			},
+		});
+
+		form.createFieldArray({
+			el: "#users",
+			name: "users",
+			itemTemplate: () => document.createElement("div"),
+			itemFieldsCreator: () => [],
+		});
+
+		const usersEl = document.getElementById("users");
+
+		expect(usersEl).toBeInTheDocument();
+		expect(usersEl!.children.length).toBe(0);
+	});
+});

@@ -29,7 +29,7 @@ export function MembersForm() {
                 return <div>
                   Member {index + 1}:
                   <div>
-                    <fieldArray.Field index={index} name="fullName">
+                    <fieldArray.Field name={`[${index}].fullName`}>
                       <label>
                         Full name:
                         <BindingFieldInput>
@@ -37,7 +37,7 @@ export function MembersForm() {
                         </BindingFieldInput>
                       </label>
                     </fieldArray.Field>
-                    <fieldArray.Field index={index} name="age">
+                    <fieldArray.Field name={`[${index}].age`}>
                       <label>
                         Age:
                         <BindingFieldInput>

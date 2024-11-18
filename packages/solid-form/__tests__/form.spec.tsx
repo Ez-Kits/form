@@ -368,7 +368,7 @@ describe("Form values", () => {
 				<Index each={fieldsInfo()}>
 					{(_, index) => {
 						return (
-							<fieldArray.Field index={index}>
+							<fieldArray.Field name={`${index}`}>
 								{({ field }) => (
 									<input
 										{...field.getInputProps()}

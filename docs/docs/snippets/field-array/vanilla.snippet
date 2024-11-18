@@ -61,12 +61,10 @@ const membersField = form.createFieldArray({
   itemFieldsCreator(index, field) {
     return [
       field.createField({
-        name: "fullName",
-        index,
+        name: `${index}.fullName`,
       }),
       field.createField({
-        name: `age`,
-        index,
+        name: `${index}.age`,
       }),
     ];
   },

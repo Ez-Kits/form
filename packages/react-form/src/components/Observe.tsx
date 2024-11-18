@@ -14,7 +14,7 @@ import { useField } from "src/index";
 export type ObserveFieldProps<
 	FormValues,
 	ValidationSchema = DefaultValidationSchema,
-	N extends string = GetKeys<FormValues>,
+	N extends GetKeys<FormValues> = GetKeys<FormValues>,
 	T = GetType<FormValues, N>
 > = {
 	name: N;

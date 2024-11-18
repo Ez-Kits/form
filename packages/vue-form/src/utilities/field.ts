@@ -7,12 +7,7 @@ import type {
 import type { DefaultValidationSchema } from "src/global";
 import type { PropType } from "vue";
 
-export type FieldNameProps<
-	ParentValue,
-	N = GetKeys<ParentValue>
-> = ParentValue extends any[]
-	? { index: number; name?: N }
-	: { index?: number; name: N };
+export type FieldNameProps<ParentValue, N = GetKeys<ParentValue>> = { name: N };
 
 export function fieldProps<
 	FieldValue,
@@ -22,16 +17,12 @@ export function fieldProps<
 	return {
 		name: {
 			type: String as unknown as PropType<GetKeys<FormValues>>,
-			required: false,
+			required: true,
 		},
 		namePrefix: {
 			type: String,
 			required: false,
 			default: namePrefix,
-		},
-		index: {
-			type: Number,
-			required: false,
 		},
 		inputIndex: {
 			type: Number,
@@ -104,10 +95,6 @@ export function fieldArrayProps<
 			type: String,
 			required: false,
 			default: namePrefix,
-		},
-		index: {
-			type: Number,
-			required: false,
 		},
 		label: {
 			type: String,

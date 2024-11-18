@@ -76,12 +76,7 @@ export default function useField<
 		form: options.form,
 	});
 	const name = createMemo(() =>
-		(typeof options.index === "number"
-			? [options.namePrefix, options.index, options.name]
-			: [options.namePrefix, options.name]
-		)
-			.filter((d) => d !== undefined)
-			.join(".")
+		[options.namePrefix, options.name].filter((d) => d !== undefined).join(".")
 	);
 
 	const field = new FieldInstance(form, {
@@ -148,9 +143,6 @@ export type UseField<
 	FormValues,
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema
-> = <
-	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
-	FieldValue = GetType<ParentValue, N>
->(
+> = <N extends GetKeys<ParentValue>, FieldValue = GetType<ParentValue, N>>(
 	options: UseFieldProps<FormValues, ParentValue, ValidationSchema, N>
 ) => FieldInstance<FieldValue, FormValues, ValidationSchema>;

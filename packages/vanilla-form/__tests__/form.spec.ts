@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { createForm } from "src/index";
 import { describe, it } from "vitest";
 
-describe("Form values", () => {
+describe("Form", () => {
 	it("Login form", async () => {
 		interface LoginForm {
 			username: string;
@@ -254,5 +254,29 @@ describe("Form values", () => {
 		expect(usernameInput).toHaveValue(formData.username + "_2");
 		expect(passwordInput).toHaveValue(formData.password + "_2");
 		expect(observeUsernameEl).toHaveTextContent(formData.username + "_2");
+	});
+
+	it("Form El - HTMLElement", ({ expect }) => {
+		document.body.innerHTML = `
+			<form id="form">
+			</form>
+		`;
+
+		const formEl = document.getElementById("form");
+		if (!(formEl instanceof HTMLFormElement)) return;
+
+		const form = createForm({
+			el: formEl,
+		});
+
+		expect(form.el).toBe(formEl);
+	});
+
+	it("Form El - Not Found", ({ expect }) => {
+		expect(() => {
+			createForm({
+				el: "#not-found",
+			});
+		}).toThrowError();
 	});
 });

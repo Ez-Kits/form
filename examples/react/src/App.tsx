@@ -132,7 +132,7 @@ function LoginPage() {
 								{fieldsInfo.map((field) => {
 									return (
 										<div key={field.key}>
-											<fieldArray.Field index={field.index} name="lineOne">
+											<fieldArray.Field name={`[${field.index}].lineOne`}>
 												<BindingFieldInput>
 													<input />
 												</BindingFieldInput>
@@ -143,8 +143,7 @@ function LoginPage() {
 											</fieldArray.Field>
 											<br />
 											<fieldArray.Field
-												index={field.index}
-												name="lineTwo"
+												name={`[${field.index}].lineTwo`}
 												label="Line two"
 											>
 												<BindingFieldInput>

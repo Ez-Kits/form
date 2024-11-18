@@ -1,5 +1,5 @@
 import { useForm } from "@ez-kits/form-solid";
-import { For } from "solid-js";
+import { Index } from "solid-js";
 export interface Member {
   fullName: string;
   age: number;
@@ -25,12 +25,12 @@ export function MembersForm() {
         {({fieldArray, fieldsInfo}) => {
           return <div>
             {
-              <For each={fieldsInfo()}>
+              <Index each={fieldsInfo()}>
                 {(_, index) => (
                   <div>
-                    Member {index() + 1}:
+                    Member {index + 1}:
                     <div>
-                      <fieldArray.Field index={index()} name="fullName">
+                      <fieldArray.Field name={`[${index}].fullName`}>
                         {({field}) => (
                           <label>
                             Full name:
@@ -38,7 +38,7 @@ export function MembersForm() {
                           </label>
                         )}
                       </fieldArray.Field>
-                      <fieldArray.Field index={index()} name="age">
+                      <fieldArray.Field name={`[${index}].age`}>
                         {({field}) => (
                           <label>
                             Age:
@@ -47,12 +47,12 @@ export function MembersForm() {
                         )}
                       </fieldArray.Field>
                     </div>
-                    <button onClick={() => fieldArray.remove(index())}>
-                      Remove member {index() + 1}
+                    <button onClick={() => fieldArray.remove(index)}>
+                      Remove member {index + 1}
                     </button>
                   </div>
                 )}
-              </For>
+              </Index>
             }
 
             <button onClick={() => fieldArray.push({

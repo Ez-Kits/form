@@ -2,12 +2,12 @@
 	<Form>
 		<div>
 			<div v-for="field in fieldsInfo" :key="field.index">
-				<Field :index="field.index" name="username">
+				<Field :name="`[${field.index}].username`">
 					<EzBindingFieldInput>
 						<input :data-testid="`users.username.${field.index}`" />
 					</EzBindingFieldInput>
 				</Field>
-				<Field :index="field.index" name="password">
+				<Field :name="`[${field.index}].password`">
 					<EzBindingFieldInput>
 						<input :data-testid="`users.password.${field.index}`" />
 					</EzBindingFieldInput>

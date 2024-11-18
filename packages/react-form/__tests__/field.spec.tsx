@@ -57,7 +57,7 @@ describe("Field", () => {
 										return (
 											<fieldArray.Field
 												key={index}
-												index={index}
+												name={`[${index}]`}
 												onBlur={onBlur}
 											>
 												<BindingFieldInput>
@@ -301,7 +301,7 @@ describe("Field", () => {
 	it("useField - Outside Form", ({ expect }) => {
 		expect(() => {
 			renderHook(() => {
-				useField({ name: "username" });
+				useField({ name: "username" as never });
 			});
 		}).toThrowError();
 	});

@@ -33,10 +33,9 @@
 
 			<div>
 				<AddressField
-					v-for="(field, index) in fields"
+					v-for="(_, index) in fields"
 					:key="index"
-					:index="field.index"
-					name="city"
+					:name="`[${index}].city`"
 				>
 					<input />
 				</AddressField>

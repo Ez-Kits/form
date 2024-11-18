@@ -17,6 +17,7 @@ import {
 	get,
 	getValidationSchema,
 	isEqual,
+	isPathStartsWith,
 	normalizeErrors,
 	set,
 	uniqueId,
@@ -140,7 +141,7 @@ export default abstract class FieldBaseInstance<
 
 		const offFormChangeMeta = this.form.on("change:meta", () => {
 			const nextErrors = this.form.meta.errors.filter((error) =>
-				error.field.startsWith(this.name)
+				isPathStartsWith(error.field, this.name)
 			);
 
 			if (!isEqual(this.meta.errors, nextErrors)) {
