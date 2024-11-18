@@ -11,7 +11,7 @@ const fieldArray = useInjectFieldArray<Member[], MembersFormValues>();
 
 <template>
 	<div>
-		<fieldArray.Field :index="index" name="fullName">
+		<fieldArray.Field :name="`[${index}].fullName`">
 			<label>
 				Full name:
 				<EzBindingFieldInput>
@@ -19,7 +19,7 @@ const fieldArray = useInjectFieldArray<Member[], MembersFormValues>();
 				</EzBindingFieldInput>
 			</label>
 		</fieldArray.Field>
-		<fieldArray.Field :index="index" name="age">
+		<fieldArray.Field :name="`[${index}].age`">
 			<label>
 				Age:
 				<EzBindingFieldInput>

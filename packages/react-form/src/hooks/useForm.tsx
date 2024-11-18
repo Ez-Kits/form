@@ -48,7 +48,7 @@ declare module "@ez-kits/form-core" {
 		Observe: <T = Values>(
 			props: ObserveProps<Values, ValidationSchema, T>
 		) => ReactElement;
-		ObserveField: <N extends string = GetKeys<Values>, T = GetType<Values, N>>(
+		ObserveField: <N extends GetKeys<Values>, T = GetType<Values, N>>(
 			props: ObserveFieldProps<Values, ValidationSchema, N, T>
 		) => ReactElement;
 		getFormProps: () => {

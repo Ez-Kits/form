@@ -6,7 +6,7 @@ import type {
 	ToArray,
 	ValidateError,
 } from "src/models";
-import { uniqueId } from "src/utilities";
+import { isPathStartsWith, uniqueId } from "src/utilities";
 import { toArray } from "src/utilities/array";
 
 type GetArrayItemType<T> = ToArray<T>[number];
@@ -61,26 +61,20 @@ export default class FieldArrayInstance<
 	}
 
 	getFieldsInfo() {
-		return Array.isArray(this.fields)
-			? this.fields.map((_, index) => {
-					let key = this.keys[index];
+		return (this.fields as FieldValue & []).map((_, index) => {
+			let key = this.keys[index];
 
-					if (key === undefined) {
-						key = uniqueId();
-						this.keys[index] = key;
-					}
+			if (key === undefined) {
+				key = uniqueId();
+				this.keys[index] = key;
+			}
 
-					return { index, key };
-			  })
-			: [];
+			return { index, key };
+		});
 	}
 
 	private copyFields(): FieldValue {
-		if (Array.isArray(this.fields)) {
-			return this.fields.slice(0) as any;
-		}
-
-		return this.fields;
+		return (this.fields as FieldValue & []).slice(0) as any;
 	}
 
 	// --------------------
@@ -205,30 +199,24 @@ export default class FieldArrayInstance<
 		}
 	};
 	// --------------------
-	// Start Utils
+	// End Utils
 	// --------------------
 
 	getItemErrors(index: number): ValidateError[] {
 		return (
 			this.meta.errors?.filter((error) => {
-				return (
-					error.field.startsWith(`${this.name}[${index}]`) ||
-					error.field.startsWith(`${this.name}.${index}`)
-				);
+				return isPathStartsWith(error.field, [this.name, index]);
 			}) ?? []
 		);
 	}
 
 	getItemValue(index: number) {
-		return Array.isArray(this.fields) ? this.fields[index] : undefined;
+		return (this.fields as FieldValue & [])[index];
 	}
 
 	getItemFieldInstances(index: number) {
 		return this.form.filterFields((field) => {
-			return (
-				field.name.startsWith(`${this.name}[${index}]`) ||
-				field.name.startsWith(`${this.name}.${index}`)
-			);
+			return isPathStartsWith(field.name, [this.name, index]);
 		});
 	}
 }

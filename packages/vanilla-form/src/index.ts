@@ -32,12 +32,10 @@ export type {
 	GlobalValidator,
 } from "src/global";
 
-export type FieldNameProps<
-	ParentValue,
-	N = GetKeys<ParentValue>
-> = ParentValue extends any[]
-	? { index: number; name?: N; namePrefix?: string }
-	: { index?: number; name: N; namePrefix?: string };
+export type FieldNameProps<ParentValue, N = GetKeys<ParentValue>> = {
+	name: N;
+	namePrefix?: string;
+};
 
 declare module "@ez-kits/form-core" {
 	interface FormOptions<Values, ValidationSchema> {
@@ -116,6 +114,7 @@ type CreateFieldOptions<
 		blurEventName?: string;
 		changeEventName?: string;
 		valuePropInEvent?: string;
+		autoBinding?: boolean;
 		handleInput?: (
 			field: FieldInstance<
 				GetType<ParentValue, N>,
@@ -133,6 +132,13 @@ export type CreateField<
 	options: CreateFieldOptions<FormValues, ParentValue, ValidationSchema, N>
 ) => FieldInstance<GetType<ParentValue, N>, FormValues, ValidationSchema>;
 
+/**
+ * Create a field instance.
+ *
+ * @param form - The form instance.
+ * @param options - The field options.
+ * @returns A field instance.
+ */
 function createField<
 	FormValues = unknown,
 	ParentValue = FormValues,
@@ -142,11 +148,7 @@ function createField<
 	form: FormInstance<FormValues, ValidationSchema>,
 	options: CreateFieldOptions<FormValues, ParentValue, ValidationSchema, N>
 ) {
-	const fieldName = (
-		typeof options.index === "number"
-			? [options.namePrefix, options.index, options.name]
-			: [options.namePrefix, options.name]
-	)
+	const fieldName = [options.namePrefix, options.name]
 		.filter((d) => d !== undefined)
 		.join(".");
 
@@ -170,7 +172,7 @@ function createField<
 
 	if (options.handleInput) {
 		options.handleInput(field);
-	} else {
+	} else if (options.autoBinding !== false) {
 		const formContainerEl = form.el ? form.el : document;
 
 		const getInputEl = (): HTMLElement | null => {
@@ -273,11 +275,7 @@ function createFieldArray<
 	form: FormInstance<FormValues, ValidationSchema>,
 	options: CreateFieldArrayOptions<FormValues, ParentValue, ValidationSchema, N>
 ): FieldArrayInstance<GetType<ParentValue, N>, FormValues, ValidationSchema> {
-	const fieldName = (
-		typeof options.index === "number"
-			? [options.namePrefix, options.index, options.name]
-			: [options.namePrefix, options.name]
-	)
+	const fieldName = [options.namePrefix, options.name]
 		.filter((d) => d !== undefined)
 		.join(".");
 

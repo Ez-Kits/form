@@ -317,7 +317,7 @@ describe("Form values", () => {
 				<>
 					{fieldsInfo.map((_, index) => {
 						return (
-							<fieldArray.Field key={index} index={index}>
+							<fieldArray.Field key={index} name={`${index}`}>
 								<BindingFieldInput>
 									<input data-testid={`cardNumberInput[${index}]`} />
 								</BindingFieldInput>

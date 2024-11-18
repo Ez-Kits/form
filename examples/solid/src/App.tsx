@@ -103,7 +103,7 @@ function LoginPage() {
 							<div>
 								<Index each={fieldsInfo()}>
 									{(_, index) => (
-										<fieldArray.Field index={index} name="city">
+										<fieldArray.Field name={`[${index}].city`}>
 											{({ field }) => (
 												<div>
 													<input {...field.getInputProps()} type="text" />

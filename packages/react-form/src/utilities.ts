@@ -14,12 +14,9 @@ export function handleEventPrevent<E extends SyntheticEvent>(
 	};
 }
 
-export type FieldNameProps<
-	ParentValue,
-	N = GetKeys<ParentValue>
-> = ParentValue extends any[]
-	? { index: number; name?: N }
-	: { index?: number; name: N };
+export type FieldNameProps<ParentValue, N extends GetKeys<ParentValue>> = {
+	name: N;
+};
 
 export function mergeFormOptions<
 	Values,

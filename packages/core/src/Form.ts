@@ -114,7 +114,7 @@ export default class FormInstance<
 	};
 
 	mount = () => {
-		const fieldsToAdd: FieldBaseInstance<any, any, ValidationSchema>[] = [];
+		const fieldsToAdd: FieldBaseInstance<any, Values, ValidationSchema>[] = [];
 		this.fields.forEach((field) => {
 			if (field.options.registerInstance !== false) {
 				fieldsToAdd.push(field);

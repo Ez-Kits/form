@@ -20,7 +20,7 @@ export type FieldProps<
 	FormValue,
 	ParentValue = FormValue,
 	ValidationSchema = DefaultValidationSchema,
-	N extends string = GetKeys<ParentValue>,
+	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
@@ -67,6 +67,6 @@ export type FieldComponent<
 	FormValue,
 	ParentValue = FormValue,
 	ValidationSchema = DefaultValidationSchema
-> = <N extends string = GetKeys<ParentValue>>(
+> = <N extends GetKeys<ParentValue>>(
 	props: FieldProps<FormValue, ParentValue, ValidationSchema, N>
 ) => JSXElement;

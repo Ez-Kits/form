@@ -77,7 +77,7 @@ describe("Field", () => {
 										fieldsInfo.map((_, index) => {
 											return h(
 												cardNumbersField.Field,
-												{ index },
+												{ name: `[${index}]` },
 												{
 													default: () => [
 														h(EzBindingFieldInput, null, {

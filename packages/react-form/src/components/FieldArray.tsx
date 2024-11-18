@@ -21,7 +21,7 @@ export type FieldArrayProps<
 	FormValues,
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema,
-	N extends string = GetKeys<ParentValue>,
+	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
 	FieldValue = GetType<ParentValue, N>
 > = FieldNameProps<ParentValue, N> & {
 	children?:
@@ -84,6 +84,6 @@ export type FieldArrayComponent<
 	FormValues,
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema
-> = <N extends string = GetKeys<ParentValue>>(
+> = <N extends GetKeys<ParentValue>>(
 	props: FieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
 ) => ReactElement;

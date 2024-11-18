@@ -1,25 +1,5 @@
 import type { NamePath } from "src/models";
 
-// export function emptyObject<T>(obj: T): T {
-// 	for (const key in obj) {
-// 		if (Object.prototype.hasOwnProperty.call(obj, key)) {
-// 			delete obj[key];
-// 		}
-// 	}
-
-// 	return obj;
-// }
-
-// export function clearObject<T extends { [key: string]: any }>(obj: T): T {
-// 	for (const key in obj) {
-// 		if (Object.prototype.hasOwnProperty.call(obj, key)) {
-// 			obj[key] = undefined as any;
-// 		}
-// 	}
-
-// 	return obj;
-// }
-
 export function clone<T>(input: T): T {
 	if (typeof input !== "object" || input === null) {
 		return input;
@@ -38,25 +18,27 @@ export function clone<T>(input: T): T {
 export function castPath(path: NamePath): string[] {
 	if (Array.isArray(path)) {
 		return path.reduce<string[]>((result, p) => {
-			result.push(String(p));
-
-			return result;
+			return result.concat(castPath(p));
 		}, []);
 	}
 
 	if (typeof path === "string") {
-		return path.replace(/\[([\d\w]+)\]/g, ".$1").split(".");
+		return path.replace(/\[([\d\w]+)\]/g, "$1").split(".");
 	}
 
 	return [String(path)];
 }
 
-// export function castNamePathToString(path: NamePath): string {
-// 	return castPath(path).join(".");
-// }
-
-export function get(input: any, path: NamePath, defaultValue: any = undefined) {
+export function isPathStartsWith(input: NamePath, path: NamePath) {
 	const keys = castPath(path);
+	const inputKeys = castPath(input);
+
+	return keys.every((key, index) => key === inputKeys[index]);
+}
+
+export function get(input: any, path: NamePath) {
+	const keys = castPath(path);
+
 	let index = 0;
 
 	for (; index < keys.length && input != null; index++) {
@@ -66,7 +48,9 @@ export function get(input: any, path: NamePath, defaultValue: any = undefined) {
 		}
 	}
 
-	return index && index === keys.length ? input : undefined;
+	const result = index && index === keys.length ? input : undefined;
+
+	return result;
 }
 
 export function set(
@@ -132,19 +116,3 @@ export function mapValues<T extends object, R>(
 		return result;
 	}, {} as any);
 }
-
-// export function uniqBy<T extends any[]>(arr: T, key: keyof T[number]): T {
-// 	const exists: any[] = [];
-
-// 	return arr.filter((item) => {
-// 		const uniqValue = item[key];
-// 		const existed = exists.includes(uniqValue);
-
-// 		if (existed) {
-// 			return false;
-// 		}
-
-// 		exists.push(uniqValue);
-// 		return true;
-// 	}) as T;
-// }

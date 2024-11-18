@@ -2,7 +2,7 @@ import userEvent from "@testing-library/user-event";
 import { render, screen } from "@testing-library/vue";
 import LoginPage from "__tests__/forms/LoginPage.vue";
 import RegisterPage from "__tests__/forms/RegisterPage.vue";
-import { useInjectForm } from "src/index";
+import { useForm, useInjectForm } from "src/index";
 import { describe, it } from "vitest";
 
 describe("Form values", () => {
@@ -163,5 +163,61 @@ describe("Form values", () => {
 		expect(() => {
 			useInjectForm();
 		}).toThrowError();
+	});
+
+	it("useFormData", ({ expect }) => {
+		const form = useForm({
+			initialValues: {
+				username: "johnson",
+				password: "secret_password",
+			},
+		});
+
+		const formValues = form.useFormData();
+
+		expect(formValues.value.values).toEqual(form.options.initialValues);
+
+		form.setFieldValue("username", "johnson_2");
+
+		expect(formValues.value.values).toEqual({
+			username: "johnson_2",
+			password: "secret_password",
+		});
+	});
+
+	it("useFormValues - With Selector", ({ expect }) => {
+		const form = useForm({
+			initialValues: {
+				username: "johnson",
+				password: "secret_password",
+			},
+		});
+
+		const username = form.useFormValues(({ username }) => username);
+
+		expect(username.value).toEqual(form.options.initialValues?.username);
+
+		form.setFieldValue("username", "johnson_2");
+
+		expect(username.value).toEqual("johnson_2");
+	});
+
+	it("useFormMeta - With Selector", ({ expect }) => {
+		const form = useForm({
+			initialValues: {
+				username: "johnson",
+				password: "secret_password",
+			},
+		});
+
+		const isFormDirty = form.useFormMeta(({ dirty }) => dirty);
+
+		expect(isFormDirty.value).toBeFalsy();
+
+		form.setFieldValue("username", "johnson_2", {
+			dirty: true,
+		});
+
+		expect(isFormDirty.value).toBeTruthy();
 	});
 });

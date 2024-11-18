@@ -69,13 +69,9 @@ export default function useFieldArray<
 	});
 
 	const name = createMemo(() => {
-		const { index, namePrefix, name } = options as any;
+		const { namePrefix, name } = options;
 
-		return (
-			typeof index === "number" ? [namePrefix, index, name] : [namePrefix, name]
-		)
-			.filter((d) => d !== undefined)
-			.join(".");
+		return [namePrefix, name].filter((d) => d !== undefined).join(".");
 	});
 
 	const field = new FieldArrayInstance(form, {
@@ -130,7 +126,7 @@ export type UseFieldArray<
 	ParentValue = FormValues,
 	ValidationSchema = DefaultValidationSchema
 > = <
-	N extends GetKeys<ParentValue> = GetKeys<ParentValue>,
+	N extends GetKeys<ParentValue>,
 	FieldValue extends any[] = GetType<ParentValue, N> & []
 >(
 	options: UseFieldArrayProps<FormValues, ParentValue, ValidationSchema, N>
