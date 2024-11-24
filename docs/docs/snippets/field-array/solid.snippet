@@ -23,26 +23,33 @@ export function MembersForm() {
     <form {...membersForm.getFormProps()}>
       <membersForm.FieldArray name="members">
         {({fieldArray, fieldsInfo}) => {
-          return <div>
-            {
+          return (
+            <div>              
               <Index each={fieldsInfo()}>
                 {(_, index) => (
                   <div>
                     Member {index + 1}:
                     <div>
                       <fieldArray.Field name={`[${index}].fullName`}>
-                        {({field}) => (
+                        {({field, value}) => (
                           <label>
                             Full name:
-                              <input {...field.getInputProps()} />
+                            <input
+                              value={value()}
+                              {...field.getInputHandlers()}
+                            />
                           </label>
                         )}
                       </fieldArray.Field>
                       <fieldArray.Field name={`[${index}].age`}>
-                        {({field}) => (
+                        {({field, value}) => (
                           <label>
                             Age:
-                              <input {...field.getInputProps()} type="number" />
+                            <input
+                              value={value()}
+                              {...field.getInputHandlers()}
+                              type="number"
+                            />
                           </label>
                         )}
                       </fieldArray.Field>
@@ -53,15 +60,15 @@ export function MembersForm() {
                   </div>
                 )}
               </Index>
-            }
 
-            <button onClick={() => fieldArray.push({
-              fullName: "",
-              age: 18,
-            })}>
-              Add member
-            </button>
-          </div>
+              <button onClick={() => fieldArray.push({
+                fullName: "",
+                age: 18,
+              })}>
+                Add member
+              </button>
+            </div>
+          );
         }}
       </membersForm.FieldArray>
     </form>

@@ -35,6 +35,10 @@ describe("Async Validator", () => {
 
 		function LoginPage() {
 			const form = useForm<LoginForm, Rule>({
+				initialValues: {
+					username: "",
+					password: "",
+				},
 				validationSchema: {
 					type: "object",
 					fields: {
@@ -51,11 +55,12 @@ describe("Async Validator", () => {
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="usernameInput"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 								</>
@@ -69,12 +74,13 @@ describe("Async Validator", () => {
 								required: true,
 							}}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -127,17 +133,28 @@ describe("Async Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm, Rule>({});
+			const form = useForm<RegisterForm, Rule>({
+				initialValues: {
+					username: "",
+					password: "",
+					confirmPassword: "",
+					address: {
+						lineOne: "",
+						lineTwo: "",
+					},
+				},
+			});
 
 			return (
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="usernameInput"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 								</>
 							)}
@@ -150,12 +167,13 @@ describe("Async Validator", () => {
 								required: true,
 							}}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -173,12 +191,13 @@ describe("Async Validator", () => {
 								},
 							})}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="confirmPasswordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>
 										{renderErrors("confirmPasswordErrors")}
@@ -187,20 +206,22 @@ describe("Async Validator", () => {
 							)}
 						</form.Field>
 						<form.Field name="address.lineOne">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineOneInput"
 									type="address"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineTwo">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineTwoInput"
 									type="address"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>

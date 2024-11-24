@@ -31,8 +31,7 @@ import type { FieldNameProps } from "src/utilities";
 
 declare module "@ez-kits/form-core" {
 	interface FieldInstance<FieldValue, FormValues, ValidationSchema> {
-		getInputProps(options?: {
-			valuePropName?: string;
+		getInputHandlers(options?: {
 			onChangePropName?: string;
 			onBlurPropName?: string;
 		}): Record<string, any>;
@@ -96,20 +95,12 @@ export default function useField<
 		return useFieldData(field, selector);
 	};
 
-	field.getInputProps = (options = {}) => {
-		const {
-			valuePropName = "value",
-			onChangePropName = "onInput",
-			onBlurPropName = "onBlur",
-		} = options;
+	field.getInputHandlers = (options = {}) => {
+		const { onChangePropName = "onInput", onBlurPropName = "onBlur" } = options;
+
 		return {
-			[valuePropName]: field.getValue(),
-			[onChangePropName]: (e: any) => {
-				return field.handleChange(e);
-			},
-			[onBlurPropName]: (e: Event) => {
-				return field.handleBlur(e);
-			},
+			[onChangePropName]: field.handleChange,
+			[onBlurPropName]: field.handleBlur,
 		};
 	};
 

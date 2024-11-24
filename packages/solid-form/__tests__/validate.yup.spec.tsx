@@ -36,6 +36,10 @@ describe("Yup Validator", () => {
 
 		function LoginPage() {
 			const form = useForm<LoginForm, yup.Schema>({
+				initialValues: {
+					username: "",
+					password: "",
+				},
 				validationSchema: yup.object({
 					username: yup.string().required().length(6),
 				}),
@@ -45,11 +49,12 @@ describe("Yup Validator", () => {
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="usernameInput"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 								</>
@@ -62,12 +67,13 @@ describe("Yup Validator", () => {
 								.required()
 								.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"))}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -120,14 +126,28 @@ describe("Yup Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm, yup.Schema>({});
+			const form = useForm<RegisterForm, yup.Schema>({
+				initialValues: {
+					username: "",
+					password: "",
+					confirmPassword: "",
+					address: {
+						lineOne: "",
+						lineTwo: "",
+					},
+				},
+			});
 
 			return (
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
-								<input data-testid="usernameInput" {...field.getInputProps()} />
+							{({ field, value }) => (
+								<input
+									data-testid="usernameInput"
+									value={value()}
+									{...field.getInputHandlers()}
+								/>
 							)}
 						</form.Field>
 						<form.Field
@@ -137,12 +157,13 @@ describe("Yup Validator", () => {
 								.required()
 								.matches(new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$"))}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -159,12 +180,13 @@ describe("Yup Validator", () => {
 									)
 							}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="confirmPasswordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>
 										{renderErrors("confirmPasswordErrors")}
@@ -173,20 +195,22 @@ describe("Yup Validator", () => {
 							)}
 						</form.Field>
 						<form.Field name="address.lineOne">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineOneInput"
 									type="address"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineTwo">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineTwoInput"
 									type="address"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>

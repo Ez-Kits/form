@@ -43,18 +43,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -123,18 +125,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -208,18 +212,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -294,18 +300,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -379,18 +387,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -464,18 +474,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -544,18 +556,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -624,18 +638,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -708,18 +724,20 @@ describe("Field Array - Operators", () => {
 									return (
 										<>
 											<fieldArray.Field name={`[${index}].username`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.username.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
 											<fieldArray.Field name={`[${index}].password`}>
-												{({ field }) => (
+												{({ field, value }) => (
 													<input
 														data-testid={`users.password.${index}`}
-														{...field.getInputProps()}
+														value={value()}
+														{...field.getInputHandlers()}
 													/>
 												)}
 											</fieldArray.Field>
@@ -857,9 +875,10 @@ describe("Field Array - Values", () => {
 					{(_, index) => (
 						<>
 							<field.Field name={`[${index}].username`}>
-								{({ field }) => (
+								{({ field, value }) => (
 									<CustomInput
-										{...field.getInputProps({
+										value={value()}
+										{...field.getInputHandlers({
 											onChangePropName: "onChange",
 										})}
 										data-testid={`usernameInput[${index}]`}
@@ -873,9 +892,10 @@ describe("Field Array - Values", () => {
 											{(_, innerIndex) => {
 												return (
 													<fieldArray.Field name={`${index}`} onBlur={onBlur}>
-														{({ field }) => (
+														{({ field, value }) => (
 															<input
-																{...field.getInputProps()}
+																value={value()}
+																{...field.getInputHandlers()}
 																data-testid={`cardNumberInput[${index}][${innerIndex}]`}
 															/>
 														)}
