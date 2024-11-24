@@ -35,6 +35,10 @@ describe("Zod Validator", () => {
 
 		function LoginPage() {
 			const form = useForm<LoginForm, z.Schema>({
+				initialValues: {
+					username: "",
+					password: "",
+				},
 				validationSchema: z.object({
 					username: z.string().length(6),
 				}),
@@ -44,11 +48,12 @@ describe("Zod Validator", () => {
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="usernameInput"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("usernameErrors")}</FieldErrors>
 								</>
@@ -62,12 +67,13 @@ describe("Zod Validator", () => {
 									new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
 								)}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -120,17 +126,28 @@ describe("Zod Validator", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm, z.Schema>({});
+			const form = useForm<RegisterForm, z.Schema>({
+				initialValues: {
+					username: "",
+					password: "",
+					confirmPassword: "",
+					address: {
+						lineOne: "",
+						lineTwo: "",
+					},
+				},
+			});
 
 			return (
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="usernameInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
@@ -142,12 +159,13 @@ describe("Zod Validator", () => {
 									new RegExp("^(?=.*[A-Za-z])(?=.*d)[A-Za-zd]{8,}$").test(value)
 								)}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="passwordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>{renderErrors("passwordErrors")}</FieldErrors>
 								</>
@@ -164,12 +182,13 @@ describe("Zod Validator", () => {
 									)
 							}
 						>
-							{({ field }) => (
+							{({ field, value }) => (
 								<>
 									<input
 										data-testid="confirmPasswordInput"
 										type="password"
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors>
 										{renderErrors("confirmPasswordErrors")}
@@ -178,20 +197,22 @@ describe("Zod Validator", () => {
 							)}
 						</form.Field>
 						<form.Field name="address.lineOne">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineOneInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineTwo">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineTwoInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>

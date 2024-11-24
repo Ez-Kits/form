@@ -10,6 +10,7 @@ import { zodValidator } from "@ez-kits/form-zod-validator";
 import { z } from "zod";
 import styles from "./App.module.css";
 import logo from "./logo.svg";
+import { MembersForm } from "./MembersForm";
 
 const App: Component = () => {
 	return (
@@ -27,7 +28,8 @@ const App: Component = () => {
 				>
 					Learn Solid
 				</a>
-				<LoginPage />
+				{/* <LoginPage /> */}
+				<MembersForm />
 			</header>
 		</div>
 	);
@@ -81,19 +83,24 @@ function LoginPage() {
 					<InnerFieldData />
 				</form.Field>
 				<form.Field name="user.username">
-					{({ field }) => (
+					{({ field, value }) => (
 						<>
-							<input data-testid="usernameInput" {...field.getInputProps()} />
+							<input
+								data-testid="usernameInput"
+								value={value()}
+								onInput={field.handleChange}
+							/>
 						</>
 					)}
 				</form.Field>
 
 				<form.Field name="user.password">
-					{({ field }) => (
+					{({ field, value }) => (
 						<input
 							data-testid="passwordInput"
 							type="password"
-							{...field.getInputProps()}
+							value={value()}
+							onInput={field.handleChange}
 						/>
 					)}
 				</form.Field>
@@ -104,9 +111,13 @@ function LoginPage() {
 								<Index each={fieldsInfo()}>
 									{(_, index) => (
 										<fieldArray.Field name={`[${index}].city`}>
-											{({ field }) => (
+											{({ field, value }) => (
 												<div>
-													<input {...field.getInputProps()} type="text" />
+													<input
+														value={value()}
+														onInput={field.handleChange}
+														type="text"
+													/>
 													<FieldErrors>
 														{(errors) => (
 															<div>

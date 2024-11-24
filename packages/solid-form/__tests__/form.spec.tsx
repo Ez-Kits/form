@@ -17,22 +17,32 @@ describe("Form values", () => {
 		};
 
 		function LoginPage() {
-			const form = useForm<LoginForm>();
+			const form = useForm<LoginForm>({
+				initialValues: {
+					username: "",
+					password: "",
+				},
+			});
 
 			return (
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
-								<input data-testid="usernameInput" {...field.getInputProps()} />
+							{({ field, value }) => (
+								<input
+									data-testid="usernameInput"
+									value={value()}
+									{...field.getInputHandlers()}
+								/>
 							)}
 						</form.Field>
 						<form.Field name="password">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="passwordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
@@ -76,16 +86,21 @@ describe("Form values", () => {
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
-								<input data-testid="usernameInput" {...field.getInputProps()} />
+							{({ field, value }) => (
+								<input
+									data-testid="usernameInput"
+									value={value()}
+									{...field.getInputHandlers()}
+								/>
 							)}
 						</form.Field>
 						<form.Field name="password">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="passwordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
@@ -147,47 +162,65 @@ describe("Form values", () => {
 		};
 
 		function RegisterPage() {
-			const form = useForm<RegisterForm>({});
+			const form = useForm<RegisterForm>({
+				initialValues: {
+					username: "",
+					password: "",
+					confirmPassword: "",
+					address: {
+						lineOne: "",
+						lineTwo: "",
+					},
+				},
+			});
 
 			return (
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
-								<input data-testid="usernameInput" {...field.getInputProps()} />
+							{({ field, value }) => (
+								<input
+									data-testid="usernameInput"
+									value={value()}
+									{...field.getInputHandlers()}
+								/>
 							)}
 						</form.Field>
 						<form.Field name="password">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="passwordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="confirmPassword">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="confirmPasswordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineOne">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineOneInput"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineTwo">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineTwoInput"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
@@ -251,41 +284,49 @@ describe("Form values", () => {
 				<form.Form>
 					<form {...form.getFormProps()}>
 						<form.Field name="username">
-							{({ field }) => (
-								<input data-testid="usernameInput" {...field.getInputProps()} />
+							{({ field, value }) => (
+								<input
+									data-testid="usernameInput"
+									value={value()}
+									{...field.getInputHandlers()}
+								/>
 							)}
 						</form.Field>
 						<form.Field name="password">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="passwordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="confirmPassword">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="confirmPasswordInput"
 									type="password"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineOne">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineOneInput"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
 						<form.Field name="address.lineTwo">
-							{({ field }) => (
+							{({ field, value }) => (
 								<input
 									data-testid="addressLineTwoInput"
-									{...field.getInputProps()}
+									value={value()}
+									{...field.getInputHandlers()}
 								/>
 							)}
 						</form.Field>
@@ -369,9 +410,10 @@ describe("Form values", () => {
 					{(_, index) => {
 						return (
 							<fieldArray.Field name={`${index}`}>
-								{({ field }) => (
+								{({ field, value }) => (
 									<input
-										{...field.getInputProps()}
+										value={value()}
+										{...field.getInputHandlers()}
 										data-testid={`cardNumberInput[${index}]`}
 									/>
 								)}
@@ -391,11 +433,10 @@ describe("Form values", () => {
 			return (
 				<>
 					<field.Field name="username">
-						{({ field }) => (
+						{({ field, value }) => (
 							<CustomInput
-								{...field.getInputProps({
-									onChangePropName: "onChange",
-								})}
+								value={value()}
+								onChange={field.handleChange}
 								data-testid="usernameInput"
 							/>
 						)}
@@ -491,8 +532,12 @@ describe("Form values", () => {
 			return (
 				<mainForm.Form>
 					<mainForm.Field name="username">
-						{({ field }) => (
-							<input {...field.getInputProps()} data-testid="usernameInput" />
+						{({ field, value }) => (
+							<input
+								value={value()}
+								{...field.getInputHandlers()}
+								data-testid="usernameInput"
+							/>
 						)}
 					</mainForm.Field>
 					<MainFormData />
@@ -524,8 +569,12 @@ describe("Form values", () => {
 			return (
 				<mainForm.Form>
 					<mainForm.Field name="username">
-						{({ field }) => (
-							<input {...field.getInputProps()} data-testid="usernameInput" />
+						{({ field, value }) => (
+							<input
+								value={value()}
+								{...field.getInputHandlers()}
+								data-testid="usernameInput"
+							/>
 						)}
 					</mainForm.Field>
 					<mainForm.Observe>

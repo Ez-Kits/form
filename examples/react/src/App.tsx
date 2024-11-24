@@ -10,6 +10,7 @@ import { useState } from "react";
 import { z } from "zod";
 import "./App.css";
 import reactLogo from "./assets/react.svg";
+import { MembersForm } from "./MembersForm";
 import viteLogo from "/vite.svg";
 
 function App() {
@@ -37,7 +38,8 @@ function App() {
 			<p className="read-the-docs">
 				Click on the Vite and React logos to learn more
 			</p>
-			{count % 2 === 0 && <LoginPage />}
+			{/* {count % 2 === 0 && <LoginPage />} */}
+			<MembersForm />
 		</>
 	);
 }

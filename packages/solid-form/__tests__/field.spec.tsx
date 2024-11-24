@@ -65,9 +65,12 @@ describe("Field", () => {
 			return (
 				<>
 					<field.Field name="username">
-						{({ field }) => (
+						{({ field, value }) => (
 							<CustomInput
-								{...field.getInputProps()}
+								{...field.getInputHandlers({
+									onChangePropName: "onChange",
+								})}
+								value={value()}
 								data-testid="usernameInput"
 							/>
 						)}
@@ -79,11 +82,11 @@ describe("Field", () => {
 									{(_, index) => {
 										return (
 											<fieldArray.Field name={`${index}`} onBlur={onBlur}>
-												{({ field }) => {
+												{({ field, value }) => {
 													return (
 														<input
-															{...field.getInputProps()}
-															value={field.getValue()}
+															value={value()}
+															{...field.getInputHandlers()}
 															data-testid={`cardNumberInput[${index}]`}
 														/>
 													);
@@ -173,7 +176,7 @@ describe("Field", () => {
 								<input
 									data-testid="usernameInput"
 									value={field.getValue()}
-									onChange={field.handleChange}
+									onInput={field.handleChange}
 								/>
 							);
 						}}
@@ -205,13 +208,13 @@ describe("Field", () => {
 			return (
 				<mainForm.Form>
 					<mainForm.Field name="username">
-						{({ field }) => {
+						{({ field, value }) => {
 							return (
 								<>
 									<input
 										data-testid="usernameInput"
-										value={field.getValue()}
-										onChange={field.handleChange}
+										value={value()}
+										{...field.getInputHandlers()}
 									/>
 									<FieldErrors></FieldErrors>
 								</>
